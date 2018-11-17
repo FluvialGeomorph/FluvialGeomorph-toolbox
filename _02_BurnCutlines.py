@@ -1,0 +1,97 @@
+"""____________________________________________________________________________
+Script Name:          _02_BurnCutlines.py
+Description:          Burn cutlines into DEM to create a new hydro 
+                      modified DEM. 
+Date:                 11/22/2017
+
+Usage:
+This script is based on the Agricultural Conservation Planning Framework (ACPF)
+http://northcentralwater.org/acpf/ RepairFlowPaths_ManualCutter.py tool. 
+
+This tool assumes that all input datasets are in the same coordinate system. 
+
+Parameters:
+output_workspace (str)-- Path to the output workspace
+cutlines (str)        -- Path to the cutlines feature class
+dem (str)             -- Path to the digital elevation model (DEM)
+
+Outputs:
+dem_hydro             -- a hydro modified dem
+____________________________________________________________________________"""
+
+import os
+import arcpy
+
+def BurnCutlines(output_workspace, cutlines, dem):
+    # Check out the extension license 
+    arcpy.CheckOutExtension("Spatial")
+    
+    # Set environment variables 
+    arcpy.env.overwriteOutput = True
+    arcpy.env.workspace = output_workspace
+    arcpy.env.extent = dem
+    arcpy.env.snapRaster = dem
+    arcpy.env.cellSize = arcpy.Describe(dem).meanCellHeight
+    arcpy.env.compression = "LZ77"
+    arcpy.env.outputCoordinateSystem = dem    
+    
+    # List parameter values
+    arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
+    arcpy.AddMessage("Cutlines: "
+                     "{}".format(arcpy.Describe(cutlines).baseName))
+    arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
+    
+    # Determine the resolution of dem
+    cellsize = float(arcpy.GetRasterProperties_management(
+                                         dem, "CELLSIZEX").getOutput(0))
+    
+    # Convert cutlines to raster
+    cutline_ras = os.path.join(output_workspace, "cutline_ras")
+    OID = arcpy.Describe(cutlines).OIDFieldName
+    arcpy.PolylineToRaster_conversion(
+                       in_features = cutlines, 
+                       value_field = OID, 
+                       out_rasterdataset = cutline_ras, 
+                       cellsize = cellsize)
+                       
+    # Perform zonal statistics on dem with cutline_ras
+    cutline_min = arcpy.sa.ZonalStatistics(in_zone_data = cutline_ras, 
+                                           zone_field = "VALUE", 
+                                           in_value_raster = dem, 
+                                           statistics_type = "MINIMUM")
+                                    
+    # Con operation to burn cutline_ext into DEM
+    dem_hydro = arcpy.sa.Con(arcpy.sa.IsNull(cutline_min), 
+                             dem, 
+                             cutline_min)
+    
+    # Save dem_hydro to the output_workspace
+    arcpy.CopyRaster_management(
+                      in_raster = dem_hydro, 
+                      out_rasterdataset = os.path.join(output_workspace, 
+                                                       "dem_hydro"))
+    #dem_hydro.save(os.path.join(output_workspace, "dem_hydro"))
+    arcpy.AddMessage("Created hydro modified DEM.")
+    
+    # Calculate raster statistics and build pyramids
+    arcpy.CalculateStatistics_management(os.path.join(output_workspace, 
+                                                      "dem_hydro"))
+    arcpy.BuildPyramids_management(os.path.join(output_workspace, 
+                                                      "dem_hydro"))
+    arcpy.AddMessage("Calculated raster statistics and pyramids.")
+    
+    # Cleanup
+    arcpy.Delete_management(in_data = cutline_ras)
+
+
+def main():
+    # Call the BurnCutlines function with command line parameters
+    BurnCutlines(output_workspace, cutlines, dem)
+
+if __name__ == "__main__":
+    # Get input parameters
+    output_workspace = arcpy.GetParameterAsText(0)
+    cutlines         = arcpy.GetParameterAsText(1)
+    dem              = arcpy.GetParameterAsText(2)
+    
+    main()

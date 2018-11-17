@@ -1,0 +1,75 @@
+---
+title: "Detecting Stream Slope Change"
+output: html_document
+---
+
+```{r}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(arcgisbinding)
+
+arc.check_product()
+
+# Source hydraulic geometry functions
+source("//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Methods/FluvialGeomorphr/HydraulicGeometry2.R")
+```
+
+```{r}
+#flowline_points <- arc2sp("//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Sites2/G#alenaBuncombe_05415000/GalenaBuncombe_05415000.gdb/flowline_points")
+#flowline_pts <- data.frame(flowline_points@data)
+```
+
+```{r}
+flowline_points <- arc2sp("//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/Senachwine.gdb/stream_network_points")
+flowline_pts <- data.frame(flowline_points@data)
+flowline_pts <- flowline_pts[flowline_pts$ReachName == "Gilfillian Creek",]
+```
+
+```{r}
+# Sort by ReachName and POINT_M
+fl_pts <- flowline_pts[order(flowline_pts$ReachName, flowline_pts$POINT_M),]
+```
+
+
+
+```{r}
+# Calculate a loess smoothed z
+l_z_5 <- loess(Z ~ POINT_M, data = fl_pts, span = 0.01)
+fl_pts$Z_smooth <- predict(l_z_5)
+# Calculate slope (rise / run)
+fl_pts$slope <- (lag(fl_pts$Z_smooth, 50) - fl_pts$Z_smooth) / 50
+# Remove na introduced by the moving window analysis
+fl_pts <- na.omit(fl_pts)
+# Convert from wide to long format
+fp <- gather(fl_pts[,c("POINT_M","Z","Z_smooth","slope")], 
+             key = key, value = value, c(Z, Z_smooth, slope))
+```
+
+
+```{r}
+p <- ggplot(fp[fp$key != "slope",], 
+            aes(x = POINT_M, y = value, color = key)) + 
+       geom_point() + 
+       scale_color_brewer(palette = "Dark2") + 
+       theme_bw() + 
+       labs(x = "Distance to Mouth (kilometers)",
+            y = "Elevation (feet)")
+ggplotly(p)
+```
+
+
+```{r}
+p2 <- ggplot(fp[fp$key != "Z",], 
+             aes(x = POINT_M, y = value, color = key)) + 
+       geom_point() + 
+       scale_color_brewer(palette = "Dark2") + 
+       theme_bw() + 
+       labs(x = "Distance to Mouth (kilometers)",
+            y = "Elevation (feet)") + 
+       facet_grid(key ~ ., scales = "free_y") +
+       theme(strip.background = element_blank())
+ggplotly(p2)
+```
+
