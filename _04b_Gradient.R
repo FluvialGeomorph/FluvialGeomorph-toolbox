@@ -1,34 +1,34 @@
+#' Calculates stream gradient (or slope) for a flowline_points feature
+#' class.
+#'
+#' Args:
+#'    flowline_points_fc: character; the full path to an ESRI flowline 
+#'                        points feature class
+#'    gradient_distance:  numeric; the window size (in feet) around each 
+#'                        point that will be used to calculate the stream 
+#'                        gradient
+#'    use_smoothing:      boolean; determines if smoothed elevation values
+#'                        are used to calculate gradient. values are: 
+#'                        TRUE, FALSE (default)
+#'    loess_span:         numeric; the loess regression span parameter, 
+#'                        defaults to 0.05
+#'
+#' Usage:
+#'    Positive slope values represent elevations decreasing as one moves 
+#'    downstream. Negative slope values represent elevations increasing as 
+#'    one moves downstream (caused by error in the terrain data). 
+#'
+#' Returns:
+#'    A new flowline_points feature class called 'gradient' with the new
+#'    fields 'slope', `sinuosity`. 
+#'
 tool_exec <- function(in_params, out_params) {
-    # Calculates stream gradient (or slope) for a flowline_points feature
-    # class.
-    #
-    # Args:
-    #    flowline_points_fc: character; the full path to an ESRI flowline 
-    #                        points feature class
-    #    gradient_distance:  numeric; the window size (in feet) around each 
-    #                        point that will be used to calculate the stream 
-    #                        gradient
-    #    use_smoothing:      boolean; determines if smoothed elevation values
-    #                        are used to calculate gradient. values are: 
-    #                        TRUE, FALSE (default)
-    #    loess_span:         numeric; the loess regression span parameter, 
-    #                        defaults to 0.05
-    #
-    # Usage:
-    #    Positive slope values represent elevations decreasing as one moves 
-    #    downstream. Negative slope values represent elevations increasing as 
-    #    one moves downstream (caused by error in the terrain data). 
-    #
-    # Returns:
-    #    A new flowline_points feature class called 'gradient' with the new
-    #    fields 'slope', `sinuosity`. 
-    #
+    # Load utility R functions
+    source("FG_utils.R")
     # Load required libraries
-    if (!require("pacman")) install.packages("pacman")
-    pacman::p_load(sp, dplyr, raster)
-
-    # Source hydraulic geometry functions
-    source("//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Methods/FluvialGeomorphr/HydraulicGeometry2.R")
+    load_packages(c("sp", "dplyr", "raster"))
+    # Load FluvialGeomorph R packages
+    load_fgm_packages()
     
     # gp tool parameters
     flowline_points_fc  <- in_params[[1]]

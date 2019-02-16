@@ -1,41 +1,54 @@
+#' @title Reach geometry graph
+#' 
+#' @description Produces a hydraulic geometry graph for all of the cross 
+#'     sections in the current reach.
+#' 
+#' @export
+#' @param xs_points_fc        character; an ESRI cross section points feature 
+#'                            class
+#' @param regions:            character vector; The regions that dimensions
+#'                            will be calculated for. See the
+#'                            fgm::regional_curves$region field for a complete 
+#'                            list.
+#' @param bankfull_elevation  numeric; The detrended bankfull elevation (in 
+#'                            feet) that is used to calculate hydraulic 
+#'                            geometry.
+#'
+#' @return A ggplot object
+#'
 tool_exec <- function(in_params, out_params) {
-  # Produces a hydraulic geometry graph for all of the cross sections in 
-  # the current reach.
-  # Args:
-  #    xs_points_fc        character; an ESRI cross section points feature 
-  #                        class
-  #    regions:            character vector; The regions that dimensions
-  #                        will be calculated for. See the
-  #                        regional_curves$region field for a complete list.
-  #    bankfull_elevation  numeric; The detrended bankfull elevation (in feet)
-  #                        that is used to calculate hydraulic geometry.
-  #
-  # Returns:
-  #    a ggplot object
-  #
+  # Load utility R functions
+  dir_name <- getSrcDirectory(function(x) {x})
+  source(file.path(dir_name, "FG_utils.R"))
   # Load required libraries
-  if (!require("pacman")) install.packages("pacman")
-  pacman::p_load(dplyr, tibble, tidyr, ggplot2, ggrepel, sp)
-
-  # Source hydraulic geometry functions
-  source("//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Methods/FluvialGeomorphr/HydraulicGeometry2.R")
+  load_packages(c("sp", "dplyr", "tibble", "tidyr", "ggplot2", "ggrepel"))
+  # Load FluvialGeomorph R packages
+  load_fgm_packages()
   
   # gp tool parameters
   xs_points_fc        <- in_params[[1]]
-  regions             <- c(in_params[[2]])
+  regions             <- c(in_params[[2]], recursive = TRUE)
   bankfull_elevation  <- in_params[[3]]
-
+  
   # Import fc to sp
   xs_points <- arc2sp(xs_points_fc)
 
-  # Determine the stream name
-  stream <- unique(xs_points$ReachName)
+  # Determine the stream names
+  streams <- unique(xs_points$ReachName)
+  
+  # Convert xs_points to a data frame
+  xs_pts <- xs_points@data
   
   # Calculate cross section dimensions
-  xs_dims <- xs_Dimensions(xs_points, stream, regions, bankfull_elevation)
+  xs_dims <- xs_dimensions(xs_points = xs_pts, 
+                           streams = streams, 
+                           regions = regions, 
+                           bankfull_elevation = bankfull_elevation)
 
   # Call the gof_graph plot function
-  print(reach_RHG_graph(xs_dims, stream, bankfull_elevation))
+  print(reach_rhg_graph(xs_dims = xs_dims, 
+                        streams = streams, 
+                        bf_elevation = bankfull_elevation))
   
   return(out_params)
 }
