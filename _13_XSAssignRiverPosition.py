@@ -23,7 +23,7 @@ downstream end of the flowline.
 Parameters:
 output_workspace      -- Path to the output workspace
 cross_section         -- Path to the cross section line feature class
-flowline_route        -- Path to the flowline route feature class
+flowline_points       -- Path to the flowline route feature class
 
 Outputs:
 Writes the river position to a new field `km_to_mouth` field in the cross 
@@ -32,7 +32,13 @@ ____________________________________________________________________________"""
  
 import arcpy
 
-def XSAssignRiverPosition(output_workspace, cross_section, flowline_route):
+def DeleteExistingFields(in_table, field):
+    field_names = [f.name for f in arcpy.ListFields(in_table)]
+    if field in field_names:
+        arcpy.DeleteField_management(in_table = cross_section, 
+                                     drop_field = [field])
+
+def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     # Set environment variables
     arcpy.env.overwriteOutput = True
     arcpy.env.workspace = output_workspace
@@ -42,41 +48,42 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_route):
     arcpy.AddMessage("Cross Section: "
                      "{}".format(arcpy.Describe(cross_section).baseName))
     arcpy.AddMessage("flowline: "
-                     "{}".format(arcpy.Describe(flowline_route).baseName))
+                     "{}".format(arcpy.Describe(flowline_points).baseName))
     
-    # Intersect the `cross_section` fc with the `flowline_route` fc
-    arcpy.Intersect_analysis(in_features = [cross_section, flowline_route], 
-                             out_feature_class = "xs_flowline_pt", 
-                             output_type = "POINT")
+    # Spatial Join the cross sections with the closest flowline point
+    arcpy.SpatialJoin_analysis(target_features = cross_section, 
+                               join_features = flowline_points, 
+                               out_feature_class = "cross_section_flowline_point",  
+                               match_option = "CLOSEST", )
 
-    # Locate each cross section along the `flowline_route` feature class
-    arcpy.LocateFeaturesAlongRoutes_lr(
-                    in_features = "xs_flowline_pt", 
-                    in_routes = flowline_route,
-                    route_id_field = "ReachName",
-                    radius_or_tolerance = "1 Meter",
-                    out_table = "cross_section_route_table",
-                    out_event_properties = "ReachName POINT km_to_mouth")
-
-    # Before joining the `km_to_mouth` field to the `cross_section` fc, 
-    # check if the `km_to_mouth` field exists from a previous run. If so, 
-    # delete the field. 
-    field_names = [f.name for f in arcpy.ListFields(cross_section)]
-    if "km_to_mouth" in field_names:
-        arcpy.DeleteField_management(in_table = cross_section, 
-                                     drop_field = ["km_to_mouth"])
+    # Check if the fields that will be joined to the cross section feature class 
+    # exist from a previous run. If so, delete the fields before the join. 
+    DeleteExistingFields(cross_section, "km_to_mouth")
+    DeleteExistingFields(cross_section, "POINT_X")
+    DeleteExistingFields(cross_section, "POINT_Y")
+    DeleteExistingFields(cross_section, "POINT_M")
+    DeleteExistingFields(cross_section, "Z")
     
     # Join fields from the `cross_section_route_table` table to the 
     # `cross_section` feature class
     arcpy.JoinField_management(in_data = cross_section, 
                                in_field = "Seq", 
-                               join_table = "cross_section_route_table", 
+                               join_table = "cross_section_flowline_point", 
                                join_field = "Seq", 
-                               fields = ["km_to_mouth"])
+                               fields = ["POINT_X", "POINT_Y", "POINT_M", "Z"])
+    
+    # Calculate the "km_to_mouth" field
+    arcpy.AddField_management(in_table = cross_section, 
+                              field_name = "km_to_mouth", 
+                              field_type = "DOUBLE")
+    arcpy.CalculateField_management(in_table = cross_section, 
+                                    field = "km_to_mouth",
+                                    expression = "!POINT_M!", 
+                                    expression_type = "PYTHON_9.3")
 
     # Cleanup
     arcpy.Delete_management(in_data = "xs_flowline_pt")
-    arcpy.Delete_management(in_data = "cross_section_route_table")
+    arcpy.Delete_management(in_data = "cross_section_flowline_point")
     return
 
 def main():
