@@ -38,23 +38,27 @@ tool_exec <- function(in_params, out_params) {
     lead_lag           <- as.numeric(in_params[[4]])
     use_smoothing      <- as.logical(in_params[[5]])
     loess_span         <- as.numeric(in_params[[6]])
+    
+    print(lead_lag)
+    print(is.vector(lead_lag))
 
     # Code for testing in RStudio
-    library(sp)
-    library(dplyr)
-    library(fgm)
-    library(arcgisbinding)
-    arc.check_product()
-    xs_fc              <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle"
-    xs_points_fc       <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle_points"
-    bankfull_elevation <- 103
-    lead_lag           <- 1
-    use_smoothing      <- TRUE
-    loess_span         <- 1
+    # library(sp)
+    # library(dplyr)
+    # library(fgm)
+    # library(arcgisbinding)
+    # arc.check_product()
+    # xs_fc              <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle"
+    # xs_points_fc       <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle_points"
+    # bankfull_elevation <- 103
+    # lead_lag           <- 1
+    # use_smoothing      <- TRUE
+    # loess_span         <- 1
 
     # Convert ArcGIS fc to sp format
     xs        <- fgm::arc2sp(xs_fc)
     xs_points <- fgm::arc2sp(xs_points_fc)
+    print("Conversion to sp complete")
 
     # Create a list to hold the xs dimensions
     xs_geoms_ss <- list()
@@ -62,6 +66,8 @@ tool_exec <- function(in_params, out_params) {
 
     # Iterate through xs ReachNames
     for (g in unique(xs_points$ReachName)) {
+        print(unique(xs_points$ReachName))
+        
         # Subset xs for the current reach
         xs_reach <- xs@data[xs$ReachName == g, ]
         
@@ -71,6 +77,7 @@ tool_exec <- function(in_params, out_params) {
                                             use_smoothing = use_smoothing,
                                             loess_span = loess_span)
         xs_geoms_ss[[g]] <- xs_reach_ss
+        print("slope and sinuosity complete")
         
         # Iterate through xs's and calculate dimensions
         for (i in xs[xs$ReachName == g, ]$Seq) {
@@ -82,6 +89,7 @@ tool_exec <- function(in_params, out_params) {
                                     xs_number = i,
                                     bankfull_elevation = bankfull_elevation)
             xs_geoms[[i]] <- dims
+            print("xs_metrics complete")
         }
     }
     # Append the list of xs dimensions into a single data frame 
@@ -96,6 +104,7 @@ tool_exec <- function(in_params, out_params) {
     dims_join <- merge(x = reach_geoms,
                        y = xs_reach_geoms,
                        by.x = "Seq", by.y = "cross_section")
+    print("join complete")
     
     # Remove fields from dims_join already on xs
     # Get the list of names from xs
@@ -109,6 +118,7 @@ tool_exec <- function(in_params, out_params) {
     
     # Join the reach_geoms to xs_fc
     xs_dims <- sp::merge(xs, dims_join_reduced, by.x = "Seq", by.y = "Seq")
+    print("join table of metrics to fc complete")
 
     # Write the xs_fc with hydraulic dimensions
     xs_dims_path <- paste0(xs_fc, "_dims")

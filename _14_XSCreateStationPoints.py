@@ -32,6 +32,9 @@ station_distance      -- Distance between output flowline station points (in
 Outputs:
 <xs_name>_points      -- a new feature class of densified vertices 
                          along the cross section
+
+TODO:
+* refactor to use the FG_utils.py functions
 ____________________________________________________________________________"""
  
 import arcpy

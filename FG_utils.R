@@ -90,7 +90,7 @@ load_fgm_packages <- function() {
     
     # Install `fgm` from a local source tarball
     if (!require("fgm")) {
-        devtools::install_local("//mvrdfs//egis//Work//Office//Regional//ERDC/EMRRP_Sediment//Methods//fgm_0.1.0.zip",
+        devtools::install_local("//mvrdfs//egis//Work//Office//Regional//ERDC/EMRRP_Sediment//Methods//fgm_0.1.2.zip",
                                 force = TRUE,
                                 upgrade = TRUE, 
                                 dependencies = TRUE,

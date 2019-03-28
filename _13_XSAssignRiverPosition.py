@@ -54,7 +54,7 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     arcpy.SpatialJoin_analysis(target_features = cross_section, 
                                join_features = flowline_points, 
                                out_feature_class = "cross_section_flowline_point",  
-                               match_option = "CLOSEST", )
+                               match_option = "CLOSEST")
 
     # Check if the fields that will be joined to the cross section feature class 
     # exist from a previous run. If so, delete the fields before the join. 
