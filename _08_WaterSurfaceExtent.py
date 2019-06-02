@@ -1,7 +1,8 @@
 """____________________________________________________________________________
-Script Name:          _08_BankfullPolygon.py
-Description:          Extracts a bankfull polygon from a detrended DEM. 
-Date:                 11/26/2017
+Script Name:          _08_WaterSurfaceExtent.py
+Description:          Extracts a water surface extent polygon from a detrended 
+                      DEM. 
+Date:                 06/02/2019
 
 Usage:
 This tool is based on the detrending method used in the River Bathymetry 
@@ -52,7 +53,7 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value):
     # Convert the banks raster to a polygon
     arcpy.RasterToPolygon_conversion(
               in_raster = banks, 
-              out_polygon_features = "banks_raw_" + 
+              out_polygon_features = "banks_" + 
                                      str(detrend_value).replace(".", "_"),
               simplify = "SIMPLIFY",
               raster_field = "VALUE")

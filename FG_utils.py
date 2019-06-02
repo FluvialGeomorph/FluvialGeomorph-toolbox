@@ -169,3 +169,5 @@ def line_route_points(line, station_distance, route_id_field, fields):
     arcpy.Delete_management(in_data = line_densify_route)
     
     arcpy.AddMessage("Converted " + str(line_name) + " to points")
+
+

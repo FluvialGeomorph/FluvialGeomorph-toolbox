@@ -35,7 +35,7 @@ from FG_utils import *
 def assignLoopAndBend(bankline_loop_points, loop_points):
     """
     Iterates through a feature class of bankline_loop_points and assigns loop 
-    and bend values using the measures in the loop_points feature class.
+    and bend values using the values in the loop_points feature class.
     """
     # Iterate through each loop
     loops = set([row[0] for row in arcpy.da.SearchCursor(loop_points, "loop")])
@@ -48,7 +48,7 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
                 arcpy.AddFieldDelimiters(loop_points, "loop"), str(loop))
         bends = set([row[0] for row in arcpy.da.SearchCursor(loop_points, "bend",
                      where_clause = loop_wc)])
-                     
+        
         # Determine bank (left or right) of the current loop and bend(s)
         # Ex. sql: "loop" = 1
         bank_wc = """{0} = {1}""".format(
@@ -56,7 +56,7 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
         bank = set([row[0] for row in arcpy.da.SearchCursor(
                    bankline_loop_points, "bank",
                    where_clause = bank_wc)])
-                       
+        
         # Iterate through each bend in the current loop
         for bend in bends:
             # Skip to the next iteration for bend = 0 (apex point designator)
@@ -70,7 +70,7 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
                 arcpy.AddFieldDelimiters(loop_points, "loop"), str(loop),
                 arcpy.AddFieldDelimiters(loop_points, "bend"), str(bend),
                 arcpy.AddFieldDelimiters(loop_points, "position"), "start")
-                
+            
             m_start = min([row[0] for row in arcpy.da.SearchCursor(
                           bankline_loop_points, "POINT_M",
                           where_clause = start_wc)])
@@ -81,12 +81,13 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
                 arcpy.AddFieldDelimiters(loop_points, "loop"), str(loop),
                 arcpy.AddFieldDelimiters(loop_points, "bend"), str(bend),
                 arcpy.AddFieldDelimiters(loop_points, "position"), "end")
-                
+            
             m_end = max([row[0] for row in arcpy.da.SearchCursor(
                         bankline_loop_points, "POINT_M",
                         where_clause = end_wc)])
             
-            arcpy.AddMessage("    Bend m_start: " + str(m_start) + 
+            arcpy.AddMessage("    Bank: " + str(list(bank)[0]) + 
+                             " Bend m_start: " + str(m_start) + 
                              " m_end: " + str(m_end))
             
             # Update loop and bend values for the current bend
@@ -98,23 +99,23 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
                 arcpy.AddFieldDelimiters(bankline_loop_points, "bank"),
                 list(bank)[0],
                 arcpy.AddFieldDelimiters(loop_points, "POINT_M"), 
-                int(m_start), int(m_end))
+                str(m_start), str(m_end))
+            arcpy.AddMessage("    " + str(bend_wc))
             
-            with arcpy.da.UpdateCursor(fc, fields, 
-                                       where_clause = bend_wc) as cursor:
-                for row in cursor:
+            with arcpy.da.UpdateCursor(fc, fields, where_clause = bend_wc) as cursor:
+                for row in cursor: 
                     row[1] = int(loop)
                     row[2] = int(bend)
                     cursor.updateRow(row)
-                    
-    arcpy.AddMessage("Assigned loop and bends to bankline_loop_points")
-            
+    
+    arcpy.AddMessage("Assigned loop and bend values to bankline_loop_points")
+
 
 def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem, 
                    station_distance):
     # Check out the extension licenses 
     arcpy.CheckOutExtension("3D")
-
+    
     # Set environment variables 
     arcpy.env.overwriteOutput = True
     arcpy.env.workspace = output_workspace
@@ -152,34 +153,33 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     assignLoopAndBend("bankline_loop_points", loop_points)
     
     # Convert valleyline to points
-    line_route_points(line = valleyline, 
-                      station_distance = station_distance, 
+    line_route_points(line = valleyline,
+                      station_distance = station_distance,
                       route_id_field = "ReachName",
                       fields = [])
-    
+
     # Assign valleyline_points values to bankline_points
-    arcpy.SpatialJoin_analysis(target_features = "bankline_loop_points", 
-                               join_features = "valleyline_points", 
-                               out_feature_class = "bankline_points",  
+    arcpy.SpatialJoin_analysis(target_features = "bankline_loop_points",
+                               join_features = "valleyline_points",
+                               out_feature_class = "bankline_points",
                                match_option = "CLOSEST")
-    
-    arcpy.DeleteField_management(in_table = "bankline_points", 
-                                 drop_field = ["Join_Count", "TARGET_FID", 
-                                               "ReachName_1" , "ReachName12",
+
+    arcpy.DeleteField_management(in_table = "bankline_points",
+                                 drop_field = ["Join_Count", "TARGET_FID",
+                                               "ReachName_1" , "ReachName_12",
                                                "from_measure", "to_measure"])
-    
-    arcpy.AlterField_management("bankline_points", 
+
+    arcpy.AlterField_management("bankline_points",
                                 "POINT_X_1", 'v_POINT_X', 'v_POINT_X')
-    arcpy.AlterField_management("bankline_points", 
+    arcpy.AlterField_management("bankline_points",
                                 "POINT_Y_1", 'v_POINT_Y', 'v_POINT_Y')
-    arcpy.AlterField_management("bankline_points", 
+    arcpy.AlterField_management("bankline_points",
                                 "POINT_M_1", 'v_POINT_M', 'v_POINT_M')
-    
+
     # Cleanup
     arcpy.Delete_management("banklines_points")
     arcpy.Delete_management("bankline_loop_points")
-    return
-    
+
     
 def main():
     # Call the BanklinePoints function with command line parameters
@@ -196,3 +196,4 @@ if __name__ == "__main__":
     station_distance = arcpy.GetParameterAsText(5)
     
     main()
+
