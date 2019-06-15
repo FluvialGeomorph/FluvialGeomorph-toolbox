@@ -53,12 +53,12 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value):
     # Convert the banks raster to a polygon
     arcpy.RasterToPolygon_conversion(
               in_raster = banks, 
-              out_polygon_features = "banks_" + 
+              out_polygon_features = "banks_raw_" + 
                                      str(detrend_value).replace(".", "_"),
               simplify = "SIMPLIFY",
               raster_field = "VALUE")
     
-    arcpy.AddMessage("Created Banks polygon feature class")
+    arcpy.AddMessage("Created water surface area feature class")
 
 
 def main():
