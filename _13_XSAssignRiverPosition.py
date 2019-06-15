@@ -2,7 +2,7 @@
 Script Name:          _13_XSAssignRiverPosition.py
 Description:          Adds a "distance to the mouth of the river" field to 
                       each cross section. 
-Date:                 11/16/2017
+Date:                 06/15/2019
 
 Usage:
 Calculates the river position of the input cross section. Writes the  
@@ -50,21 +50,21 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     arcpy.AddMessage("flowline: "
                      "{}".format(arcpy.Describe(flowline_points).baseName))
     
-    # Spatial Join the cross sections with the closest flowline point
-    arcpy.SpatialJoin_analysis(target_features = cross_section, 
-                               join_features = flowline_points, 
-                               out_feature_class = "cross_section_flowline_point",  
-                               match_option = "CLOSEST")
-
     # Check if the fields that will be joined to the cross section feature class 
-    # exist from a previous run. If so, delete the fields before the join. 
+    # exist from a previous run. If so, delete the fields before the joins. 
     DeleteExistingFields(cross_section, "km_to_mouth")
     DeleteExistingFields(cross_section, "POINT_X")
     DeleteExistingFields(cross_section, "POINT_Y")
     DeleteExistingFields(cross_section, "POINT_M")
     DeleteExistingFields(cross_section, "Z")
     
-    # Join fields from the `cross_section_route_table` table to the 
+    # Spatial Join the cross sections with the closest flowline point
+    arcpy.SpatialJoin_analysis(target_features = cross_section, 
+                               join_features = flowline_points, 
+                               out_feature_class = "cross_section_flowline_point",  
+                               match_option = "CLOSEST")
+
+    # Join fields from the `cross_section_flowline_point` table back to the 
     # `cross_section` feature class
     arcpy.JoinField_management(in_data = cross_section, 
                                in_field = "Seq", 
