@@ -168,13 +168,21 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
                                  drop_field = ["Join_Count", "TARGET_FID",
                                                "ReachName_1" , "ReachName_12",
                                                "from_measure", "to_measure"])
-
+    # Set the name of bankline_points coordinates
     arcpy.AlterField_management("bankline_points",
-                                "POINT_X_1", 'v_POINT_X', 'v_POINT_X')
+                                "POINT_X", 'bank_POINT_X', 'bank_POINT_X')
     arcpy.AlterField_management("bankline_points",
-                                "POINT_Y_1", 'v_POINT_Y', 'v_POINT_Y')
+                                "POINT_Y", 'bank_POINT_Y', 'bank_POINT_Y')
     arcpy.AlterField_management("bankline_points",
-                                "POINT_M_1", 'v_POINT_M', 'v_POINT_M')
+                                "POINT_M", 'bank_POINT_M', 'bank_POINT_M')
+    
+    # Set the name of valleyline_points coordinates
+    arcpy.AlterField_management("bankline_points",
+                                "POINT_X_1", 'valley_POINT_X', 'valley_POINT_X')
+    arcpy.AlterField_management("bankline_points",
+                                "POINT_Y_1", 'valley_POINT_Y', 'valley_POINT_Y')
+    arcpy.AlterField_management("bankline_points",
+                                "POINT_M_1", 'valley_POINT_M', 'valley_POINT_M')
 
     # Cleanup
     arcpy.Delete_management("banklines_points")
