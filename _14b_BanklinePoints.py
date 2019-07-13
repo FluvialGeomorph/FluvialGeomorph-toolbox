@@ -137,7 +137,7 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     # Add elevation to bankline_points
     add_elevation("banklines_points", dem)
     
-    # Spatial Join bankline_points with the closest loop_points
+    # Spatial Join bankline_points with the closest (within 1m) loop_point
     arcpy.SpatialJoin_analysis(target_features = "banklines_points", 
                                join_features = "loop_points", 
                                out_feature_class = "bankline_loop_points",  
