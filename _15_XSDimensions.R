@@ -10,7 +10,7 @@
 #'                            points feature class
 #' @param bankfull_elevation  numeric; The bankfull elevation (in feet) that is
 #'                            used to calculate hydraulic geometry.
-#' @param lead_lag            numeric; The number of features to lead/lag on
+#' @param lead_n              numeric; The number of features to lead/lag on
 #'                            either side of each feature that will be used to
 #'                            calculate the slope and sinuosity.
 #' @param use_smoothing       boolean; determines if smoothed elevation values
@@ -21,7 +21,9 @@
 #'
 #' @return A new cross section feature class with the hydraulic geometry 
 #'      dimensions added to the attribute table
-#'
+#'      
+#' #TODO Create an fgm function to perform this operation
+#' 
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     dir_name <- getSrcDirectory(function(x) {x})
@@ -35,12 +37,12 @@ tool_exec <- function(in_params, out_params) {
     xs_fc              <- in_params[[1]]
     xs_points_fc       <- in_params[[2]]
     bankfull_elevation <- as.numeric(in_params[[3]])
-    lead_lag           <- as.numeric(in_params[[4]])
+    lead_n             <- as.numeric(in_params[[4]])
     use_smoothing      <- as.logical(in_params[[5]])
     loess_span         <- as.numeric(in_params[[6]])
     
-    print(lead_lag)
-    print(is.vector(lead_lag))
+    message(use_smoothing)
+    message(loess_span)
 
     # Code for testing in RStudio
     # library(sp)
@@ -58,7 +60,7 @@ tool_exec <- function(in_params, out_params) {
     # Convert ArcGIS fc to sp format
     xs        <- fgm::arc2sp(xs_fc)
     xs_points <- fgm::arc2sp(xs_points_fc)
-    print("Conversion to sp complete")
+    message("Conversion to sp complete")
 
     # Create a list to hold the xs dimensions
     xs_geoms_ss <- list()
@@ -73,11 +75,11 @@ tool_exec <- function(in_params, out_params) {
         
         # Calculate slope and sinuosity for xs_reach
         xs_reach_ss <- fgm::slope_sinuosity(xs_reach,
-                                            lead_lag = lead_lag,
+                                            lead_n = lead_n, lag_n = 0,
                                             use_smoothing = use_smoothing,
                                             loess_span = loess_span)
         xs_geoms_ss[[g]] <- xs_reach_ss
-        print("slope and sinuosity complete")
+        message("slope and sinuosity complete")
         
         # Iterate through xs's and calculate dimensions
         for (i in xs[xs$ReachName == g, ]$Seq) {
@@ -89,7 +91,7 @@ tool_exec <- function(in_params, out_params) {
                                     xs_number = i,
                                     bankfull_elevation = bankfull_elevation)
             xs_geoms[[i]] <- dims
-            print("xs_metrics complete")
+            message(paste("xs ", i, " metrics complete"))
         }
     }
     # Append the list of xs dimensions into a single data frame 
@@ -104,7 +106,7 @@ tool_exec <- function(in_params, out_params) {
     dims_join <- merge(x = reach_geoms,
                        y = xs_reach_geoms,
                        by.x = "Seq", by.y = "cross_section")
-    print("join complete")
+    message("join complete")
     
     # Remove fields from dims_join already on xs
     # Get the list of names from xs
@@ -118,7 +120,7 @@ tool_exec <- function(in_params, out_params) {
     
     # Join the reach_geoms to xs_fc
     xs_dims <- sp::merge(xs, dims_join_reduced, by.x = "Seq", by.y = "Seq")
-    print("join table of metrics to fc complete")
+    message("join table of metrics to fc complete")
 
     # Write the xs_fc with hydraulic dimensions
     xs_dims_path <- paste0(xs_fc, "_dims")
