@@ -2,7 +2,7 @@
 Script Name:          _08a_BanklinePoints.py
 Description:          Converts a stream banklines feature class to a route and 
                       creates a feature class of stream bankline points. 
-Date:                 03/24/2019
+Date:                 08/28/2019
 
 Usage:
 Creates a new feature class of bankline points with 3D information describing 
@@ -39,6 +39,7 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
     """
     # Iterate through each loop
     loops = set([row[0] for row in arcpy.da.SearchCursor(loop_points, "loop")])
+    arcpy.AddMessage("Loops: " + str(loops))
     
     for loop in loops:
         arcpy.AddMessage("Loop: " + str(loop))
@@ -62,6 +63,7 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
             # Skip to the next iteration for bend = 0 (apex point designator)
             if bend == 0:
                 continue
+            arcpy.AddMessage("Bends: " + str(bends))
             arcpy.AddMessage("  Bend: " + str(bend))
             
             # Determine the current bend start m value
@@ -122,13 +124,13 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
-    arcpy.AddMessage("banklines: {}".format(arcpy.Describe(loop_points).baseName))
+    arcpy.AddMessage("loop_points: {}".format(arcpy.Describe(loop_points).baseName))
     arcpy.AddMessage("banklines: {}".format(arcpy.Describe(banklines).baseName))
     arcpy.AddMessage("valleyline: {}".format(arcpy.Describe(valleyline).baseName))
     arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
     arcpy.AddMessage("Station distance: {}".format(str(station_distance)))
     
-    # Convert banklines to points
+    # Convert banklines to points; writes `banklines_points` to the output_workspace
     line_route_points(line = banklines, 
                       station_distance = station_distance, 
                       route_id_field = "bank_id",
@@ -137,12 +139,16 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     # Add elevation to bankline_points
     add_elevation("banklines_points", dem)
     
-    # Spatial Join bankline_points with the closest (within 1m) loop_point
+    # Buffer loop_points to use for spatal join
+    arcpy.Buffer_analysis(in_features = loop_points, 
+                          out_feature_class = "loop_points_buffer", 
+                          buffer_distance_or_field = "1 Meters")
+    
+    # Identify loop_points close to bankline_points and transfer attributes
     arcpy.SpatialJoin_analysis(target_features = "banklines_points", 
-                               join_features = "loop_points", 
-                               out_feature_class = "bankline_loop_points",  
-                               match_option = "WITHIN_A_DISTANCE",
-                               search_radius = 1)
+                               join_features = "loop_points_buffer", 
+                               out_feature_class = "bankline_loop_points", 
+                               match_option = "INTERSECT")
     
     arcpy.DeleteField_management(in_table = "bankline_loop_points", 
                                  drop_field = ["Join_Count", "TARGET_FID", 
@@ -165,9 +171,11 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
                                match_option = "CLOSEST")
 
     arcpy.DeleteField_management(in_table = "bankline_points",
-                                 drop_field = ["Join_Count", "TARGET_FID",
+                                 drop_field = ["Join_Count", "TARGET_FID", 
+                                               "BUFF_DIST", "ORIG_FID",
                                                "ReachName_1" , "ReachName_12",
-                                               "from_measure", "to_measure"])
+                                               "from_measure", "to_measure",
+                                               "InLine_FID", "SmoLnFlag"])
     # Set the name of bankline_points coordinates
     arcpy.AlterField_management("bankline_points",
                                 "POINT_X", 'bank_POINT_X', 'bank_POINT_X')
