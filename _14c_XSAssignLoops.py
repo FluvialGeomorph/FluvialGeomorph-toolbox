@@ -32,6 +32,16 @@ def XSAssignLoops(output_workspace, cross_section, bankline_points):
     arcpy.AddMessage("cross_section: {}".format(arcpy.Describe(cross_section).baseName))
     arcpy.AddMessage("bankline_points: {}".format(arcpy.Describe(bankline_points).baseName))
     
+    # Remove loop and bend fields from previous runs
+    field_names = [f.name for f in arcpy.ListFields(cross_section)]
+    if "loop" in field_names:
+        arcpy.DeleteField_management(in_table = cross_section, 
+                                     drop_field = "loop")
+    if "bend" in field_names:                                 
+        arcpy.DeleteField_management(in_table = cross_section, 
+                                     drop_field = "bend")
+    
+    
     # Remove Null loop records from bankline_points
     loop_bl_pts = arcpy.MakeFeatureLayer_management(bankline_points, "loop_bl_pts",
                             where_clause = "loop IS NOT NULL")
