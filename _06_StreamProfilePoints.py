@@ -141,8 +141,7 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
     
     # Cleanup
     arcpy.Delete_management(in_data = "flowline_densify")
-    # Do not delete the flowline_densify_route fc as it is needed by 
-    # 13_XSAssignRiverPosition.py
+    arcpy.Delete_management(in_data = "flowline_densify_route")
     return
     
 def main():
