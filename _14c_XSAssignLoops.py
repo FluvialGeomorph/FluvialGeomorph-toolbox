@@ -1,7 +1,7 @@
 """____________________________________________________________________________
-Script Name:          _15a_XS_Assign_Loops.py
+Script Name:          _14c_XS_Assign_Loops.py
 Description:          Assigns loops and bends to cross sections. 
-Date:                 07/06/2019
+Date:                 09/17/2019
 
 Usage:
 Assigns loops and bends to cross section features by finding the closest 
@@ -59,6 +59,9 @@ def XSAssignLoops(output_workspace, cross_section, bankline_points):
                                join_table = "xs_fc",
                                join_field = "Seq",
                                fields = ["loop", "bend"])
+    
+    # Cleanup
+    arcpy.Delete_management("xs_fc")
 
 def main():
     XSAssignLoops(output_workspace, cross_section, bankline_points)
