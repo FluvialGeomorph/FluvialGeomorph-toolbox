@@ -88,13 +88,13 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
 
 def main():
     # Call the XSAssignRiverPosition function with command line parameters
-    XSAssignRiverPosition(output_workspace, cross_section, flowline_route)
+    XSAssignRiverPosition(output_workspace, cross_section, flowline_points)
 
 if __name__ == "__main__":
     # Get input parameters
     output_workspace = arcpy.GetParameterAsText(0)
     cross_section    = arcpy.GetParameterAsText(1)
-    flowline_route   = arcpy.GetParameterAsText(2)
+    flowline_points  = arcpy.GetParameterAsText(2)
     
     main()
 
