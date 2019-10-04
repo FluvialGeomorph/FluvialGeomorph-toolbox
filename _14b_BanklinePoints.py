@@ -196,6 +196,7 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     arcpy.Delete_management("banklines_points")
     arcpy.Delete_management("bankline_loop_points")
     arcpy.Delete_management("loop_points_buffer")
+    arcpy.Delete_management("valleyline_points")
 
     
 def main():
