@@ -24,7 +24,8 @@
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
-    source("FG_utils.R")
+    dir_name <- getSrcDirectory(function(x) {x})
+    source(file.path(dir_name, "FG_utils.R"))
     # Load required libraries
     load_packages(c("sp", "dplyr", "raster"))
     # Load FluvialGeomorph R packages
