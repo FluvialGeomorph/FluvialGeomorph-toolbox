@@ -172,7 +172,8 @@ def line_route_points(line, station_distance, route_id_field, fields):
 
 
 def repair_until_fixed (in_dataset, null_setting):
-    """ Repairs geometry in a vector feature class until all geometry errors
+    """
+    Repairs geometry in a vector feature class until all geometry errors
     have been fixed.
 
     Keyword Arguments:
@@ -186,8 +187,8 @@ def repair_until_fixed (in_dataset, null_setting):
     max_severity = 1
     cnt = 1
     while max_severity == 1:
-        print "Repair #{0}".format(cnt)
+        arcpy.AddMessage("Repair Num{0}".format(cnt))
         result = arcpy.RepairGeometry_management(in_dataset, null_setting)
-        print "Messages:"
-        print result.getMessages()
+        arcpy.AddMessage("Messages:")
+        arcpy.AddMessage(result.getMessages())
         max_severity = result.maxSeverity
