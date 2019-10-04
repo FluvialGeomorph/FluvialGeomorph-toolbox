@@ -21,7 +21,12 @@ tool_exec <- function(in_params, out_params) {
     print(Sys.getenv())
     
     # Determine if pandoc is available
-    print(rmarkdown::pandoc_available())
+    print(paste("Pandoc available: ", rmarkdown::pandoc_available()))
+    
+    # Get R version
+    print("R version:")
+    print(R.Version())
+    print(Sys.info()[["machine"]])
     
     return(out_params)
 }
