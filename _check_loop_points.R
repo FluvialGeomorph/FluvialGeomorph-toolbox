@@ -1,7 +1,7 @@
 #' Checks the `loop_points` feature class.
 #'
 #' Args:
-#'    loop_points)fc      character; the full path to an ESRI loop_points 
+#'    loop_points_fc      character; the full path to an ESRI loop_points 
 #'                        feature class
 #'
 tool_exec <- function(in_params, out_params) {
@@ -26,7 +26,7 @@ tool_exec <- function(in_params, out_params) {
     if(inherits(check, "try-error")) {
         print(geterrmessage())
     } else { 
-        message(paste(fc_name, "is a valid fgm loop_points data structure. "))
+        message(paste(fc_name, "is a valid loop_points data structure."))
     }
     
     return(out_params)
