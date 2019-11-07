@@ -31,8 +31,8 @@ tool_exec <- function(in_params, out_params) {
     # library(fgm)
     # library(arcgisbinding)
     # arc.check_product()
-    # xs_dimensions   <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle_floodplain_dims"
-    # bankline_points <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/bankline_points"
+    # xs_dimensions   <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain_dims"
+    # bankline_points <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb//bankline_points"
 
     # Convert ArcGIS fc to sp format
     xs_dimensions_sp   <- fgm::arc2sp(xs_dimensions)
@@ -47,6 +47,10 @@ tool_exec <- function(in_params, out_params) {
     # Calculate metric ratios
     xs_dims_ratios <- fgm::xs_metric_ratios(xs_dims_plan)
     message("metric ratios complete")
+    
+    # Write the xs with the planform dimensions
+    xs_dims_path <- paste0(xs_dimensions, "_planform")
+    fgm::sp2arc(sp_obj = xs_dims_ratios, fc_path = xs_dims_path)
     
     return(out_params)
 }    
