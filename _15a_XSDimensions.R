@@ -18,6 +18,8 @@
 #'                            TRUE, FALSE (default)
 #' @param loess_span          numeric; the loess regression span parameter,
 #'                            defaults to 0.05
+#' @param vert_units          character; The vertical units. One of: "m"
+#'                            (meter), "ft" (foot), "us-ft" (us survey foot)
 #' @param discharge_method  character; The method for calculating discharge (Q).
 #'                          Must be one of: "model_measure", "regional_curve",
 #'                          "width_relationship".
@@ -42,7 +44,7 @@
 #' @return A new cross section feature class with the hydraulic geometry 
 #'      dimensions added to the attribute table
 #'      
-#' #TODO Create an fgm function to perform this operation
+#' #TODO Create an fluvgeo function to perform this operation
 #' 
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
@@ -51,7 +53,7 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("sp", "dplyr"))
     # Load FluvialGeomorph R packages
-    load_fgm_packages()
+    load_fluvgeo_packages()
     
     # gp tool parameters
     xs_fc              <- in_params[[1]]
@@ -60,11 +62,12 @@ tool_exec <- function(in_params, out_params) {
     lead_n             <- as.numeric(in_params[[4]])
     use_smoothing      <- as.logical(in_params[[5]])
     loess_span         <- as.numeric(in_params[[6]])
-    discharge_method   <- in_params[[7]]
-    discharge_value    <- as.numeric(in_params[[8]])
-    region             <- in_params[[9]]
-    drainage_area      <- as.numeric(in_params[[10]])
-    width_method       <- in_params[[11]]
+    vert_units         <- in_params[[7]]
+    discharge_method   <- in_params[[8]]
+    discharge_value    <- as.numeric(in_params[[9]])
+    region             <- in_params[[10]]
+    drainage_area      <- as.numeric(in_params[[11]])
+    width_method       <- in_params[[12]]
     
     message(discharge_method)
     message(discharge_value)
@@ -73,43 +76,45 @@ tool_exec <- function(in_params, out_params) {
     message(width_method)
     
     # Code for testing in RStudio
-    # library(sp)
-    # library(dplyr)
-    # library(fgm)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # xs_fc              <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain"
-    # xs_points_fc       <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain_points"
-    # bankfull_elevation <- 101.5
-    # lead_n             <- 1
-    # use_smoothing      <- TRUE
-    # loess_span         <- 1
-    # discharge_method   <- "model_measure"
-    # discharge_value    <- 283
-    # region             <- ""
-    # drainage_area      <- 0
-    # width_method       <- ""
+    library(sp)
+    library(dplyr)
+    library(fluvgeo)
+    library(arcgisbinding)
+    arc.check_product()
+    xs_fc              <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain"
+    xs_points_fc       <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain_points"
+    bankfull_elevation <- 101.5
+    lead_n             <- 1
+    use_smoothing      <- TRUE
+    loess_span         <- 1
+    vert_units         <- "ft"
+    discharge_method   <- "model_measure"
+    discharge_value    <- 283
+    region             <- ""
+    drainage_area      <- 0
+    width_method       <- ""
     
     # Convert ArcGIS fc to sp format
-    xs        <- fgm::arc2sp(xs_fc)
-    xs_points <- fgm::arc2sp(xs_points_fc)
+    xs        <- fluvgeo::arc2sp(xs_fc)
+    xs_points <- fluvgeo::arc2sp(xs_points_fc)
     message("Conversion to sp complete")
     
     # Calculate cross section dimensions
-    xs_dims <- fgm::cross_section_dimensions(xs = xs,
+    xs_dims <- fluvgeo::cross_section_dimensions(xs = xs,
                                         xs_points = xs_points,
                                         bankfull_elevation = bankfull_elevation,
                                         lead_n = lead_n,
                                         use_smoothing = use_smoothing,
-                                        loess_span = loess_span)
+                                        loess_span = loess_span,
+                                        vert_units = vert_units)
     message("Calculated cross section dimensions")
     
     # Calculate shear stress
-    xs_dims_ss <- fgm::shear_stress(xs_dims)
+    xs_dims_ss <- fluvgeo::shear_stress(xs_dims)
     message("Calculated shear stress")
     
     # Calculate stream power
-    xs_dims_spow <- fgm::stream_power(xs_dims_ss, 
+    xs_dims_spow <- fluvgeo::stream_power(xs_dims_ss, 
                                       discharge_method = discharge_method,
                                       discharge_value = discharge_value,
                                       region = region,
@@ -123,7 +128,7 @@ tool_exec <- function(in_params, out_params) {
     
     # Write the xs with hydraulic dimensions
     xs_dims_path <- paste0(xs_fc, "_dims")
-    fgm::sp2arc(sp_obj = xs_dims_sp, fc_path = xs_dims_path)
+    fluvgeo::sp2arc(sp_obj = xs_dims_sp, fc_path = xs_dims_path)
     
     return(out_params)
 }
