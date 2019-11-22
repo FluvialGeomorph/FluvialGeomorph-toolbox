@@ -66,8 +66,11 @@ tool_exec <- function(in_params, out_params) {
     drainage_area      <- as.numeric(in_params[[10]])
     width_method       <- in_params[[11]]
     
-    message(use_smoothing)
-    message(loess_span)
+    message(discharge_method)
+    message(discharge_value)
+    message(region)
+    message(drainage_area)
+    message(width_method)
     
     # Code for testing in RStudio
     # library(sp)
@@ -75,16 +78,16 @@ tool_exec <- function(in_params, out_params) {
     # library(fgm)
     # library(arcgisbinding)
     # arc.check_product()
-    # xs_fc              <- "//mvrdfs.mvr.ds.usace.army.mil/EGIS/Work/Office/Regional/ERDC/EMRRP_Sediment/Methods/fgm/inst/extdata/testing_data.gdb/riffle_channel"
-    # xs_points_fc       <- "//mvrdfs.mvr.ds.usace.army.mil/EGIS/Work/Office/Regional/ERDC/EMRRP_Sediment/Methods/fgm/inst/extdata/testing_data.gdb/riffle_channel_points"
-    # bankfull_elevation <- 103
+    # xs_fc              <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain"
+    # xs_points_fc       <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain_points"
+    # bankfull_elevation <- 101.5
     # lead_n             <- 1
     # use_smoothing      <- TRUE
     # loess_span         <- 1
-    # discharge_method   <- "regional_curve"
-    # discharge_value    <- 1200
-    # region             <- "Illinois River"
-    # drainage_area      <- 87
+    # discharge_method   <- "model_measure"
+    # discharge_value    <- 283
+    # region             <- ""
+    # drainage_area      <- 0
     # width_method       <- ""
     
     # Convert ArcGIS fc to sp format
@@ -99,6 +102,7 @@ tool_exec <- function(in_params, out_params) {
                                         lead_n = lead_n,
                                         use_smoothing = use_smoothing,
                                         loess_span = loess_span)
+    message("Calculated cross section dimensions")
     
     # Calculate shear stress
     xs_dims_ss <- fgm::shear_stress(xs_dims)
@@ -113,11 +117,11 @@ tool_exec <- function(in_params, out_params) {
                                       width_method = width_method)
     message("Calculated stream power")
     
-    # Join the xs_dims to xs_fc
+    # Join the xs_dims to xs
     xs_dims_sp <- sp::merge(xs, xs_dims_spow, by.x = "Seq", by.y = "Seq")
     message("join table of metrics to fc complete")
     
-    # Write the xs_fc with hydraulic dimensions
+    # Write the xs with hydraulic dimensions
     xs_dims_path <- paste0(xs_fc, "_dims")
     fgm::sp2arc(sp_obj = xs_dims_sp, fc_path = xs_dims_path)
     
