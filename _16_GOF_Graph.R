@@ -8,7 +8,7 @@
 #'                            class
 #' @param regions             character vector; The regions that dimensions
 #'                            will be calculated for. See the
-#'                            fgm::regional_curves$region field for a complete 
+#'                            fluvgeo::regional_curves$region field for a complete 
 #'                            list.
 #' @param bankfull_elevation  numeric; The detrended bankfull elevation (in 
 #'                            feet) that is used to calculate hydraulic 
@@ -30,7 +30,7 @@ tool_exec <- function(in_params, out_params) {
   # Load required libraries
   load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", "ggplot2"))
   # Load FluvialGeomorph R packages
-  load_fgm_packages()
+  load_fluvgeo_packages()
   
   # gp tool parameters
   xs_points_fc        <- in_params[[1]]

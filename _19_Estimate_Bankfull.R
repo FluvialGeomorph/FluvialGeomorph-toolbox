@@ -25,7 +25,7 @@
 #'                            of "html_document", "word_document",
 #'                            "pdf_document".
 #'
-#' @return A report written to the file system in the output fromat requested.
+#' @return A report written to the file system in the output format requested.
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
@@ -36,7 +36,7 @@ tool_exec <- function(in_params, out_params) {
                     "ggrepel", "knitr", "rmarkdown", "kableExtra", "reshape2",
                     "assertthat"))
     # Load FluvialGeomorph R packages
-    load_fgm_packages()
+    load_fluvgeo_packages()
     # Set pandoc
     set_pandoc()
     

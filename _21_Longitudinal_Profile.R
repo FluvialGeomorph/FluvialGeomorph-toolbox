@@ -19,7 +19,7 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("sp", "ggplot2", "ggrepel"))
     # Load FluvialGeomorph R packages
-    load_fgm_packages()
+    load_fluvgeo_packages()
     
     # gp tool parameters
     xs_dimensions_fc    <- in_params[[1]]
@@ -30,7 +30,7 @@ tool_exec <- function(in_params, out_params) {
     #library(sp)
     #library(ggplot2)
     #library(ggrepel)
-    #library(fgm)
+    #library(fluvgeo)
     #library(arcgisbinding)
     #arc.check_product()
     #xs_dimensions_fc    <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle_dims"
@@ -41,13 +41,9 @@ tool_exec <- function(in_params, out_params) {
     xs_dimensions <- arc2sp(xs_dimensions_fc)
     features      <- arc2sp(features_fc)
 
-    # Convert to a data frame
-    xs_dims <- xs_dimensions@data
-    feats   <- features@data
-    
     # Call xs_plot function
-    print(xs_profile_plot(reach_xs_dims = xs_dims, 
-                          features = feats, 
+    print(xs_profile_plot(reach_xs_dims = xs_dimensions, 
+                          features = features, 
                           label_xs = label_xs))
     
     return(out_params)

@@ -19,7 +19,7 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("sp", "dplyr"))
     # Load FluvialGeomorph R packages
-    load_fgm_packages()
+    load_fluvgeo_packages()
     
     # gp tool parameters
     xs_dimensions      <- in_params[[1]]
@@ -28,29 +28,36 @@ tool_exec <- function(in_params, out_params) {
     # Code for testing in RStudio
     # library(sp)
     # library(dplyr)
-    # library(fgm)
+    # library(fluvgeo)
     # library(arcgisbinding)
     # arc.check_product()
-    # xs_dimensions   <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain_dims"
-    # bankline_points <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb//bankline_points"
+    # xs_dimensions   <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R2_LytleCk_Rialto.gdb/riffle_floodplain_dims"
+    # bankline_points <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R2_LytleCk_Rialto.gdb//bankline_points"
 
     # Convert ArcGIS fc to sp format
-    xs_dimensions_sp   <- fgm::arc2sp(xs_dimensions)
-    bankline_points_sp <- fgm::arc2sp(bankline_points)
+    xs_dimensions_sp   <- fluvgeo::arc2sp(xs_dimensions)
+    bankline_points_sp <- fluvgeo::arc2sp(bankline_points)
     message("Conversion to sp complete")
 
     # Calculate planform dimensions
-    xs_dims_plan <- fgm::planform_dimensions(xs_dimensions_sp, 
+    xs_dims_plan <- fluvgeo::planform_dimensions(xs_dimensions_sp, 
                                              bankline_points_sp)
     message("planform dimensions complete")
     
     # Calculate metric ratios
-    xs_dims_ratios <- fgm::xs_metric_ratios(xs_dims_plan)
+    xs_dims_ratios <- fluvgeo::xs_metric_ratios(xs_dims_plan)
     message("metric ratios complete")
     
-    # Write the xs with the planform dimensions
+    # Convert SpatialLinesDataFrame to a SpatialPointsDataFrame
+    xs_dims_pts <- xs2pts(xs_dims_ratios)
+    
+    # Write the xs lines with the planform dimensions
     xs_dims_path <- paste0(xs_dimensions, "_planform")
-    fgm::sp2arc(sp_obj = xs_dims_ratios, fc_path = xs_dims_path)
+    fluvgeo::sp2arc(sp_obj = xs_dims_ratios, fc_path = xs_dims_path)
+    
+    # Write the xs points with the planform dimensions
+    xs_dims_path <- paste0(xs_dimensions, "_planform_pts")
+    fluvgeo::sp2arc(sp_obj = xs_dims_pts, fc_path = xs_dims_path)
     
     return(out_params)
 }    
