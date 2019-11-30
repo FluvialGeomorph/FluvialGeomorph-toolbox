@@ -35,18 +35,18 @@ load_packages <- function(need_pkgs) {
 #' @return None
 #' 
 #' @details This function installs the \code{RegionalCurve} R package from 
-#'     GitHub and the \code{fgm} R package from a local source tarball. 
+#'     GitHub and the \code{fluvgeo} R package from a local source tarball. 
 #'     
-uninstall_fgm_packages <- function() {
+uninstall_fluvgeo_packages <- function() {
     # Test if RegionalCurve is installed
     if ("RegionalCurve" %in% rownames(installed.packages()) == TRUE) {
         remove.packages(pkgs = "RegionalCurve")
         message("The RegionalCurve package was uninstalled")
     }
-    # Test if fgm is installed
-    if ("fgm" %in% rownames(installed.packages()) == TRUE) {
-        remove.packages(pkgs = "fgm")
-        message("The fgm package was uninstalled")
+    # Test if fluvgeo is installed
+    if ("fluvgeo" %in% rownames(installed.packages()) == TRUE) {
+        remove.packages(pkgs = "fluvgeo")
+        message("The fluvgeo package was uninstalled")
     }
 }
 
@@ -61,9 +61,9 @@ uninstall_fgm_packages <- function() {
 #' @return Installs the required ArcGIS FluvialGeomorph R packages. 
 #' 
 #' @details This function installs the \code{RegionalCurve} R package from 
-#'     GitHub and the \code{fgm} R package from a local source tarball. 
+#'     GitHub and the \code{fluvgeo} R package from a local source tarball. 
 #' 
-load_fgm_packages <- function() {
+load_fluvgeo_packages <- function() {
     # Install devtools
     if (!require("devtools")) { 
         install.packages("devtools", dependencies = TRUE)
@@ -88,19 +88,19 @@ load_fgm_packages <- function() {
         }
     }
     
-    # Install `fgm` from a local source tarball
-    if (!require("fgm")) {
-        devtools::install_local("//mvrdfs//egis//Work//Office//Regional//ERDC/EMRRP_Sediment//Methods//fgm_0.1.12.zip",
+    # Install `fluvgeo` from a local source tarball
+    if (!require("fluvgeo")) {
+        devtools::install_local("//mvrdfs//egis//Work//Office//Regional//ERDC/EMRRP_Sediment//Methods//fluvgeo_0.1.12.zip",
                                 force = TRUE,
                                 upgrade = TRUE, 
                                 dependencies = TRUE,
                                 options(install.packages.check.source = "no"))
-        if ("fgm" %in% rownames(installed.packages()) == TRUE) {
-           message("The `fgm` package was installed.")
+        if ("fluvgeo" %in% rownames(installed.packages()) == TRUE) {
+           message("The `fluvgeo` package was installed.")
         }
     } else {
-        if ("fgm" %in% rownames(installed.packages()) == TRUE) {
-           message("The `fgm` package was already installed.")
+        if ("fluvgeo" %in% rownames(installed.packages()) == TRUE) {
+           message("The `fluvgeo` package was already installed.")
         }
     }
 }
