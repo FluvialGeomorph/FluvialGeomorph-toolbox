@@ -47,18 +47,43 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value):
                      "{}".format(arcpy.Describe(detrend_dem).baseName))
     arcpy.AddMessage("Detrend Value: {}".format(str(detrend_value)))
             
-    # Con operation to select cells less than detrend_value
+    # Select cells less than detrend_value
     banks = Con(detrend_dem, 0, 1, "value >= " + str(detrend_value))
+    arcpy.AddMessage("Selected cells <= " + str(detrend_value))
+    
+    # Majority filter five times
+    arcpy.AddMessage("Filtering bank boundaries")
+    banks_maj1 = MajorityFilter(banks, number_neighbors = "EIGHT", 
+                                majority_definition = "HALF")
+    arcpy.AddMessage("Filter 1 of 5")
+    banks_maj2 = MajorityFilter(banks_maj1, number_neighbors = "EIGHT", 
+                                majority_definition = "HALF")
+    arcpy.AddMessage("Filter 2 of 5")
+    banks_maj3 = MajorityFilter(banks_maj2, number_neighbors = "EIGHT", 
+                                majority_definition = "HALF")
+    arcpy.AddMessage("Filter 3 of 5")
+    banks_maj4 = MajorityFilter(banks_maj3, number_neighbors = "EIGHT", 
+                                majority_definition = "HALF")
+    arcpy.AddMessage("Filter 4 of 5")
+    banks_maj5 = MajorityFilter(banks_maj4, number_neighbors = "EIGHT", 
+                                majority_definition = "HALF")
+    arcpy.AddMessage("Filter 5 of 5")
+    
+    # Clean the edges of the banks
+    arcpy.AddMessage("Cleaning bank boundaries")
+    banks_clean = BoundaryClean(banks_maj5, sort_type = "DESCEND", 
+                                number_of_runs = "TWO_WAY")
+    arcpy.AddMessage("Bank boundaries cleaned")
     
     # Convert the banks raster to a polygon
+    out_feature_class = "banks_raw_" + str(detrend_value).replace(".", "_")
     arcpy.RasterToPolygon_conversion(
-              in_raster = banks, 
-              out_polygon_features = "banks_raw_" + 
-                                     str(detrend_value).replace(".", "_"),
+              in_raster = banks_clean, 
+              out_polygon_features = out_feature_class,
               simplify = "SIMPLIFY",
               raster_field = "VALUE")
-    
-    arcpy.AddMessage("Created water surface area feature class")
+    arcpy.AddMessage("Created water surface area feature class: " + 
+                     out_feature_class)
 
 
 def main():
