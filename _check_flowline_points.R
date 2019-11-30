@@ -11,7 +11,7 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("sp", "dplyr", "raster"))
     # Load FluvialGeomorph R packages
-    load_fgm_packages()
+    load_fluvgeo_packages()
     
     # gp tool parameters
     flowline_points_fc  <- in_params[[1]]
