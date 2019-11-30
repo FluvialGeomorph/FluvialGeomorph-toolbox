@@ -20,11 +20,11 @@ tool_exec <- function(in_params, out_params) {
     
     # Uninstall FluvialGeomorph R packages
     if (reinstall == TRUE) {
-        uninstall_fgm_packages()
+        uninstall_fluvgeo_packages()
     }
     
     # Load FluvialGeomorph R packages
-    load_fgm_packages()
+    load_fluvgeo_packages()
     
     # Set pandoc
     set_pandoc()
