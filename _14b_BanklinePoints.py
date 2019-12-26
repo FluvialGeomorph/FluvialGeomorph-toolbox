@@ -131,8 +131,9 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     arcpy.AddMessage("Station distance: {}".format(str(station_distance)))
     
     # Snap loop_points to banklines
+    snap_string = "{} 'EDGE' '50 feet'".format(arcpy.Describe(banklines).baseName)
     arcpy.Snap_edit(in_features = loop_points, 
-                    snap_environment = "banklines 'EDGE' '50 feet'")
+                    snap_environment = snap_string)
     arcpy.AddMessage("loop_points snapped to banklines")
     
     # Convert banklines to points; writes `banklines_points` to the output_workspace
