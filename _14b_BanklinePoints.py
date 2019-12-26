@@ -142,8 +142,9 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
                       route_id_field = "bank_id",
                       fields = ["bank","ReachName"])
     
-    # Add elevation to bankline_points
-    add_elevation("banklines_points", dem)
+    # Add elevation to banklines_points
+    banklines_points = "{}_points".format(arcpy.Describe(banklines).baseName)
+    add_elevation(banklines_points, dem)
     
     # Buffer loop_points to use for spatal join
     arcpy.Buffer_analysis(in_features = loop_points, 
@@ -151,7 +152,7 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
                           buffer_distance_or_field = "1 Meters")
     
     # Identify loop_points close to bankline_points and transfer attributes
-    arcpy.SpatialJoin_analysis(target_features = "banklines_points", 
+    arcpy.SpatialJoin_analysis(target_features = banklines_points, 
                                join_features = "loop_points_buffer", 
                                out_feature_class = "bankline_loop_points", 
                                match_option = "INTERSECT")
@@ -199,7 +200,7 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
                                 "POINT_M_1", 'valley_POINT_M', 'valley_POINT_M')
 
     # Cleanup
-    arcpy.Delete_management("banklines_points")
+    arcpy.Delete_management(banklines_points)
     arcpy.Delete_management("bankline_loop_points")
     arcpy.Delete_management("loop_points_buffer")
     arcpy.Delete_management("valleyline_points")
