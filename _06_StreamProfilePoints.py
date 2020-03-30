@@ -3,7 +3,7 @@ Script Name:          _06_StreamProfilePoints.py
 Description:          Converts a stream flowline to a route using the 
                       distance to mouth parameter and creates a feature class 
                       of stream profile points. 
-Date:                 11/20/2017
+Date:                 01/14/2020
 
 Usage:
 Creates a new feature class of stream longitudinal profile points with 3D 
@@ -30,12 +30,11 @@ station_distance      -- Distance between output flowline station points (in
                          the linear units of the flowline feature class)
 
 Outputs:
-flowline_densify_route -- a new feature class based on flowline_densify but 
-                          converted to a route
 flowline_points        -- a new feature class of densified vertices along the 
                           flowline
 ____________________________________________________________________________"""
  
+from datetime import datetime
 import arcpy
 
 # Define the StreamProfilePoints function
@@ -83,8 +82,15 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
                                     expression = "!shape.length@kilometers!", 
                                     expression_type = "PYTHON_9.3")
 
-    # Densify vertices of the flowline feature class using the Densify tool.
-    arcpy.CopyFeatures_management(in_features = flowline, 
+    # Simplify the flowline to speed interpolation
+    arcpy.SimplifyLine_cartography(in_features = flowline, 
+                                   out_feature_class = "flowline_simplify", 
+                                   algorithm = "POINT_REMOVE", 
+                                   tolerance = "1 Feet")
+    arcpy.AddMessage("Simplified flowline: flowline_simplify")
+    
+    # Densify vertices of the flowline_simplify feature class using the Densify tool.
+    arcpy.CopyFeatures_management(in_features = "flowline_simplify", 
                                   out_feature_class = "flowline_densify")
     arcpy.Densify_edit(in_features = "flowline_densify", 
                        densification_method = "DISTANCE", 
@@ -117,6 +123,8 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
     # route` tool sets it to NULL. 
     # Create code block that inserts the km_to_mouth value for the NULL record
     # (the first record) 
+    #arcpy.AddMessage("Set Null m-values to zero - start: {}".format(datetime.now().strftime("%H:%M:%S")))
+    
     codeBlock = """def setNull2Zero(m):
                        if m is None: 
                            return {}
@@ -127,6 +135,7 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
                                 expression = "setNull2Zero(!POINT_M!)", 
                                 code_block = codeBlock,
                                 expression_type = "PYTHON_9.3")
+    #arcpy.AddMessage("Set Null m-values to zero - end: {}".format(datetime.now().strftime("%H:%M:%S")))
 
     # Delete un-needed fields
     arcpy.DeleteField_management(in_table = "flowline_points", 
@@ -140,6 +149,8 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
     arcpy.AddMessage("Added geometry fields to flowline points.")
     
     # Cleanup
+    arcpy.Delete_management(in_data = "flowline_simplify")
+    arcpy.Delete_management(in_data = "flowline_simplify_Pnt")
     arcpy.Delete_management(in_data = "flowline_densify")
     arcpy.Delete_management(in_data = "flowline_densify_route")
     return
