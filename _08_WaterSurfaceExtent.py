@@ -17,6 +17,7 @@ detrend_dem (str)     -- Path to the detrended digital elevation model (DEM)
 detrend_value (double)-- Detrended elevation value used to define the 
                          innundated area. All raster values below this value
                          will be extracted to a polygon. 
+smoothing             -- Smoothing factor (1, low smoothing - 5, high smoothing)
 
 Outputs:
 banks                 -- a new polygon feature class representing the area 
@@ -28,7 +29,7 @@ import string
 import arcpy
 from arcpy.sa import *
 
-def BankfullPolygon(output_workspace, detrend_dem, detrend_value):
+def BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
@@ -46,32 +47,24 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value):
     arcpy.AddMessage("Detrended DEM: "
                      "{}".format(arcpy.Describe(detrend_dem).baseName))
     arcpy.AddMessage("Detrend Value: {}".format(str(detrend_value)))
+    arcpy.AddMessage("Smoothing: {}".format(str(smoothing)))
             
     # Select cells less than detrend_value
+    arcpy.AddMessage("Selecting cells <= {}".format(str(detrend_value)))
     banks = Con(detrend_dem, 0, 1, "value >= " + str(detrend_value))
-    arcpy.AddMessage("Selected cells <= " + str(detrend_value))
-    
-    # Majority filter five times
-    arcpy.AddMessage("Filtering bank boundaries")
-    banks_maj1 = MajorityFilter(banks, number_neighbors = "EIGHT", 
-                                majority_definition = "HALF")
-    arcpy.AddMessage("Filter 1 of 5")
-    banks_maj2 = MajorityFilter(banks_maj1, number_neighbors = "EIGHT", 
-                                majority_definition = "HALF")
-    arcpy.AddMessage("Filter 2 of 5")
-    banks_maj3 = MajorityFilter(banks_maj2, number_neighbors = "EIGHT", 
-                                majority_definition = "HALF")
-    arcpy.AddMessage("Filter 3 of 5")
-    banks_maj4 = MajorityFilter(banks_maj3, number_neighbors = "EIGHT", 
-                                majority_definition = "HALF")
-    arcpy.AddMessage("Filter 4 of 5")
-    banks_maj5 = MajorityFilter(banks_maj4, number_neighbors = "EIGHT", 
-                                majority_definition = "HALF")
-    arcpy.AddMessage("Filter 5 of 5")
+
+    # Smooth the banks raster
+    arcpy.AddMessage("Smoothing banks raster")
+    i = 1
+    while i <= int(smoothing):
+        banks = MajorityFilter(banks, number_neighbors = "EIGHT", 
+                                      majority_definition = "HALF")
+        arcpy.AddMessage("Completed majority filter: {}".format(str(i)))
+        i += 1
     
     # Clean the edges of the banks
     arcpy.AddMessage("Cleaning bank boundaries")
-    banks_clean = BoundaryClean(banks_maj5, sort_type = "DESCEND", 
+    banks_clean = BoundaryClean(banks, sort_type = "DESCEND", 
                                 number_of_runs = "TWO_WAY")
     arcpy.AddMessage("Bank boundaries cleaned")
     
@@ -88,12 +81,15 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value):
 
 def main():
     # Call the BankfullPolygon function with command line parameters
-    BankfullPolygon(output_workspace, detrend_dem, detrend_value)
+    BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing)
 
 if __name__ == "__main__":
     # Get input parameters
     output_workspace = arcpy.GetParameterAsText(0)
     detrend_dem      = arcpy.GetParameterAsText(1)
     detrend_value    = arcpy.GetParameterAsText(2)
+    smoothing        = arcpy.GetParameterAsText(3)
     
     main()
+
+
