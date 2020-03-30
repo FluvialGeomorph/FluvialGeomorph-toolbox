@@ -16,7 +16,7 @@ tool_exec <- function(in_params, out_params) {
     #message(as.character(dirname))
     
     # gp tool parameters
-    reinstall        <- in_params[[1]]
+    reinstall <- in_params[[1]]
     
     # Uninstall FluvialGeomorph R packages
     if (reinstall == TRUE) {
