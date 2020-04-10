@@ -17,7 +17,7 @@ detrend_dem (str)     -- Path to the detrended digital elevation model (DEM)
 detrend_value (double)-- Detrended elevation value used to define the 
                          innundated area. All raster values below this value
                          will be extracted to a polygon. 
-smoothing             -- Smoothing factor (1, low smoothing - 5, high smoothing)
+smoothing             -- Smoothing factor (0, no smoothing - 5, high smoothing)
 
 Outputs:
 banks                 -- a new polygon feature class representing the area 
