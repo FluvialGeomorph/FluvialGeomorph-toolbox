@@ -174,6 +174,7 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
 
     # Add elevations to the `cross_section_points` feature class
     arcpy.AddMessage("Adding DEM surface information...")
+    arcpy.AddMessage("DEM: {}".format(dem))
     arcpy.AddSurfaceInformation_3d(in_feature_class = xs_points, 
                                    in_surface = dem, 
                                    out_property = "Z",
