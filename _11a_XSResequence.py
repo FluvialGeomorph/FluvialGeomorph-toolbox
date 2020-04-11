@@ -30,6 +30,8 @@ Outputs:
 xs_fc                 -- Updates the `Seq` field of the input xs_fc
 ____________________________________________________________________________"""
  
+import os
+import sys
 import arcpy
 
 def BankfullPolygon(output_workspace, xs_fc, start_seq):
@@ -70,6 +72,21 @@ def BankfullPolygon(output_workspace, xs_fc, start_seq):
             cursor.updateRow(row)
             xs_num += 1
 
+    # Set symbology -None of this works-
+    # FG_path    = os.path.dirname(sys.argv[0])
+    # layer_path = os.path.join(FG_path, "layers")
+    # layer_file = os.path.join(layer_path, "cross_section.lyr")
+    # 
+    # arcpy.AddMessage("FG path: {}".format(FG_path))
+    # arcpy.AddMessage("layer path: {}".format(layer_path))
+    # arcpy.AddMessage("layer file: {}".format(layer_file))
+    # 
+    # arcpy.MakeFeatureLayer_management(xs_fc, "xs")
+    # mxd = arcpy.mapping.MapDocument("CURRENT")
+    # df = arcpy.mapping.ListDataFrames(mxd)[0]
+    # addLayer = arcpy.mapping.Layer("xs")
+    # arcpy.mapping.AddLayer(df, addLayer, "AUTO_ARRANGE")
+    # arcpy.ApplySymbologyFromLayer_management("xs", layer_file)
 
 def main():
     # Call the BankfullPolygon function with command line parameters
