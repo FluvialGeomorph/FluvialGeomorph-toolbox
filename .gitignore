@@ -1,5 +1,12 @@
-old_scripts
-.lock
+# RStudio project files
 .Rproj.user
-.Rhistory
+
+# R session data
 .RData
+.Rhistory
+
+# Compiled Python modules
+.pyc
+
+# ArcGIS geodatabase lock files
+.lock

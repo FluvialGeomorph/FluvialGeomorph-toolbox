@@ -26,13 +26,13 @@ tool_exec <- function(in_params, out_params) {
     bankline_points    <- in_params[[2]]
     
     # Code for testing in RStudio
-    # library(sp)
-    # library(dplyr)
-    # library(fluvgeo)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # xs_dimensions   <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R2_LytleCk_Rialto.gdb/riffle_floodplain_dims"
-    # bankline_points <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R2_LytleCk_Rialto.gdb//bankline_points"
+    library(sp)
+    library(dplyr)
+    library(fluvgeo)
+    library(arcgisbinding)
+    arc.check_product()
+    xs_dimensions   <- "D:/Workspace/EMRRP_Sediment/CampbellCreek/CampbellCreekTrib.gdb/xs_50ft_dims"
+    bankline_points <- "D:/Workspace/EMRRP_Sediment/CampbellCreek/CampbellCreekTrib.gdb/bankline_points"
 
     # Convert ArcGIS fc to sp format
     xs_dimensions_sp   <- fluvgeo::arc2sp(xs_dimensions)
@@ -50,6 +50,7 @@ tool_exec <- function(in_params, out_params) {
     
     # Convert SpatialLinesDataFrame to a SpatialPointsDataFrame
     xs_dims_pts <- xs2pts(xs_dims_ratios)
+    message("conversion to points complete")
     
     # Write the xs lines with the planform dimensions
     xs_dims_path <- paste0(xs_dimensions, "_planform")

@@ -81,15 +81,15 @@ tool_exec <- function(in_params, out_params) {
     library(fluvgeo)
     library(arcgisbinding)
     arc.check_product()
-    xs_fc              <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain"
-    xs_points_fc       <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/California_Santa_Ana_River/R4b.gdb/riffle_floodplain_points"
-    bankfull_elevation <- 101.5
-    lead_n             <- 1
+    xs_fc              <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50"
+    xs_points_fc       <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50_points"
+    bankfull_elevation <- 105
+    lead_n             <- 4
     use_smoothing      <- TRUE
     loess_span         <- 1
     vert_units         <- "ft"
     discharge_method   <- "model_measure"
-    discharge_value    <- 283
+    discharge_value    <- 6.82
     region             <- ""
     drainage_area      <- 0
     width_method       <- ""
