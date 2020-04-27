@@ -14,9 +14,12 @@ import arcpy
 
 def main():
     arcpy.AddMessage("Feature class added to TOC with standard symbolization")
+    
+    # Return
+    arcpy.SetParameter(1, flowline_points)
 
 if __name__ == "__main__":
     # Get input parameters
-    flowline = arcpy.GetParameterAsText(0)
+    flowline_points = arcpy.GetParameterAsText(0)
     
     main()
