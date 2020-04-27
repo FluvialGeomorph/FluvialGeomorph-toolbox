@@ -148,6 +148,9 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
                                    z_factor = 1.0)
     arcpy.AddMessage("Added geometry fields to flowline points.")
     
+    # Return
+    arcpy.SetParameter(5, "flowline_points")
+    
     # Cleanup
     arcpy.Delete_management(in_data = "flowline_simplify")
     arcpy.Delete_management(in_data = "flowline_simplify_Pnt")

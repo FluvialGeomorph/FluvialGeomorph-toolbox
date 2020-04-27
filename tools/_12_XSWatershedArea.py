@@ -167,9 +167,12 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
             # Update row
             cursor.updateRow(row)
 
+    # Return
+    arcpy.SetParameter(5, cross_section)
+    
     # Cleanup
-    #arcpy.Delete_management(in_data = "xs_flowline_pt")
-    #arcpy.Delete_management(in_data = "watershed_area")
+    arcpy.Delete_management(in_data = "xs_flowline_pt")
+    arcpy.Delete_management(in_data = "watershed_area")
 
 
 def main():

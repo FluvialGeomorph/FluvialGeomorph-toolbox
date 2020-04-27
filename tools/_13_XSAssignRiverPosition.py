@@ -80,6 +80,9 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
                                     field = "km_to_mouth",
                                     expression = "!POINT_M!", 
                                     expression_type = "PYTHON_9.3")
+    
+    # Return
+    arcpy.SetParameter(3, cross_section)
 
     # Cleanup
     arcpy.Delete_management(in_data = "xs_flowline_pt")

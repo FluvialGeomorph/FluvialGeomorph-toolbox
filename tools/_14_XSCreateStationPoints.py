@@ -205,6 +205,9 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
                                 field = "Z", 
                                 new_field_name = "Detrend_DEM_Z")
     
+    # Return
+    arcpy.SetParameter(6, xs_points)
+    
     # Cleanup
     arcpy.Delete_management(in_data = xs_densify)
     arcpy.Delete_management(in_data = xs_densify_route)

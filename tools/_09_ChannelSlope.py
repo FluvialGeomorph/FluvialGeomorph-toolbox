@@ -47,12 +47,14 @@ def ChannelSlope(output_workspace, dem, banks_poly):
                                    output_measurement = "DEGREE", 
                                    z_factor = 0.3048)
     
-    arcpy.CopyRaster_management(
-                      in_raster = channel_slope, 
-                      out_rasterdataset = os.path.join(output_workspace, 
-                                          "channel_slope"))
+    channel_slope = os.path.join(output_workspace, "channel_slope")
+    arcpy.CopyRaster_management(in_raster = channel_slope, 
+                                out_rasterdataset = channel_slope)
     
     arcpy.AddMessage("Created slope raster")
+    
+    # Return
+    arcpy.SetParameter(3, channel_slope)
 
 
 def main():

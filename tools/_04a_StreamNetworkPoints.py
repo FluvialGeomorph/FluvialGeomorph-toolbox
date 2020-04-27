@@ -156,6 +156,9 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                                 new_field_alias = "Z")
     arcpy.AddMessage("Added stream network elevations")
     
+    # Return
+    arcpy.SetParameter(4, "stream_network_points")
+    
     # Cleanup
     arcpy.Delete_management(in_data = "stream_network_route")    
 

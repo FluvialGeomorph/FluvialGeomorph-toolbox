@@ -329,6 +329,9 @@ def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength, TransecL
                                     expression = "'" + ReachName + "'", 
                                     expression_type = "PYTHON_9.3")                          
     
+    # Return
+    arcpy.SetParameter(8, OutputTransect)
+    
     # Cleanup
     arcpy.Delete_management(General_GDB)
 

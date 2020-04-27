@@ -69,14 +69,17 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing):
     arcpy.AddMessage("Bank boundaries cleaned")
     
     # Convert the banks raster to a polygon
-    out_feature_class = "banks_raw_" + str(detrend_value).replace(".", "_")
+    banks_raw = "banks_raw_" + str(detrend_value).replace(".", "_")
     arcpy.RasterToPolygon_conversion(
               in_raster = banks_clean, 
-              out_polygon_features = out_feature_class,
+              out_polygon_features = banks_raw,
               simplify = "SIMPLIFY",
               raster_field = "VALUE")
     arcpy.AddMessage("Created water surface area feature class: " + 
-                     out_feature_class)
+                     banks_raw)
+    
+    # Return
+    arcpy.SetParameter(4, banks_raw)
 
 
 def main():

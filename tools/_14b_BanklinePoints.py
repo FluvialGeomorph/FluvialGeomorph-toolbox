@@ -199,6 +199,9 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     arcpy.AlterField_management("bankline_points",
                                 "POINT_M_1", 'valley_POINT_M', 'valley_POINT_M')
 
+    # Return
+    arcpy.SetParameter(6, "bankline_points")
+    
     # Cleanup
     arcpy.Delete_management(banklines_points)
     arcpy.Delete_management("bankline_loop_points")

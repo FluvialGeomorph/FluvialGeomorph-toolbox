@@ -101,6 +101,9 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
               os.path.join(output_workspace, "detrend"))
     arcpy.AddMessage("Calculated raster statistics and pyramids.")
     
+    # Return
+    arcpy.SetParameter(5, "detrend")
+    
     # Cleanup
     arcpy.Delete_management(in_data = flowline_buffer)
     # arcpy.Delete_management(in_data = trend)

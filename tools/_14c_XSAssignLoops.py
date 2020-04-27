@@ -60,6 +60,9 @@ def XSAssignLoops(output_workspace, cross_section, bankline_points):
                                join_field = "Seq",
                                fields = ["loop", "bend"])
     
+    # Return
+    arcpy.SetParameters(3, cross_section)
+    
     # Cleanup
     arcpy.Delete_management("xs_fc")
 

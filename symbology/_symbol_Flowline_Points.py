@@ -4,7 +4,7 @@ Description:          Symbolizes a flowline_points feature class.
 Date:                 04/24/2020
 
 Parameters:
-flowline        -- A flowline_points feature class. 
+flowline_points      -- A flowline_points feature class. 
 
 Outputs:
 Adds input feature class to TOC and applies standard symbolization. 

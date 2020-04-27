@@ -59,6 +59,9 @@ def CleanFlowline(output_workspace, stream_network, smooth_tolerance):
     
     arcpy.AddMessage("Stream Network Smoothed")
     
+    # Return
+    arcpy.SetParameter(3, flowline)
+    
     # Cleanup
     arcpy.Delete_management(in_data = stream_network_dissolve)
 

@@ -95,6 +95,9 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
                                   field_name = "ReachName", 
                                   field_type = "TEXT")
     
+    # Return
+    arcpy.SetParameter(4, "stream_network")
+    
     # Cleanup
     arcpy.Delete_management(in_data = contrib_area_nocompression)
     arcpy.Delete_management(in_data = contrib_area_tif)

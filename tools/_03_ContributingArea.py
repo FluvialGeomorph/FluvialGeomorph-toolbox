@@ -104,6 +104,9 @@ def ContributingArea(output_workspace, dem, processes):
                                 out_rasterdataset = contributing_area)
     arcpy.AddMessage("Contributing Area Calculated")
     
+    # Return
+    arcpy.SetParameter(3, "contributing_area")
+    
     # Cleanup
     arcpy.Delete_management(in_data = dem_nocompression)
     arcpy.Delete_management(in_data = demfile)

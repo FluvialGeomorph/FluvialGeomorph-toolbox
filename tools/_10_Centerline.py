@@ -73,6 +73,9 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
     
     arcpy.AddMessage("Created centerline")
     
+    # Return
+    arcpy.SetParameter(4, "centerline")
+    
     # Cleanup
     arcpy.Delete_management(in_data = "banks")
     arcpy.Delete_management(in_data = "centerline_raw")
