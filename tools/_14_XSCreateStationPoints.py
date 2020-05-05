@@ -68,8 +68,9 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
                      "{}".format(arcpy.Describe(cross_section).baseName))
     arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
     arcpy.AddMessage("DEM vertical units: {}".format(dem_units))
-    arcpy.AddMessage("Detrended DEM: "
-                     "{}".format(arcpy.Describe(detrend_dem).baseName))
+    if detrend_dem is True:
+      arcpy.AddMessage("Detrended DEM: "
+                       "{}".format(arcpy.Describe(detrend_dem).baseName))
     arcpy.AddMessage("Station distance: {0}".format(str(station_distance)))
     
     # Set cross_section name
@@ -194,16 +195,17 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
                                     expression = "'{}'".format(dem_units), 
                                     expression_type = "PYTHON_9.3")
                                     
-    # Add detrended elevations to the `cross_section_points` feature class
-    arcpy.AddSurfaceInformation_3d(in_feature_class = xs_points, 
-                                   in_surface = detrend_dem, 
-                                   out_property = "Z",
-                                   z_factor = 1.0)
-
-    # Change `Z` field name to `Detrend_DEM_Z`
-    arcpy.AlterField_management(in_table = xs_points, 
-                                field = "Z", 
-                                new_field_name = "Detrend_DEM_Z")
+    if detrend_dem is True:
+        # Add detrended elevations to the `cross_section_points` feature class
+        arcpy.AddSurfaceInformation_3d(in_feature_class = xs_points, 
+                                       in_surface = detrend_dem, 
+                                       out_property = "Z",
+                                       z_factor = 1.0)
+    
+        # Change `Z` field name to `Detrend_DEM_Z`
+        arcpy.AlterField_management(in_table = xs_points, 
+                                    field = "Z", 
+                                    new_field_name = "Detrend_DEM_Z")
     
     # Return
     arcpy.SetParameter(6, xs_points)
