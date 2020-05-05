@@ -108,7 +108,7 @@ def ContributingArea(output_workspace, dem, processes):
     # Copy flow direction raster to output_workspace
     flow_direction = os.path.join(output_workspace, "flow_direction")
     arcpy.env.compression = "LZ77"
-    arcpy.CopyRaster_management(in_raster = felfile, 
+    arcpy.CopyRaster_management(in_raster = angfile, 
                                 out_rasterdataset = flow_direction)
     arcpy.AddMessage("Flow Direction Calculated")
     
