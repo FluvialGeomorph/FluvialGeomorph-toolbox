@@ -15,13 +15,13 @@ The station distance parameter is specified in the linear units of the
 flowline feature class.
 
 Parameters:
-output_workspace      -- Path to the output workspace
-loop_points           -- Path to the loop_points feature class
-banklines             -- Path to the banklines feature class
-valleyline            -- Path to the valleyline feature class
-dem                   -- Path to the digital elevation model (DEM)
+output_workspace      -- Path to the output workspace.
+loop_points           -- Path to the loop_points feature class.
+banklines             -- Path to the banklines feature class.
+valleyline            -- Path to the valleyline feature class.
+dem                   -- Path to the digital elevation model (DEM).
 station_distance      -- Distance between output bankline station points (in 
-                         the linear units of the banklines feature class)
+                         the linear units of the banklines feature class).
 
 Outputs:
 bankline_points       -- a new feature class of vertices along each bankline

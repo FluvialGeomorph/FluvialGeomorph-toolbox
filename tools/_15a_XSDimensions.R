@@ -42,7 +42,7 @@
 #'                          one of: <list goes here when implemented>
 #'
 #' @return A new cross section feature class with the hydraulic geometry 
-#'      dimensions added to the attribute table
+#'      dimensions is added to the attribute table.
 #'      
 #' #TODO Create an fluvgeo function to perform this operation
 #' 
@@ -78,23 +78,23 @@ tool_exec <- function(in_params, out_params) {
     message(width_method)
     
     # Code for testing in RStudio
-    # library(sp)
-    # library(dplyr)
-    # library(fluvgeo)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # xs_fc              <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50"
-    # xs_points_fc       <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50_points"
-    # bankfull_elevation <- 105
-    # lead_n             <- 4
-    # use_smoothing      <- TRUE
-    # loess_span         <- 1
-    # vert_units         <- "ft"
-    # discharge_method   <- "model_measure"
-    # discharge_value    <- 6.82
-    # region             <- ""
-    # drainage_area      <- 0
-    # width_method       <- ""
+    library(sp)
+    library(dplyr)
+    library(fluvgeo)
+    library(arcgisbinding)
+    arc.check_product()
+    xs_fc              <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50"
+    xs_points_fc       <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50_points"
+    bankfull_elevation <- 105
+    lead_n             <- 4
+    use_smoothing      <- TRUE
+    loess_span         <- 1
+    vert_units         <- "ft"
+    discharge_method   <- "model_measure"
+    discharge_value    <- 6.82
+    region             <- ""
+    drainage_area      <- 0
+    width_method       <- ""
     
     # Convert ArcGIS fc to sp format
     xs        <- fluvgeo::arc2sp(xs_fc)

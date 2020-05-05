@@ -1,7 +1,7 @@
 """____________________________________________________________________________
 Script Name:          _03_ContributingArea.py
 Description:          Calculates the contributing area from an input DEM. 
-Date:                 11/22/2017
+Date:                 05/5/2020
 
 Usage:
 This tool requires TauDEM (http://hydrology.usu.edu/taudem/taudem5/) to be 
@@ -17,6 +17,7 @@ processes (long)      -- The number of stripes that the domain will be divided
 Outputs:
 contrib_area          -- a TauDEM contributing area raster. Units are the 
                          linear units of the input DEM.
+flow_direction        -- A TauDEM flow direction raster. 
 ____________________________________________________________________________"""
  
 import os

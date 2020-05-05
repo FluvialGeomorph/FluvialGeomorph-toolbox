@@ -2,7 +2,7 @@
 Script Name:          _11_XSLayout.py
 Description:          Creates cross sections at regular intervals along a 
                       stream centerline. 
-Date:                 4/19/2018
+Date:                 5/5/2020
 
 Usage:
 Creates cross sections of a specified length at regular intervals along a 
@@ -17,15 +17,15 @@ Mateus Ferreira - http://gis4geomorphology.com/stream-transects-partial/
 
 
 Parameters:
-workspace_folder (str)-- Path to the output workspace folder
-centerline (str)      -- Path to the centerline feature class.
+workspace_folder (str)-- Path to the output workspace folder. Not a geodatabase. 
+centerline (str)      -- Path to the flowline feature class.
 split_type (str)      -- Method for placing cross sections along the 
-                         centerline. "Split at approximate distance" places
+                         flowline. "Split at approximate distance" places
                          cross sections along the centerline at the value of 
                          split_distance. "Split at vertices" places cross 
                          sections at vertices. 
-distance_split        -- The distance along the centerline that cross sections
-                         will be placed. Uses units of the input centerline.
+distance_split        -- The distance along the flowline that cross sections
+                         will be placed. Uses units of the input flowline.
 transect_length       -- The length of the cross section.
 transect_length_unit  -- The unit of the transect_length.
 output_transect       -- Path to the output cross sections.

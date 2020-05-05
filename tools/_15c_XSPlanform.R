@@ -10,7 +10,7 @@
 #'                            points feature class
 #'
 #' @return A new cross section feature class with the planform dimensions added 
-#' to the attribute table
+#' to the attribute table.
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions

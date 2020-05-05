@@ -22,9 +22,9 @@ This tool assumes:
 * The fields `POINT_M` and `Seq` exist in the input cross section feature class.
 
 Parameters:
-output_workspace (str)-- Path to the output workspace
-xs_fc (str)           -- Path to a cross section feature class
-start_seq (int)       -- The starting value of the `Seq` field
+output_workspace (str)-- Path to the output workspace.
+xs_fc (str)           -- Path to a cross section feature class.
+start_seq (int)       -- The starting value of the `Seq` field.
 
 Outputs:
 xs_fc                 -- Updates the `Seq` field of the input xs_fc

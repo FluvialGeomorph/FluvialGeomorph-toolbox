@@ -6,7 +6,7 @@ Date:                 11/26/2017
 Usage:
 
 Parameters:
-output_workspace (str)-- Path to the output workspace
+output_workspace (str)-- Path to the output workspace.
 dem (str)             -- Path to the digital elevation model (DEM).
 banks_poly (str)      -- Path to a banks polygon representing the channel area 
                          for which slope will be calculated. 

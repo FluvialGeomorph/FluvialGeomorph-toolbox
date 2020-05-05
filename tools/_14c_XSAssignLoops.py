@@ -11,9 +11,9 @@ This tool assumes that there is a field in the bankline feature class
 called `ReachName` that uniquely identifies each stream reach. 
 
 Parameters:
-output_workspace      -- Path to the output workspace
-cross_section         -- Path to the cross section feature class
-bankline_points       -- Path to the bankline_points feature class                         
+output_workspace      -- Path to the output workspace.
+cross_section         -- Path to the cross section feature class.
+bankline_points       -- Path to the bankline_points feature class.
 
 Outputs:
 Updates the cross_section feature class with new fields for loop and bend. 

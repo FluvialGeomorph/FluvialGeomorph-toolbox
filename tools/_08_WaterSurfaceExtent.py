@@ -12,9 +12,9 @@ This tool produces a polygon representing the area innundated by the
 detrended elevation value specified. 
 
 Parameters:
-output_workspace (str)-- Path to the output workspace
-detrend_dem (str)     -- Path to the detrended digital elevation model (DEM)
-detrend_value (double)-- Detrended elevation value used to define the 
+output_workspace      -- Path to the output workspace.
+detrend_dem           -- Path to the detrended digital elevation model (DEM).
+detrend_value         -- Detrended elevation value used to define the 
                          innundated area. All raster values below this value
                          will be extracted to a polygon. 
 smoothing             -- Smoothing factor (0, no smoothing - 5, high smoothing)

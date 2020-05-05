@@ -8,11 +8,11 @@ Creates a new feature class representing the centerline of the input bankfull
 polygon.  
 
 Parameters:
-output_workspace (str)-- Path to the output workspace
-dem (str)             -- Path to the digital elevation model (DEM).
-banks_poly (str)      -- Path to a banks polygon representing the channel area 
+output_workspace      -- Path to the output workspace.
+dem                   -- Path to the digital elevation model (DEM).
+banks_poly            -- Path to a banks polygon representing the channel area 
                          for which slope will be calculated. 
-smooth_tolerance (int)-- The PAEK smoothing tolerance that controls the 
+smooth_tolerance      -- The PAEK smoothing tolerance that controls the 
                          calculating of new vertices. Acceptable smoothing 
                          occurs with values between 2 - 5.
 
