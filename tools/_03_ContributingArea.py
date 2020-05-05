@@ -104,13 +104,20 @@ def ContributingArea(output_workspace, dem, processes):
                                 out_rasterdataset = contributing_area)
     arcpy.AddMessage("Contributing Area Calculated")
     
+    # Copy flow direction raster to output_workspace
+    contributing_area = os.path.join(output_workspace, "flow_direction")
+    arcpy.env.compression = "LZ77"
+    arcpy.CopyRaster_management(in_raster = felfile, 
+                                out_rasterdataset = contributing_area)
+    arcpy.AddMessage("Flow Direction Calculated")
+    
     # Return
     arcpy.SetParameter(3, "contributing_area")
     
     # Cleanup
     arcpy.Delete_management(in_data = dem_nocompression)
     arcpy.Delete_management(in_data = demfile)
-    arcpy.Delete_management(in_data = felfile)
+    # arcpy.Delete_management(in_data = felfile)
     arcpy.Delete_management(in_data = angfile)
     arcpy.Delete_management(in_data = slpfile)
     arcpy.Delete_management(in_data = scafile)
