@@ -2,7 +2,7 @@
 Script Name:          _02_BurnCutlines.py
 Description:          Burn cutlines into DEM to create a new hydro 
                       modified DEM. 
-Date:                 11/22/2017
+Date:                 05/08/2020
 
 Usage:
 This script is based on the Agricultural Conservation Planning Framework (ACPF)
@@ -14,15 +14,21 @@ Parameters:
 output_workspace (str)-- Path to the output workspace
 cutlines (str)        -- Path to the cutlines feature class
 dem (str)             -- Path to the digital elevation model (DEM)
+widen_cells (int)     -- Number of cells to widen the cutline by
 
 Outputs:
 dem_hydro             -- a hydro modified dem
+
+TODO:
+Widen the cutlines to ensure that `flowline_points` full within the hydro 
+modified cutline.
 ____________________________________________________________________________"""
 
 import os
 import arcpy
+#from arcpy.sa import *
 
-def BurnCutlines(output_workspace, cutlines, dem):
+def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
@@ -40,10 +46,22 @@ def BurnCutlines(output_workspace, cutlines, dem):
     arcpy.AddMessage("Cutlines: "
                      "{}".format(arcpy.Describe(cutlines).baseName))
     arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
+    arcpy.AddMessage("widen_cells: {}".format(str(widen_cells)))
     
     # Determine the resolution of dem
     cellsize = float(arcpy.GetRasterProperties_management(
                                          dem, "CELLSIZEX").getOutput(0))
+    
+    # Create a list of cutline OIDs
+    cutlines_desc = arcpy.Describe(cutlines)
+    cutlines_oid = cutlines_desc.OIDFieldName
+    
+    oidList = [] 
+    with arcpy.da.SearchCursor(cutlines, [cutlines_oid]) as cursor: 
+        for row in cursor: 
+            id = row[0] 
+            oidList.append(id)
+    arcpy.AddMessage("Cutline OIDs: {}".format(oidList))
     
     # Convert cutlines to raster
     cutline_ras = os.path.join(output_workspace, "cutline_ras")
@@ -53,8 +71,12 @@ def BurnCutlines(output_workspace, cutlines, dem):
                        value_field = OID, 
                        out_rasterdataset = cutline_ras, 
                        cellsize = cellsize)
-                       
-    # Perform zonal statistics on dem with cutline_ras
+    
+    # Increase width of each cutline
+    if widen_cells > 0:
+      cutline_ras = arcpy.sa.Expand(cutline_ras, int(widen_cells), oidList)
+    
+    # Determine the minimum elevation along each cutline
     cutline_min = arcpy.sa.ZonalStatistics(in_zone_data = cutline_ras, 
                                            zone_field = "VALUE", 
                                            in_value_raster = dem, 
@@ -84,17 +106,18 @@ def BurnCutlines(output_workspace, cutlines, dem):
     arcpy.SetParameter(3, "dem_hydro")
     
     # Cleanup
-    arcpy.Delete_management(in_data = cutline_ras)
+    #arcpy.Delete_management(in_data = cutline_ras)
 
 
 def main():
     # Call the BurnCutlines function with command line parameters
-    BurnCutlines(output_workspace, cutlines, dem)
+    BurnCutlines(output_workspace, cutlines, dem, widen_cells)
 
 if __name__ == "__main__":
     # Get input parameters
     output_workspace = arcpy.GetParameterAsText(0)
     cutlines         = arcpy.GetParameterAsText(1)
     dem              = arcpy.GetParameterAsText(2)
+    widen_cells      = arcpy.GetParameterAsText(3)
     
     main()
