@@ -18,10 +18,6 @@ widen_cells (int)     -- Number of cells to widen the cutline by
 
 Outputs:
 dem_hydro             -- a hydro modified dem
-
-TODO:
-Widen the cutlines to ensure that `flowline_points` full within the hydro 
-modified cutline.
 ____________________________________________________________________________"""
 
 import os

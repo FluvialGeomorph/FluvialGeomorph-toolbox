@@ -3,7 +3,7 @@ Script Name:          _06_StreamProfilePoints.py
 Description:          Converts a stream flowline to a route using the 
                       distance to mouth parameter and creates a feature class 
                       of stream profile points. 
-Date:                 01/14/2020
+Date:                 05/08/2020
 
 Usage:
 Creates a new feature class of stream longitudinal profile points with 3D 
@@ -23,11 +23,21 @@ flowline feature class.
 Parameters:
 output_workspace      -- Path to the output workspace
 flowline              -- Path to the flowline feature class
-km_to_mouth           -- The distance to the mouth of the river from the 
-                         reach's downstream end (in kilometers).
 dem                   -- Path to the digital elevation model (DEM)
+km_to_mouth           -- Kilometers to the mouth of the study area outlet
 station_distance      -- Distance between output flowline station points (in 
                          the linear units of the flowline feature class)
+calibration_points    -- A point feature class used to calibrate the output 
+                         flowline points. 
+point_id_field        -- The field that identifies the route on which each 
+                         calibration point is located.The values in this field 
+                         match those in the route identifier field. This field 
+                         can be numeric or character. If using a flowline_points
+                         feature class, the id_field is "ReachName".
+measure_field         -- The field containing the measure value for each 
+                         calibration point. This field must be numeric. If using
+                         a flowline_points feature class, the measure_field is 
+                         "POINT_M".
 
 Outputs:
 flowline_points        -- a new feature class of densified vertices along the 
@@ -38,8 +48,9 @@ from datetime import datetime
 import arcpy
 
 # Define the StreamProfilePoints function
-def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem, 
-                        station_distance):
+def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth, 
+                        station_distance, 
+                        calibration_points, point_id_field, measure_field):
     # Check out the extension licenses 
     arcpy.CheckOutExtension("3D")
 
@@ -53,6 +64,9 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
     arcpy.AddMessage("km_to_mouth: {}".format(str(km_to_mouth)))
     arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
     arcpy.AddMessage("Station distance: {}".format(str(station_distance)))
+    arcpy.AddMessage("Calibration points: {}".format(str(calibration_points)))
+    arcpy.AddMessage("point_id_field: {}".format(str(point_id_field)))
+    arcpy.AddMessage("measure_field: {}".format(str(measure_field)))
     
     # Add a field to hold the linear referencing route from measure
     # Check if the field already exists and if not add it
@@ -76,10 +90,12 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
                                   field_type = "DOUBLE")
 
     # Set the value of the flowline `to_measure` to the length of the flowline
-    # in units meters 
+    # in units kilometers plus the value of km_to_mouth 
+    expression = "!shape.length@kilometers! + {}".format(str(km_to_mouth))
+    
     arcpy.CalculateField_management(in_table = flowline, 
                                     field = "to_measure", 
-                                    expression = "!shape.length@kilometers!", 
+                                    expression = expression, 
                                     expression_type = "PYTHON_9.3")
 
     # Simplify the flowline to speed interpolation
@@ -106,7 +122,18 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
                           to_measure_field = "to_measure")
     arcpy.AddMessage("Converted densfied flowline to a route: "
                      "flowline_densify_route")
-                          
+    
+    # Calibrate route
+    if calibration_points:
+        arcpy.CalibrateRoutes_lr(in_route_features = "flowline_densify_route", 
+                                 route_id_field = "ReachName", 
+                                 in_point_features = calibration_points,
+                                 point_id_field = point_id_field,
+                                 measure_field = measure_field,
+                                 out_feature_class = "flowline_route_calibrate")
+        arcpy.CopyFeatures_management(in_features = "flowline_route_calibrate", 
+                                  out_feature_class = "flowline_densify_route")
+    
     # Convert flowline feature vertices to points
     arcpy.FeatureVerticesToPoints_management(
                      in_features = "flowline_densify_route", 
@@ -160,16 +187,20 @@ def StreamProfilePoints(output_workspace, flowline, km_to_mouth, dem,
     
 def main():
     # Call the StreamProfilePoints function with command line parameters
-    StreamProfilePoints(output_workspace, flowline, km_to_mouth, 
-                        dem, station_distance)
+    StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth, 
+                        station_distance, 
+                        calibration_points, point_id_field, measure_field)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
-    flowline         = arcpy.GetParameterAsText(1)
-    km_to_mouth      = arcpy.GetParameterAsText(2)
-    dem              = arcpy.GetParameterAsText(3)
-    station_distance = arcpy.GetParameterAsText(4)
+    output_workspace   = arcpy.GetParameterAsText(0)
+    flowline           = arcpy.GetParameterAsText(1)
+    dem                = arcpy.GetParameterAsText(2)
+    km_to_mouth        = arcpy.GetParameterAsText(3)
+    station_distance   = arcpy.GetParameterAsText(4)
+    calibration_points = arcpy.GetParameterAsText(5)
+    point_id_field     = arcpy.GetParameterAsText(6)
+    measure_field      = arcpy.GetParameterAsText(7)
     
     main()
 
