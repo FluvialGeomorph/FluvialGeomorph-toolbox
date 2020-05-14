@@ -1,7 +1,7 @@
 """____________________________________________________________________________
 Script Name:          _03_ContributingArea.py
 Description:          Calculates the contributing area from an input DEM. 
-Date:                 05/5/2020
+Date:                 05/10/2020
 
 Usage:
 This tool requires TauDEM (http://hydrology.usu.edu/taudem/taudem5/) to be 
@@ -10,14 +10,16 @@ installed before running this tool.
 Parameters:
 output_workspace (str)-- Path to the output workspace. 
 dem (str)             -- Path to the digital elevation model (DEM). 
-processes (long)      -- The number of stripes that the domain will be divided
+processes (long)      -- The number of stripes that the DEM will be divided
                          into and the number of MPI parallel processes that 
-                         will be spawned to evaluate each of the stripes.
+                         will be spawned to evaluate each of the stripes. It is 
+                         recommended to use no more than the number of cores on 
+                         your computer. 
 
 Outputs:
 contrib_area          -- a TauDEM contributing area raster. Units are the 
-                         linear units of the input DEM.
-flow_direction        -- A TauDEM flow direction raster. 
+                         linear units of the input DEM. ESRI refers to this as 
+                         a flow accumulation raster. 
 ____________________________________________________________________________"""
  
 import os
@@ -104,13 +106,6 @@ def ContributingArea(output_workspace, dem, processes):
     arcpy.CopyRaster_management(in_raster = scafile, 
                                 out_rasterdataset = contributing_area)
     arcpy.AddMessage("Contributing Area Calculated")
-    
-    # Copy flow direction raster to output_workspace
-    flow_direction = os.path.join(output_workspace, "flow_direction")
-    arcpy.env.compression = "LZ77"
-    arcpy.CopyRaster_management(in_raster = angfile, 
-                                out_rasterdataset = flow_direction)
-    arcpy.AddMessage("Flow Direction Calculated")
     
     # Return
     arcpy.SetParameter(3, "contributing_area")
