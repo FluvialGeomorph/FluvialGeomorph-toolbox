@@ -80,7 +80,7 @@ def splitline(inFC, FCName, alongDist):
 
               totalDist = 0
 
-              pnt = part.next()
+              pnt = next(part)
               pntcount = 0
 
               prevpoint = None
@@ -94,7 +94,7 @@ def splitline(inFC, FCName, alongDist):
                         thisDist = distPoint(prevpoint,pnt)
                         maxAdditionalDist = splitDist - totalDist
 
-                        print thisDist, totalDist, maxAdditionalDist
+                        print((thisDist, totalDist, maxAdditionalDist))
 
                         if (totalDist + thisDist) > splitDist:
                               while(totalDist + thisDist) > splitDist:
@@ -125,15 +125,15 @@ def splitline(inFC, FCName, alongDist):
                     prevpoint = pnt                
                     pntcount += 1
 
-                    pnt = part.next()
+                    pnt = next(part)
 
                     # If pnt is null, either the part is finished or there is an
                     #   interior ring
                     #
                     if not pnt:
-                        pnt = part.next()
+                        pnt = next(part)
                         if pnt:
-                              print "Interior Ring:"
+                              print("Interior Ring:")
               partnum += 1
 
         if (lineArray.count > 1):
