@@ -87,17 +87,14 @@ def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
                              cutline_min)
     
     # Save dem_hydro to the output_workspace
-    arcpy.CopyRaster_management(
-                      in_raster = dem_hydro, 
-                      out_rasterdataset = os.path.join(output_workspace, 
-                                                       "dem_hydro"))
-    arcpy.AddMessage("Created hydro modified DEM.")
+    dem_hydro_path = os.path.join(output_workspace, "dem_hydro")
+    arcpy.CopyRaster_management(in_raster = dem_hydro, 
+                                out_rasterdataset = dem_hydro_path)
+    arcpy.AddMessage("Saved hydro modified DEM.")
     
     # Calculate raster statistics and build pyramids
-    arcpy.CalculateStatistics_management(os.path.join(output_workspace, 
-                                                      "dem_hydro"))
-    arcpy.BuildPyramids_management(os.path.join(output_workspace, 
-                                                      "dem_hydro"))
+    arcpy.CalculateStatistics_management(dem_hydro_path)
+    arcpy.BuildPyramids_management(dem_hydro_path)
     arcpy.AddMessage("Calculated raster statistics and pyramids.")
     
     # Return
