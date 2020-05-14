@@ -22,7 +22,6 @@ ____________________________________________________________________________"""
 
 import os
 import arcpy
-#from arcpy.sa import *
 
 def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
     # Check out the extension license 
