@@ -10,10 +10,14 @@
 * Added the `XS Compare Plot` to allow users to create a cross section plot for multiple survey time periods. 
 
 * Updated the `Burn Cutlines` tool to allow for widening the cut made by each cutline. 
+* Updated the `Channel Slope` tool to expose the `z_factor` parameter to handle z-units different from z, y-units. 
+
 * Removed the `Point Landcover` tool. This tool was replaced by the functionality in the `Point Watershed` tool. 
 
 ## Bug Fixes
 * Fixed bug in `Burn Cutlines` when `widen_cells` = 0. 
+
+* Fixed bug in `Channel Slope`. 
 
 * Updated the help text for all tools. 
 
