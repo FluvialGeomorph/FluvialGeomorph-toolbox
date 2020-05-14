@@ -13,5 +13,7 @@
 * Removed the `Point Landcover` tool. This tool was replaced by the functionality in the `Point Watershed` tool. 
 
 ## Bug Fixes
+* Fixed bug in `Burn Cutlines` when `widen_cells` = 0. 
+
 * Updated the help text for all tools. 
 
