@@ -2,16 +2,22 @@
 Script Name:          _04_StreamNetwork.py
 Description:          Creates a synthetic flow network from a contributing 
                       area raster and a stream initiation threshold.  
-Date:                 11/22/2017
+Date:                 05/11/2020
 
 Usage:
 This tool requires TauDEM (http://hydrology.usu.edu/taudem/taudem5/) to be 
 installed before running this tool. 
 
+For best results in deriving a synthetic stream network, this tool uses the 
+D-Infinity method for calculating flow accumulation. 
+
+The contributing area used in the tool must be calculated using the D-infinity 
+method used in the Contributing Area tool. 
+
 Parameters:
 output_workspace      -- Path to the output workspace
-contrib_area          -- Path to the contributing area raster created in the
-                         previous step
+contrib_area          -- Path to the D-Infinity contributing area raster 
+                         created by the Contributing Area tool. 
 threshold (long)      -- Flow accumulation threshold to initiate a stream 
                          expressed in the units of the source DEM used to 
                          accumulate the flow.
