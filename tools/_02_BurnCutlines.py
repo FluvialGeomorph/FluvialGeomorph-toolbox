@@ -69,16 +69,19 @@ def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
                        cellsize = cellsize)
     
     # Increase width of each cutline
-    if widen_cells > 0:
+    if int(widen_cells) > 0:
+      arcpy.AddMessage("Expanding cutlines...")
       cutline_ras = arcpy.sa.Expand(cutline_ras, int(widen_cells), oidList)
     
     # Determine the minimum elevation along each cutline
+    arcpy.AddMessage("Calculating minumum elevation for each cutline...")
     cutline_min = arcpy.sa.ZonalStatistics(in_zone_data = cutline_ras, 
                                            zone_field = "VALUE", 
                                            in_value_raster = dem, 
                                            statistics_type = "MINIMUM")
                                     
     # Con operation to burn cutline_ext into DEM
+    arcpy.AddMessage("Burning cutlines into DEM...")
     dem_hydro = arcpy.sa.Con(arcpy.sa.IsNull(cutline_min), 
                              dem, 
                              cutline_min)
@@ -88,7 +91,6 @@ def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
                       in_raster = dem_hydro, 
                       out_rasterdataset = os.path.join(output_workspace, 
                                                        "dem_hydro"))
-    #dem_hydro.save(os.path.join(output_workspace, "dem_hydro"))
     arcpy.AddMessage("Created hydro modified DEM.")
     
     # Calculate raster statistics and build pyramids
