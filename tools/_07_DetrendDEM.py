@@ -49,7 +49,6 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
     arcpy.AddMessage("Buffer Distance: {}".format(str(buffer_distance)))
     
     # Buffer the flowline_points
-    #arcpy.AddMessage("Buffering flowline start: {}".format(datetime.now().strftime("%H:%M:%S")))
     flowline_buffer = os.path.join(output_workspace, "flowline_buffer")
     arcpy.Buffer_analysis(in_features = flowline, 
                           out_feature_class = flowline_buffer, 
@@ -57,12 +56,12 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
                           line_side = "FULL", 
                           line_end_type = "ROUND", 
                           dissolve_option = "ALL")
-    arcpy.AddMessage("Buffering flowline: complete")
+    arcpy.AddMessage("Buffering flowline complete.")
 
     # Set the environment mask to the flowline_buffer to clip all rasters
     arcpy.AddMessage("Setting mask to flowline_buffer...")
     arcpy.env.mask = flowline_buffer
-    arcpy.AddMessage("Setting mask to flowline_buffer: complete")
+    arcpy.AddMessage("Setting mask to flowline_buffer complete.")
     
     # Create the trend raster
     arcpy.AddMessage("Creating trend raster...")
@@ -73,41 +72,37 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
                  power = 2, 
                  search_radius = "VARIABLE")
     
-    arcpy.AddMessage("Created trend raster")
+    arcpy.AddMessage("Created trend raster.")
     
     # Smooth the trend raster
     trend_smooth = arcpy.sa.FocalStatistics(
                              in_raster = trend, 
                              neighborhood = arcpy.sa.NbrCircle(50, "CELL"), 
                              statistics_type = "Mean")
-    arcpy.CopyRaster_management(
-                      in_raster = trend_smooth, 
-                      out_rasterdataset = os.path.join(output_workspace, 
-                                                       "trend_smooth"))
-    arcpy.AddMessage("Smoothed trend raster")
+    trend_smooth_path = os.path.join(output_workspace, "trend_smooth")
+    arcpy.CopyRaster_management(in_raster = trend_smooth, 
+                                out_rasterdataset = trend_smooth_path)
+    arcpy.AddMessage("Smoothed trend raster.")
     
     # Create the detrended raster
-    detrend = (Raster(dem) - Raster("trend_smooth")) + float(100)
-    arcpy.CopyRaster_management(
-                      in_raster = detrend, 
-                      out_rasterdataset = os.path.join(output_workspace, 
-                                                       "detrend"))
-    arcpy.AddMessage("Created detrended raster")
+    detrend = (Raster(dem) - Raster(trend_smooth_path)) + float(100)
+    detrend_path = os.path.join(output_workspace, "detrend")
+    arcpy.CopyRaster_management(in_raster = detrend, 
+                                out_rasterdataset = detrend_path)
+    arcpy.AddMessage("Created detrended raster.")
     
     # Calculate raster statistics and build pyramids
-    arcpy.CalculateStatistics_management(
-              os.path.join(output_workspace, "detrend"))
-    arcpy.BuildPyramids_management(
-              os.path.join(output_workspace, "detrend"))
+    arcpy.CalculateStatistics_management(detrend_path)
+    arcpy.BuildPyramids_management(detrend_path)
     arcpy.AddMessage("Calculated raster statistics and pyramids.")
     
     # Return
-    arcpy.SetParameter(5, "detrend")
+    arcpy.SetParameter(5, detrend_path)
     
     # Cleanup
     arcpy.Delete_management(in_data = flowline_buffer)
-    # arcpy.Delete_management(in_data = trend)
-    arcpy.Delete_management(in_data = "trend_smooth")
+    arcpy.Delete_management(in_data = trend)
+    arcpy.Delete_management(in_data = trend_smooth_path)
         
 
 def main():
