@@ -75,29 +75,32 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                                     expression_type = "PYTHON_9.3")
     
     # Convert stream_network fc into a route
+    stream_network_route = os.path.join(output_workspace, "stream_network_route")
     arcpy.CreateRoutes_lr(in_line_features = stream_network, 
                           route_id_field = "ReachName", 
-                          out_feature_class = "stream_network_route", 
+                          out_feature_class = stream_network_route, 
                           measure_source = "TWO_FIELDS", 
                           from_measure_field = "from_measure", 
                           to_measure_field = "to_measure")
     arcpy.AddMessage("Stream network route created")
     
     # Convert stream network feature vertices to points
+    stream_network_points - os.path.join(output_workspace, 
+                                         "stream_network_points")
     arcpy.FeatureVerticesToPoints_management(
-                     in_features = "stream_network_route", 
-                     out_feature_class = "stream_network_points")
+                     in_features = stream_network_route, 
+                     out_feature_class = stream_network_points)
     arcpy.AddMessage("Converted the stream network to points")
 
     # Add x, y, z, and m values to the `cross_section_points` feature class
     arcpy.AddGeometryAttributes_management(
-                     Input_Features = "stream_network_points", 
+                     Input_Features = stream_network_points, 
                      Geometry_Properties = "POINT_X_Y_Z_M", 
                                            Length_Unit = "KILOMETERS")
 
     # Set the first m-value for each stream network to zero. The `create route`
     # tool sets it to NULL. 
-    arcpy.CalculateField_management(in_table = "stream_network_points", 
+    arcpy.CalculateField_management(in_table = stream_network_points, 
                                     field = "POINT_M", 
                                     expression = "setNull2Zero(!POINT_M!)", 
                                     code_block = """def setNull2Zero(m):
@@ -108,22 +111,22 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                                     expression_type = "PYTHON_9.3")
 
     # Delete un-needed fields
-    arcpy.DeleteField_management(in_table = "stream_network_points", 
+    arcpy.DeleteField_management(in_table = stream_network_points, 
                                  drop_field = ["ORIG_FID","POINT_Z"])
     arcpy.AddMessage("Added stream network route lengths")
     
     # Add flow accumulation values to the stream_network_points fc
     arcpy.sa.ExtractMultiValuesToPoints(
-                      in_point_features = "stream_network_points", 
+                      in_point_features = stream_network_points, 
                       in_rasters = [flow_accum], 
                       bilinear_interpolate_values = "NONE")
     # Add a field to to the stream_network_points fc to hold watershed area
     # Check if the field already exists and if not add it
-    field_names = [f.name for f in arcpy.ListFields("stream_network_points")]
+    field_names = [f.name for f in arcpy.ListFields(stream_network_points)]
     if "Watershed_Area_SqMile" not in field_names:
-        arcpy.AddField_management("stream_network_points", 
-                                  "Watershed_Area_SqMile", 
-                                  "DOUBLE")
+        arcpy.AddField_management(in_table = stream_network_points, 
+                                  field_name = "Watershed_Area_SqMile", 
+                                  field_type = "DOUBLE")
     # Convert flow accumulation cell counts to area in square miles
     cell_size = str(arcpy.GetRasterProperties_management(flow_accum, 
                                                          "CELLSIZEX"))
@@ -132,7 +135,7 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                   "!{1}!".format(cell_size, arcpy.Describe(flow_accum).baseName))
 
     if spatial_ref.linearUnitName == "Meter":
-        arcpy.CalculateField_management(in_table = "stream_network_points", 
+        arcpy.CalculateField_management(in_table = stream_network_points, 
                                         field = "Watershed_Area_SqMile", 
                                         expression = meters_sqmi, 
                                         expression_type = "PYTHON_9.3")
@@ -141,26 +144,26 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
         arcpy.AddError("    Watershed linear unit not recognized." 
                        " Area not calculated")
     # Delete un-needed fields
-    arcpy.DeleteField_management(in_table = "stream_network_points", 
+    arcpy.DeleteField_management(in_table = stream_network_points, 
                                  drop_field = [arcpy.Describe(flow_accum).baseName])
     arcpy.AddMessage("Added stream network drainage area")
     
     # Add elevation values to the stream_network_points fc
     arcpy.sa.ExtractMultiValuesToPoints(
-                      in_point_features = "stream_network_points", 
+                      in_point_features = stream_network_points, 
                       in_rasters = [dem], 
                       bilinear_interpolate_values = "NONE")
-    arcpy.AlterField_management(in_table = "stream_network_points", 
+    arcpy.AlterField_management(in_table = stream_network_points, 
                                 field = arcpy.Describe(dem).baseName, 
                                 new_field_name = "Z",
                                 new_field_alias = "Z")
     arcpy.AddMessage("Added stream network elevations")
     
     # Return
-    arcpy.SetParameter(4, "stream_network_points")
+    arcpy.SetParameter(4, stream_network_points)
     
     # Cleanup
-    arcpy.Delete_management(in_data = "stream_network_route")    
+    arcpy.Delete_management(in_data = stream_network_route)    
 
 
 def main():
