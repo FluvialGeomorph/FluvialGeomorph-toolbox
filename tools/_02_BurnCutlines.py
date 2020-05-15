@@ -97,10 +97,10 @@ def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
     arcpy.AddMessage("Calculated raster statistics and pyramids.")
     
     # Return
-    arcpy.SetParameter(3, "dem_hydro")
+    arcpy.SetParameter(4, dem_hydro_path)
     
     # Cleanup
-    #arcpy.Delete_management(in_data = cutline_ras)
+    arcpy.Delete_management(in_data = cutline_ras)
 
 
 def main():
