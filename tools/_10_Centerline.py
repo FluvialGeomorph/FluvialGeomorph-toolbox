@@ -39,8 +39,7 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
-    arcpy.AddMessage("DEM: "
-                     "{}".format(arcpy.Describe(dem).baseName))
+    arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
     arcpy.AddMessage("Banks polygon: "
                      "{}".format(arcpy.Describe(banks_poly).baseName))
     
@@ -48,37 +47,42 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
     arcpy.env.mask = banks_poly
     
     # Convert the banks polygon to raster
+    banks_path = os.path.join(output_workspace, "banks")
     arcpy.PolygonToRaster_conversion(in_features = banks_poly, 
                                      value_field = "gridcode", 
-                                     out_rasterdataset = "banks")
+                                     out_rasterdataset = banks_path)
+    arcpy.AddMessage("Converted the banks polygon to a raster.")
     
     # Thin the banks raster
     stream = arcpy.sa.Thin(in_raster = "banks", 
                            background_value = "ZERO", 
                            filter = "FILTER", 
                            corners = "ROUND")
+    arcpy.AddMessage("Used the Thin tool on the banks raster.")
     
     # Convert the synthetic stream to a centerline feature class
+    cl_raw_path = os.path.join(output_workspace, "centerline_raw")
     arcpy.RasterToPolyline_conversion(in_raster = stream, 
-                                      out_polyline_features = "centerline_raw",
+                                      out_polyline_features = cl_raw_path,
                                       background_value = "ZERO",
                                       minimum_dangle_length = 10,
                                       simplify = "SIMPLIFY")
+    arcpy.AddMessage("Convert thinned raster stream to a polyline.")
     
     # Smooth centerline
-    arcpy.SmoothLine_cartography(in_features = "centerline_raw", 
-                                 out_feature_class = "centerline", 
+    centerline_path = os.path.join(output_workspace, "centerline")
+    arcpy.SmoothLine_cartography(in_features = cl_raw_path, 
+                                 out_feature_class = centerline_path, 
                                  algorithm = "PAEK", 
                                  tolerance = smooth_tolerance)
-    
-    arcpy.AddMessage("Created centerline")
+    arcpy.AddMessage("Smoothed centerline")
     
     # Return
-    arcpy.SetParameter(4, "centerline")
+    arcpy.SetParameter(4, centerline_path)
     
     # Cleanup
-    arcpy.Delete_management(in_data = "banks")
-    arcpy.Delete_management(in_data = "centerline_raw")
+    arcpy.Delete_management(in_data = banks_path)
+    arcpy.Delete_management(in_data = cl_raw_path)
 
 
 def main():
