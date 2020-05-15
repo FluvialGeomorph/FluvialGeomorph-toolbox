@@ -44,6 +44,7 @@ def StudyAreaWatershed(output_workspace, dem_hydro, processes):
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
     arcpy.AddMessage("DEM hydro: "
                      "{}".format(arcpy.Describe(dem_hydro).baseName))
+    arcpy.AddMessage("processes: {}".format(processes))
     
     # Fill sinks
     arcpy.AddMessage("Beginning filling sinks...")
@@ -54,15 +55,15 @@ def StudyAreaWatershed(output_workspace, dem_hydro, processes):
     arcpy.AddMessage("Beginning flow direction...")
     flow_dir_d8 = arcpy.sa.FlowDirection(in_surface_raster = dem_fill, 
                                          flow_direction_type = "D8")
+    flow_direction_d8 = os.path.join(output_workspace, "flow_direction_d8")
     arcpy.CopyRaster_management(in_raster = flow_dir_d8, 
-                                out_rasterdataset = "flow_direction_d8")
+                                out_rasterdataset = flow_direction_d8)
+    
     # Calculate raster statistics and build pyramids
     arcpy.AddMessage("    Calculating statistics...")
-    arcpy.CalculateStatistics_management(os.path.join(output_workspace, 
-                                                      "flow_direction_d8"))
+    arcpy.CalculateStatistics_management(flow_direction_d8)
     arcpy.AddMessage("    Building pyraminds...")
-    arcpy.BuildPyramids_management(os.path.join(output_workspace, 
-                                                      "flow_direction_d8"))
+    arcpy.BuildPyramids_management(flow_direction_d8)
     arcpy.AddMessage("Flow direction complete.")
     
     # Calculate flow accumulation
@@ -70,19 +71,19 @@ def StudyAreaWatershed(output_workspace, dem_hydro, processes):
     flow_accum_d8 = arcpy.sa.FlowAccumulation(flow_dir_d8, 
                                               data_type = "FLOAT", 
                                               flow_direction_type = "D8")
+    flow_accumulation_d8 = os.path.join(output_workspace, "flow_accumulation_d8")
     arcpy.CopyRaster_management(in_raster = flow_accum_d8, 
-                                out_rasterdataset = "flow_accumulation_d8")
+                                out_rasterdataset = flow_accumulation_d8)
+    
     # Calculate raster statistics and build pyramids
     arcpy.AddMessage("    Calculating statistics...")
-    arcpy.CalculateStatistics_management(os.path.join(output_workspace, 
-                                                      "flow_accumulation_d8"))
+    arcpy.CalculateStatistics_management(flow_accumulation_d8)
     arcpy.AddMessage("    Building pyraminds...")
-    arcpy.BuildPyramids_management(os.path.join(output_workspace, 
-                                                      "flow_accumulation_d8"))
+    arcpy.BuildPyramids_management(flow_accumulation_d8)
     arcpy.AddMessage("Flow accumulation complete.")
     
     # Return
-    #arcpy.SetParameter(3, flow_dir_d8)    
+    arcpy.SetParameter(3, flow_accumulation_d8)    
 
 def main():
     # Call the StudyAreaWatershed function with command line parameters
