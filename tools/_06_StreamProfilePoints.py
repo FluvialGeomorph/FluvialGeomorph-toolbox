@@ -49,6 +49,7 @@ flowline_points        -- a new feature class of densified vertices along the
                           flowline
 ____________________________________________________________________________"""
  
+import os
 from datetime import datetime
 import arcpy
 
