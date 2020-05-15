@@ -200,7 +200,8 @@ def splitline(inFC, FCName, alongDist):
     del outputRows
 
 
-def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength, TransecLength_Unit, OutputTransect, ReachName):
+def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength, 
+             TransecLength_Unit, OutputTransect, ReachName):
         
     # Set environment variables 
     arcpy.env.overwriteOutput = True
@@ -311,7 +312,9 @@ def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength, TransecL
     arcpy.CalculateField_management(Azline_Dissolve, "y_end", "!Shape!.positionAlongLine(1,True).firstPoint.Y", "PYTHON_9.3")
     
     #Generate output file
-    arcpy.XYToLine_management(Azline_Dissolve, OutputTransect,"x_start", "y_start", "x_end","y_end", "", "", spatial_reference)
+    arcpy.XYToLine_management(Azline_Dissolve, OutputTransect,
+                              "x_start", "y_start", "x_end","y_end", 
+                              "", "", spatial_reference)
     
     # Create `Seq` field
     arcpy.AddField_management(in_table = OutputTransect, 
