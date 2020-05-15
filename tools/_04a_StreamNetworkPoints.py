@@ -83,20 +83,17 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                           from_measure_field = "from_measure", 
                           to_measure_field = "to_measure")
     arcpy.AddMessage("Stream network route created")
-    
     # Convert stream network feature vertices to points
-    stream_network_points - os.path.join(output_workspace, 
-                                         "stream_network_points")
-    arcpy.FeatureVerticesToPoints_management(
-                     in_features = stream_network_route, 
-                     out_feature_class = stream_network_points)
+    stream_network_points = os.path.join(output_workspace, "stream_network_points")
+    arcpy.FeatureVerticesToPoints_management(in_features = stream_network_route, 
+                                    out_feature_class = stream_network_points)
     arcpy.AddMessage("Converted the stream network to points")
 
     # Add x, y, z, and m values to the `cross_section_points` feature class
     arcpy.AddGeometryAttributes_management(
-                     Input_Features = stream_network_points, 
-                     Geometry_Properties = "POINT_X_Y_Z_M", 
-                                           Length_Unit = "KILOMETERS")
+                                    Input_Features = stream_network_points, 
+                                    Geometry_Properties = "POINT_X_Y_Z_M", 
+                                    Length_Unit = "KILOMETERS")
 
     # Set the first m-value for each stream network to zero. The `create route`
     # tool sets it to NULL. 
@@ -117,9 +114,9 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
     
     # Add flow accumulation values to the stream_network_points fc
     arcpy.sa.ExtractMultiValuesToPoints(
-                      in_point_features = stream_network_points, 
-                      in_rasters = [flow_accum], 
-                      bilinear_interpolate_values = "NONE")
+                                  in_point_features = stream_network_points, 
+                                  in_rasters = [flow_accum], 
+                                  bilinear_interpolate_values = "NONE")
     # Add a field to to the stream_network_points fc to hold watershed area
     # Check if the field already exists and if not add it
     field_names = [f.name for f in arcpy.ListFields(stream_network_points)]
