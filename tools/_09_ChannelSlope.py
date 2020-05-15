@@ -72,7 +72,7 @@ def ChannelSlope(output_workspace, dem, banks_poly, z_factor):
     arcpy.AddMessage("Created slope raster")
     
     # Return
-    arcpy.SetParameter(4, channel_slope)
+    arcpy.SetParameter(4, channel_slope_path)
 
 
 def main():
