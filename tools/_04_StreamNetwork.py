@@ -82,14 +82,16 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
     # Thin stream network - arcpy.sa.Thin _____________________________________
     stream_thin = arcpy.sa.Thin(in_raster = stream_grid, 
                                 corners = "SHARP")
-    stream_thin.save(os.path.join(os.path.dirname(output_workspace), 
-                                  "stream_thin.tif"))
+    stream_thin_path = os.path.join(os.path.dirname(output_workspace), 
+                                   "stream_thin.tif"))
+    arcpy.CopyRaster_management(in_raster = stream_thin, 
+                                out_rasterdataset = stream_thin_path)
     
     # Convert raster stream to polyline _______________________________________
     # output vector stream network
     stream_network = os.path.join(output_workspace, "stream_network")
     # Convert the `stream_thin` raster to a polyline
-    arcpy.RasterToPolyline_conversion(in_raster = stream_thin, 
+    arcpy.RasterToPolyline_conversion(in_raster = stream_thin_path, 
                                       out_polyline_features = stream_network)
     arcpy.AddMessage("Stream network created")
     
@@ -102,13 +104,13 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
                                   field_type = "TEXT")
     
     # Return
-    arcpy.SetParameter(4, "stream_network")
+    arcpy.SetParameter(4, stream_network)
     
     # Cleanup
     arcpy.Delete_management(in_data = contrib_area_nocompression)
     arcpy.Delete_management(in_data = contrib_area_tif)
     arcpy.Delete_management(in_data = stream_grid)
-    arcpy.Delete_management(in_data = stream_thin)
+    arcpy.Delete_management(in_data = stream_thin_path)
     arcpy.AddMessage("Temp datasets deleted")
     
     
