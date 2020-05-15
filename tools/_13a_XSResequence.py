@@ -1,5 +1,5 @@
 """____________________________________________________________________________
-Script Name:          _11a_XSResequence.py
+Script Name:          _13a_XSResequence.py
 Description:          Resequences the `Seq` field after cross sections have been
                       added or deleted.  
 Date:                 04/08/2020
