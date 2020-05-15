@@ -38,6 +38,7 @@ the NLCD by adding fields containing the area of each land cover class for each
 watershed. 
 ____________________________________________________________________________"""
  
+import os
 import arcpy
 
 def PointLandcover(output_workspace, points, point_ID_field, 
@@ -103,14 +104,16 @@ def PointLandcover(output_workspace, points, point_ID_field,
                                            pour_point_field = "Value")
 
             # Convert watershed to polygon
-            out_poly = "watershed_{}".format(str(row[0]).replace(" ", "_"))
+            watershed_name = "watershed_{}".format(str(row[0]).replace(" ", "_"))
+            out_poly = os.path.join(output_workspace, watershed_name)
             arcpy.RasterToPolygon_conversion(in_raster = watershed,
                                              out_polygon_features = out_poly)
             arcpy.AddMessage("    Delineate watershed complete")
 
             # Tabulate landcover area
             if landcover:
-                out_table = "lc_table_{}".format(str(row[0]).replace(" ", "_"))
+                table_name = "lc_table_{}".format(str(row[0]).replace(" ", "_"))
+                out_table = os.path.join(output_workspace, table_name)
                 arcpy.sa.TabulateArea(in_zone_data = watershed,
                                       zone_field = "Value",
                                       in_class_data = LC,
@@ -123,8 +126,9 @@ def PointLandcover(output_workspace, points, point_ID_field,
     if landcover:
         lc_tables = arcpy.ListTables(wild_card = "lc_table_*")
         arcpy.AddMessage("landcover tables: {}".format(str(lc_tables)))
+        lc_table = os.path.join(output_workspace, "lc_table")
         arcpy.Merge_management(inputs = lc_tables, 
-                               output = "lc_table")
+                               output = lc_table)
         # Delete landcover lc_tables
         for table in lc_tables:
             arcpy.Delete_management(table)
@@ -133,8 +137,9 @@ def PointLandcover(output_workspace, points, point_ID_field,
     # Merge watershed polygons
     watershed_fcs = arcpy.ListFeatureClasses("watershed_*")
     arcpy.AddMessage("Watershed polygons: {}".format(str(watershed_fcs)))
+    watersheds = os.path.join(output_workspace, "watersheds")
     arcpy.Merge_management(inputs = watershed_fcs,
-                           output = "watersheds")
+                           output = watersheds)
     
     # Delete watershed FCs
     for fc in watershed_fcs:
@@ -145,22 +150,22 @@ def PointLandcover(output_workspace, points, point_ID_field,
     arcpy.MakeTableView_management(in_table = points, 
                                    out_view = "points_table")
     
-    arcpy.JoinField_management(in_data = "watersheds",
+    arcpy.JoinField_management(in_data = watersheds,
                                in_field = "gridcode",
                                join_table = "points_table",
                                join_field = "OBJECTID")
     arcpy.AddMessage("Added points fields to watersheds fc")
     
-    # Join NLCD table to watersheds
+    # Join Landcover table to watersheds
     if landcover:
-        arcpy.JoinField_management(in_data = "watersheds",
+        arcpy.JoinField_management(in_data = watersheds,
                                    in_field = "gridcode",
-                                   join_table = "lc_table",
+                                   join_table = lc_table,
                                    join_field = "VALUE")
         arcpy.AddMessage("Added landcover fields to watersheds fc")
     
     # Return
-    arcpy.SetParameter(7, "watersheds")
+    arcpy.SetParameter(7, watersheds)
     
     # Clean up
     if landcover:
