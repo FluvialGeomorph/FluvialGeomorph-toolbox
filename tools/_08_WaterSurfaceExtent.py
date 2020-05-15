@@ -69,7 +69,8 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing):
     arcpy.AddMessage("Bank boundaries cleaned")
     
     # Convert the banks raster to a polygon
-    banks_raw = "banks_raw_" + str(detrend_value).replace(".", "_")
+    banks_raw_name = "banks_raw_" + str(detrend_value).replace(".", "_")
+    banks_raw = os.path.join(output_workspace, banks_raw_name)
     arcpy.RasterToPolygon_conversion(
               in_raster = banks_clean, 
               out_polygon_features = banks_raw,
