@@ -2,7 +2,7 @@
 Script Name:          _13a_XSResequence.py
 Description:          Resequences the `Seq` field after cross sections have been
                       added or deleted.  
-Date:                 04/08/2020
+Date:                 05/16/2020
 
 Usage:
 This tool resequences the `Seq` field after cross sections have been added or 
