@@ -30,6 +30,7 @@ Writes the river position to a new field `km_to_mouth` field in the cross
 section feature class.
 ____________________________________________________________________________"""
  
+import os
 import arcpy
 
 def DeleteExistingFields(in_table, field):
@@ -59,16 +60,18 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     DeleteExistingFields(cross_section, "Z")
     
     # Spatial Join the cross sections with the closest flowline point
+    cross_section_flowline_point = os.path.join(output_workspace, 
+                                                "cross_section_flowline_point")
     arcpy.SpatialJoin_analysis(target_features = cross_section, 
                                join_features = flowline_points, 
-                               out_feature_class = "cross_section_flowline_point",  
+                               out_feature_class = cross_section_flowline_point,  
                                match_option = "CLOSEST")
 
     # Join fields from the `cross_section_flowline_point` table back to the 
     # `cross_section` feature class
     arcpy.JoinField_management(in_data = cross_section, 
                                in_field = "Seq", 
-                               join_table = "cross_section_flowline_point", 
+                               join_table = cross_section_flowline_point, 
                                join_field = "Seq", 
                                fields = ["POINT_X", "POINT_Y", "POINT_M", "Z"])
     
@@ -85,8 +88,7 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     arcpy.SetParameter(3, cross_section)
 
     # Cleanup
-    arcpy.Delete_management(in_data = "xs_flowline_pt")
-    arcpy.Delete_management(in_data = "cross_section_flowline_point")
+    arcpy.Delete_management(in_data = cross_section_flowline_point)
     return
 
 def main():
