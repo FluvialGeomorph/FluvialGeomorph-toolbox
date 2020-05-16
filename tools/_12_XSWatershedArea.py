@@ -26,6 +26,7 @@ Writes the watershed area to a new field `Watershed_Area_SqMile` in the
 cross_section feature class.
 ____________________________________________________________________________"""
 
+import os
 import arcpy
 
 def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
@@ -62,8 +63,9 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
                                      drop_field = ["ReachName"])
 
     # Intersect cross_section with flowline
+    xs_flowline_pt = os.path.join(output_workspace, "xs_flowline_pt")
     arcpy.Intersect_analysis(in_features = [cross_section, flowline],
-                             out_feature_class = "xs_flowline_pt",
+                             out_feature_class = xs_flowline_pt,
                              output_type = "POINT")
 
     # Add a field to to the cross_section fc to hold watershed area
@@ -88,9 +90,9 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
         for row in cursor:
             # Create a feature layer from the xs_flowline_pt feature class
             # for the current cross section
-            OID = "Seq = " + str(row[0])
+            OID = "Seq = {}".format(str(row[0]))
             arcpy.MakeFeatureLayer_management(
-                      in_features = "xs_flowline_pt",
+                      in_features = xs_flowline_pt,
                       out_layer = "xs_flowln_pt",
                       where_clause = OID)
 
@@ -101,43 +103,40 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
                                            where_clause = whr_cls)
 
             for xs in xs_fl_pts:
-                seq         = xs.getValue("Seq")
+                seq        = xs.getValue("Seq")
                 reach_name = xs.getValue("ReachName")
                 arcpy.AddMessage("Seq: {0}, ReachName: {1}".format(seq,
                                  reach_name))
                 row[2] = reach_name
 
             # Calculate Watershed Area
-            # Snap pour point to flow accumulation raster
+            ## Snap pour point to flow accumulation raster
             snapPour = arcpy.sa.SnapPourPoint(
                                 in_pour_point_data = "xs_flowln_pt",
                                 in_accumulation_raster = FAC,
                                 snap_distance = snap_distance,
                                 pour_point_field = "Seq")
             arcpy.AddMessage("    Snap complete")
-            # Sample the flow accumulation raster to determine the number of
-            # upstream cells
+            
+            ## Sample the flow accum raster to determine # of upstream cells
+            watershed_area = os.path.join(output_workspace, "watershed_area")
             arcpy.sa.Sample(in_rasters = [FAC],
                             in_location_data = snapPour,
-                            out_table = "watershed_area",
+                            out_table = watershed_area,
                             resampling_type = "NEAREST",
                             unique_id_field = "Value")
             arcpy.AddMessage("    Sample complete")
 
-            arcpy.AddMessage("    Schema of the `watershed_area` table: ")
-            flds = arcpy.ListFields("watershed_area")
+            flds = arcpy.ListFields(watershed_area)
             for f in flds:
                 arcpy.AddMessage("        Field: {0}".format(f.name))
-            # Extract cell count from watershed_area table
+            
+            ## Extract cell count from watershed_area table
             cell_count = 0
-            FACname     =  flds[4].name
-            #FACname    =  arcpy.Describe(FAC).baseName
-            arcpy.AddMessage("        FACname: {0}".format(FACname))
+            FACname     = flds[4].name
             fields      = flds[1].name + "; " + flds[4].name
-            arcpy.AddMessage("    fields: " + fields)
             whereClause = flds[1].name + " = " + str(row[0])
-            arcpy.AddMessage("    WhereClause: " + whereClause)
-            counts = arcpy.SearchCursor(dataset = "watershed_area",
+            counts = arcpy.SearchCursor(dataset = watershed_area,
                                         fields = fields,
                                         where_clause = whereClause)
             for count in counts:
@@ -148,6 +147,8 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
                             arcpy.GetRasterProperties_management(
                                   FAC, "CELLSIZEX"))
                 arcpy.AddMessage("    Cell Size: " + cell_size)
+                
+                # Linear unit = meter
                 if spatial_ref.linearUnitName == "Meter":
                     # 1 sq m = 0.0000003861 sq mile
                     area_sq_mile = ((float(cell_size) * float(cell_size)) *
@@ -158,21 +159,35 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
                             " of a square mile. Try increasing the snap distance.")
                     else:
                         arcpy.AddMessage("    Area: " + str(area_sq_mile))
+                
+                # Linear unit = feet
+                elif spatial_ref.linearUnitName == "Feet":
+                    # 1 sq ft = 0.00000003587 sq mile
+                    area_sq_mile = ((float(cell_size) * float(cell_size)) *
+                                    0.00000003587) * cell_count
+                    if area_sq_mile < 0.25:
+                        # Error, valid watershed area should be larger
+                        arcpy.AddMessage("Watershed area is less than one quarter"
+                            " of a square mile. Try increasing the snap distance.")
+                    else:
+                        arcpy.AddMessage("    Area: " + str(area_sq_mile))
+                
                 else:
                     # Error
                     arcpy.AddError("    Watershed linear unit not recognized."
                           " Area not calculated")
+                
                 # Write the watershed area to the cross section table
                 row[1] = area_sq_mile
-            # Update row
+            # Update cross_section row
             cursor.updateRow(row)
 
     # Return
     arcpy.SetParameter(5, cross_section)
     
     # Cleanup
-    arcpy.Delete_management(in_data = "xs_flowline_pt")
-    arcpy.Delete_management(in_data = "watershed_area")
+    arcpy.Delete_management(in_data = xs_flowline_pt)
+    arcpy.Delete_management(in_data = watershed_area)
 
 
 def main():
