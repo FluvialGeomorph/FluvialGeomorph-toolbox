@@ -83,7 +83,7 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
     stream_thin = arcpy.sa.Thin(in_raster = stream_grid, 
                                 corners = "SHARP")
     stream_thin_path = os.path.join(os.path.dirname(output_workspace), 
-                                   "stream_thin.tif"))
+                                    "stream_thin.tif")
     arcpy.CopyRaster_management(in_raster = stream_thin, 
                                 out_rasterdataset = stream_thin_path)
     
