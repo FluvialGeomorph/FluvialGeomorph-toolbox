@@ -74,7 +74,7 @@ load_fluvgeo_packages <- function() {
     
     # Install `RegionalCurve` from github
     if (!require("RegionalCurve")) {
-        devtools::install_github(repo = "mpdougherty/RegionalCurve",
+        devtools::install_github(repo = "FluvialGeomorph/RegionalCurve",
                                  force = TRUE,
                                  upgrade = TRUE,
                                  dependencies = TRUE,
@@ -132,3 +132,14 @@ set_pandoc <- function() {
     }
 }
 
+#' @title Convert Windows path to forward slashes
+#' 
+#' @description Convert a Windows file path from double backslashes to single 
+#' forward slash file seperators suitable for use in R. 
+#' 
+#' @param path        character; A windows file path containing escaped 
+#'                    backslashs (i.e., \\)
+#' 
+forward_slash <- function(path) {
+    path <- gsub("\\\\", "/", path)
+}
