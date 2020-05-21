@@ -6,14 +6,18 @@
 #' @export
 #' @param xs_dimensions_fc line feature class; a line feature class of cross 
 #'                         section dimensions.
-#' @param label_xs         boolean; Draw the cross section locations?
+#' @param features_fc      point feature class; a point feature class of 
+#'                         infrastructure locations.
+#' @param label_xs         boolean; Draw the cross section labels?
 #'
 #' @return A ggplot2 object.
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     dir_name <- getSrcDirectory(function(x) {x})
-    source(file.path(dir_name, "FG_utils.R"))
+    fg <- dirname(dir_name)
+    fg_install <- file.path(fg, "install")
+    source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
     load_packages(c("sp", "ggplot2", "ggrepel"))
     # Load FluvialGeomorph R packages
@@ -21,16 +25,19 @@ tool_exec <- function(in_params, out_params) {
     
     # gp tool parameters
     xs_dimensions_fc    <- in_params[[1]]
-    label_xs            <- as.logical(in_params[[2]])
+    features_fc         <- in_params[[2]]
+    label_xs            <- as.logical(in_params[[3]])
     
     # Import fc to sp
     xs_dimensions <- arc2sp(xs_dimensions_fc)
+    features_sp <- arc2sp(features_fc)
 
     # Convert to a data frame
     xs_dims <- xs_dimensions@data
 
     # Call xs_plot function
     print(xs_metrics_plot(reach_xs_dims = xs_dims, 
+                          features_sp = features_sp,
                           label_xs = label_xs))
     
     return(out_params)
