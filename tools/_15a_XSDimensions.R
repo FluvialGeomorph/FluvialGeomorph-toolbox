@@ -53,48 +53,57 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "dplyr"))
+    load_packages(c("sp", "dplyr", "purrr", "tibble"))
     # Load FluvialGeomorph R packages
     load_fluvgeo_packages()
     
     # gp tool parameters
     xs_fc              <- in_params[[1]]
     xs_points_fc       <- in_params[[2]]
-    bankfull_elevation <- as.numeric(in_params[[3]])
-    lead_n             <- as.numeric(in_params[[4]])
-    use_smoothing      <- as.logical(in_params[[5]])
-    loess_span         <- as.numeric(in_params[[6]])
+    bankfull_elevation <- in_params[[3]]
+    lead_n             <- in_params[[4]]
+    use_smoothing      <- in_params[[5]]
+    loess_span         <- in_params[[6]]
     vert_units         <- in_params[[7]]
-    discharge_method   <- in_params[[8]]
-    discharge_value    <- as.numeric(in_params[[9]])
+    discharge_method   <- unlist(in_params[[8]])
+    discharge_value    <- in_params[[9]]
     region             <- in_params[[10]]
-    drainage_area      <- as.numeric(in_params[[11]])
+    drainage_area      <- in_params[[11]]
     width_method       <- in_params[[12]]
     
-    message(discharge_method)
-    message(discharge_value)
-    message(region)
-    message(drainage_area)
-    message(width_method)
-    
     # Code for testing in RStudio
-    library(sp)
-    library(dplyr)
-    library(fluvgeo)
-    library(arcgisbinding)
-    arc.check_product()
-    xs_fc              <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50"
-    xs_points_fc       <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/y2016_R1.gdb/xs_50_points"
-    bankfull_elevation <- 105
-    lead_n             <- 4
-    use_smoothing      <- TRUE
-    loess_span         <- 1
-    vert_units         <- "ft"
-    discharge_method   <- "model_measure"
-    discharge_value    <- 6.82
-    region             <- ""
-    drainage_area      <- 0
-    width_method       <- ""
+    # library(sp)
+    # library(dplyr)
+    # library(fluvgeo)
+    # library(arcgisbinding)
+    # arc.check_product()
+    # xs_fc              <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph\\tests\\data\\test.gdb\\xs_200"
+    # xs_points_fc       <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph\\tests\\data\\test.gdb\\xs_200_points"
+    # bankfull_elevation <- 104.5
+    # lead_n             <- 1
+    # use_smoothing      <- TRUE
+    # loess_span         <- 1
+    # vert_units         <- "ft"
+    # discharge_method   <- "regional_curve"
+    # discharge_value    <- NULL
+    # region             <- "Lower Southern Driftless"
+    # drainage_area      <- 41
+    # width_method       <- NULL
+    # in_params <- list(xs_fc, xs_points_fc, bankfull_elevation, lead_n,
+    #                   use_smoothing, loess_span, vert_units,
+    #                   discharge_method, discharge_value, region, 
+    #                   drainage_area, width_method)
+    
+    # Verify parameters
+    ## Create list of parameters (named using the parameter names)
+    param_list <- tibble::lst(xs_fc, xs_points_fc, bankfull_elevation, lead_n,
+                              use_smoothing, loess_span, vert_units,
+                              discharge_method, discharge_value, region, 
+                              drainage_area, width_method)
+    
+    ## Get parameter verification table
+    message("Compare input tool parameters")
+    message(compare_params(in_params, param_list))
     
     # Convert ArcGIS fc to sp format
     xs        <- fluvgeo::arc2sp(xs_fc)
