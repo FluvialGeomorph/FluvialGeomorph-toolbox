@@ -150,6 +150,7 @@ param_info <- function(param, param_name) {
     param_row <- tibble(param_name, type)
 }
 
+
 #' @title Parameters information table
 #' 
 #' @description Calculates a table of parameter characteristics for a set of 
@@ -170,6 +171,7 @@ param_table <- function(param_list) {
     # Combine all parameters into a single data frame
     info_table <- dplyr::bind_rows(param_info_table)
 }
+
 
 #' @title Compare tool parameters
 #' 
@@ -202,7 +204,6 @@ compare_params <- function(in_params, param_list) {
     # param_table <- merge(params_esri, params_r, 
     #                      by = "param_name")
 }
-
 
 
 #' @title Convert Windows path to forward slashes
