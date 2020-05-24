@@ -19,7 +19,7 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "dplyr"))
+    load_packages(c("sp", "dplyr", "purrr", "tibble"))
     # Load FluvialGeomorph R packages
     load_fluvgeo_packages()
     
@@ -28,13 +28,22 @@ tool_exec <- function(in_params, out_params) {
     bankline_points    <- in_params[[2]]
     
     # Code for testing in RStudio
-    library(sp)
-    library(dplyr)
-    library(fluvgeo)
-    library(arcgisbinding)
-    arc.check_product()
-    xs_dimensions   <- "D:/Workspace/EMRRP_Sediment/CampbellCreek/CampbellCreekTrib.gdb/xs_50ft_dims"
-    bankline_points <- "D:/Workspace/EMRRP_Sediment/CampbellCreek/CampbellCreekTrib.gdb/bankline_points"
+    # library(sp)
+    # library(dplyr)
+    # library(fluvgeo)
+    # library(arcgisbinding)
+    # arc.check_product()
+    # xs_dimensions   <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph\\tests\\data\\test.gdb\\xs_200_dims"
+    # bankline_points <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph\\tests\\data\\test.gdb\\bankline_points"
+    # in_params <- list(xs_dimensions, bankline_points)
+    
+    # Verify parameters
+    ## Create list of parameters (named using the parameter names)
+    param_list <- tibble::lst(xs_dimensions, bankline_points)
+    
+    ## Get parameter verification table
+    message("Compare input tool parameters")
+    print(compare_params(in_params, param_list))
 
     # Convert ArcGIS fc to sp format
     xs_dimensions_sp   <- fluvgeo::arc2sp(xs_dimensions)

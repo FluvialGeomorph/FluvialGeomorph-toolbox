@@ -103,7 +103,7 @@ tool_exec <- function(in_params, out_params) {
     
     ## Get parameter verification table
     message("Compare input tool parameters")
-    message(compare_params(in_params, param_list))
+    print(compare_params(in_params, param_list))
     
     # Convert ArcGIS fc to sp format
     xs        <- fluvgeo::arc2sp(xs_fc)
