@@ -1,9 +1,9 @@
 """____________________________________________________________________________
-Script Name:          _06_StreamProfilePoints.py
+Script Name:          _06_FlowlinePoints.py
 Description:          Converts a stream flowline to a route using the 
                       distance to mouth parameter and creates a feature class 
                       of stream profile points. 
-Date:                 05/09/2020
+Date:                 05/27/2020
 
 Usage:
 Creates a new feature class of stream longitudinal profile points with 3D 

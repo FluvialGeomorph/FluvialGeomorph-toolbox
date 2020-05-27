@@ -1,8 +1,8 @@
 """____________________________________________________________________________
-Script Name:          _21_RASWaterSurface.py
+Script Name:          _16_XSRASWaterSurface.py
 Description:          Calculates the RAS modeled water surface elevation (WSE) 
                       from the input RAS depth raster. 
-Date:                 01/09/2020
+Date:                 05/27/2020
 
 Usage:
 

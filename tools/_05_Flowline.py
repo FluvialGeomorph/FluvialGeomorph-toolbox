@@ -1,7 +1,7 @@
 """____________________________________________________________________________
-Script Name:          _05_CreateFlowline.py
+Script Name:          _05_Flowline.py
 Description:          Creates a flowline from an edited stream network. 
-Date:                 11/22/2017
+Date:                 05/27/2020
 
 Usage:
 This tool requires a stream_network feature class created using the tool 

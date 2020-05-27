@@ -1,8 +1,8 @@
 """____________________________________________________________________________
-Script Name:          _13_XSAssignRiverPosition.py
+Script Name:          _13_XSRiverPosition.py
 Description:          Adds a "distance to the mouth of the river" field to 
                       each cross section. 
-Date:                 06/15/2019
+Date:                 05/27/2020
 
 Usage:
 Calculates the river position of the input cross section. Writes the  

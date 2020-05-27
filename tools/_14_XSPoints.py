@@ -1,8 +1,8 @@
 """____________________________________________________________________________
-Script Name:          _14_XSStationPoints.py
+Script Name:          _14_XSPoints.py
 Description:          Creates a new station points feature class from a 
                       stream cross section feature class.  
-Date:                 05/16/2020
+Date:                 05/27/2020
 
 Usage:
 Use this tool to create a new cross section station points feature class 

@@ -1,8 +1,7 @@
 """____________________________________________________________________________
-Script Name:          _02_BurnCutlines.py
-Description:          Burn cutlines into DEM to create a new hydro 
-                      modified DEM. 
-Date:                 05/08/2020
+Script Name:          _02_HydroDEM.py
+Description:          Burn cutlines into DEM to create a new hydro modified DEM. 
+Date:                 05/27/2020
 
 Usage:
 This script is based on the Agricultural Conservation Planning Framework (ACPF)

@@ -1,7 +1,7 @@
 """____________________________________________________________________________
-Script Name:          _04c_Point_Watershed.py
+Script Name:          _04c_Watersheds.py
 Description:          Calculates the watershed for each input point. 
-Date:                 05/14/2020
+Date:                 05/27/2020
 
 Usage:
 Calculates the drainage area watershed for each input point. Optionally 
