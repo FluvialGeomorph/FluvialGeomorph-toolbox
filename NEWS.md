@@ -3,7 +3,6 @@
 ## Major Changes
 * Updated all tools to ensure they work in both ArcMap and ArcGIS Pro. 
 * Added the `XS Compare Plot` to allow users to create a cross section plot for multiple survey time periods. 
-* 
 * The `XS Dimension` tool is now running in both ArcMap and ArcGIS Pro. 
 * The `XS planform` tool is now running in both ArcMap and ArcGIS Pro. 
 * Moved existing dataset symbology tools into a new toolset named `Datasets` within the `Symbology` toolset to make room for new symbology tools that will standardize symbolization of stream dimensions. 
