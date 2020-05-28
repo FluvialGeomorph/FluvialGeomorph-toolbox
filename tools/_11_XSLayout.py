@@ -2,37 +2,45 @@
 Script Name:          _11_XSLayout.py
 Description:          Creates cross sections at regular intervals along a 
                       stream centerline. 
-Date:                 5/5/2020
+Date:                 05/27/2020
 
 Usage:
 Creates cross sections of a specified length at regular intervals along a 
-stream centerline. 
+stream flowline. 
 
 This script is based on code from:
 
+The `splitline` function is based on code from:
 Map Rantala - https://nodedangles.wordpress.com/2011/05/01/quick-dirty-arcpy-
               batch-splitting-polylines-to-a-specific-length/
 
-Mateus Ferreira - http://gis4geomorphology.com/stream-transects-partial/
+The `XSLayout` function is based on code from: 
+Mateus Ferreira - https://web.archive.org/web/20161229230139/
+      http://gis4geomorphology.com/wp-content/uploads/2014/12/Transect-Tool.zip
 
 
 Parameters:
-workspace_folder (str)-- Path to the output workspace folder. Not a geodatabase. 
-centerline (str)      -- Path to the flowline feature class.
-split_type (str)      -- Method for placing cross sections along the 
+output_workspace      -- Path to the output workspace. 
+flowline              -- Path to the flowline feature class.
+split_type            -- Method for placing cross sections along the 
                          flowline. "Split at approximate distance" places
-                         cross sections along the centerline at the value of 
-                         split_distance. "Split at vertices" places cross 
-                         sections at vertices. 
-distance_split        -- The distance along the flowline that cross sections
-                         will be placed. Uses units of the input flowline.
-transect_length       -- The length of the cross section.
-transect_length_unit  -- The unit of the transect_length.
-output_transect       -- Path to the output cross sections.
-reach_name            -- The name of the reach. 
+                         cross sections along the flowline at the value of 
+                         transect_spacing. "Split at vertices" places cross 
+                         sections at the nearest existing flowline vertex. 
+transect_spacing      -- The distance between cross sections as measured along 
+                         the flowline. Uses units of the input flowline.
+transect_width        -- The width of the cross section as measured from the 
+                         flowline to its furthest outside point. Therefore, a 
+                         value of 50 ft for transect_width will result in a 
+                         cross section with an overall width of 100 ft (50 ft 
+                         on the right descending bank and 50 ft on the left 
+                         descending bank).
+transect_width_unit   -- The unit of the transect_width.
 
 Outputs:
-output_transect       -- a new cross section feature class
+output_transect -- a new cross section feature class named using the following 
+pattern xs_<spacing>_<width>, where <spacing> is the transect_spacing and 
+<width> is the transect_width. 
 ____________________________________________________________________________"""
 
 import os
@@ -200,8 +208,8 @@ def splitline(inFC, FCName, alongDist):
     del outputRows
 
 
-def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength, 
-             TransecLength_Unit, OutputTransect, ReachName):
+def XSLayout(output_workspace, flowline, split_type, transect_spacing, 
+             transect_width, transect_width_unit):
         
     # Set environment variables 
     arcpy.env.overwriteOutput = True
@@ -209,31 +217,29 @@ def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength,
     arcpy.env.XYTolerance = "0.0001 Meters"
 
     # Create "General" file geodatabase
-    WorkFolder = workspace
+    WorkFolder = os.path.dirname(output_workspace)
     General_GDB = WorkFolder + "\General.gdb"
     arcpy.CreateFileGDB_management(WorkFolder, "General", "CURRENT")
     arcpy.env.workspace = General_GDB
     
     # List parameter values
-    arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
-    arcpy.AddMessage("Centerline: "
-                     "{}".format(arcpy.Describe(Lines).baseName))
-    arcpy.AddMessage("Split Type: {}".format(SplitType))
-    arcpy.AddMessage("XS Spacing: {}".format(DistanceSplit))
-    arcpy.AddMessage("XS Width: {}".format(TransecLength))
-    arcpy.AddMessage("XS Width Units: {}".format(TransecLength_Unit))
-    arcpy.AddMessage("Output XS: "
-                     "{}".format(os.path.basename(OutputTransect)))
-    arcpy.AddMessage("Reach Name: {}".format(ReachName))
-                     
+    arcpy.AddMessage("Output Workspace: {}".format(output_workspace))
+    arcpy.AddMessage("Workfolder: {}".format(WorkFolder))
+    arcpy.AddMessage("Flowline: "
+                     "{}".format(arcpy.Describe(flowline).baseName))
+    arcpy.AddMessage("Split Type: {}".format(split_type))
+    arcpy.AddMessage("XS Spacing: {}".format(transect_spacing))
+    arcpy.AddMessage("XS Width: {}".format(transect_width))
+    arcpy.AddMessage("XS Width Units: {}".format(transect_width_unit))
+    
     #Unsplit Line
     LineDissolve="LineDissolve"
-    arcpy.Dissolve_management(Lines, LineDissolve,"", "", "SINGLE_PART")
+    arcpy.Dissolve_management(flowline, LineDissolve,"", "", "SINGLE_PART")
     LineSplit="LineSplit"
 
     #Split Line
-    if SplitType=="Split at approximate distance":
-        splitline(LineDissolve, LineSplit, DistanceSplit)
+    if split_type=="Split at approximate distance":
+        splitline(LineDissolve, LineSplit, transect_spacing)
     else:
         arcpy.SplitLine_management(LineDissolve, LineSplit)
     
@@ -281,14 +287,14 @@ def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength,
       return az2"""
     arcpy.CalculateField_management(LineSplit, "AziLine_1", "Azline1(!Azimuth!)", "PYTHON_9.3", CodeBlock_AziLine1)
     arcpy.CalculateField_management(LineSplit, "AziLine_2", "Azline2(!Azimuth!)", "PYTHON_9.3", CodeBlock_AziLine2) 
-    arcpy.CalculateField_management(LineSplit, "Distance", TransecLength, "PYTHON_9.3")
+    arcpy.CalculateField_management(LineSplit, "Distance", transect_width, "PYTHON_9.3")
     
     #Generate Azline1 and Azline2
-    spatial_reference=arcpy.Describe(Lines).spatialReference
+    spatial_reference=arcpy.Describe(flowline).spatialReference
     Azline1="Azline1"
     Azline2="Azline2"
-    arcpy.BearingDistanceToLine_management(LineSplit, Azline1, "X_mid", "Y_mid", "Distance", TransecLength_Unit, "AziLine_1", "DEGREES", "GEODESIC", "LineID", spatial_reference)
-    arcpy.BearingDistanceToLine_management(LineSplit, Azline2, "X_mid", "Y_mid", "Distance", TransecLength_Unit, "AziLine_2", "DEGREES", "GEODESIC", "LineID", spatial_reference)
+    arcpy.BearingDistanceToLine_management(LineSplit, Azline1, "X_mid", "Y_mid", "Distance", transect_width_unit, "AziLine_1", "DEGREES", "GEODESIC", "LineID", spatial_reference)
+    arcpy.BearingDistanceToLine_management(LineSplit, Azline2, "X_mid", "Y_mid", "Distance", transect_width_unit, "AziLine_2", "DEGREES", "GEODESIC", "LineID", spatial_reference)
     
     #Create Azline and append Azline1 and Azline2
     Azline="Azline"
@@ -312,28 +318,34 @@ def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength,
     arcpy.CalculateField_management(Azline_Dissolve, "y_end", "!Shape!.positionAlongLine(1,True).firstPoint.Y", "PYTHON_9.3")
     
     #Generate output file
-    arcpy.XYToLine_management(Azline_Dissolve, OutputTransect,
+    out_transect_name = "xs_{}_{}".format(int(round(transect_spacing)),
+                                          int(round(transect_width)))
+    output_transect = os.path.join(output_workspace, out_transect_name)
+    arcpy.XYToLine_management(Azline_Dissolve, output_transect,
                               "x_start", "y_start", "x_end","y_end", 
                               "", "", spatial_reference)
     
     # Create `Seq` field
-    arcpy.AddField_management(in_table = OutputTransect, 
+    arcpy.AddField_management(in_table = output_transect, 
                               field_name = "Seq", field_type = "SHORT")
-    arcpy.CalculateField_management(in_table = OutputTransect, 
+    arcpy.CalculateField_management(in_table = output_transect, 
                                     field = "Seq", 
                                     expression = "!OID!", 
                                     expression_type = "PYTHON_9.3")
     
-    # Create ReachName field
-    arcpy.AddField_management(in_table = OutputTransect, 
+    # Set the ReachName field
+    unique_reaches = set(row[0] for row in arcpy.da.SearchCursor(flowline, 
+                                                                 "ReachName"))
+    reach_name = list(unique_reaches)[0]
+    arcpy.AddField_management(in_table = output_transect, 
                               field_name = "ReachName", field_type = "TEXT")
-    arcpy.CalculateField_management(in_table = OutputTransect, 
+    arcpy.CalculateField_management(in_table = output_transect, 
                                     field = "ReachName", 
-                                    expression = "'" + ReachName + "'", 
+                                    expression = "'" + reach_name + "'", 
                                     expression_type = "PYTHON_9.3")                          
     
     # Return
-    arcpy.SetParameter(8, OutputTransect)
+    arcpy.SetParameter(6, output_transect)
     
     # Cleanup
     arcpy.Delete_management(General_GDB)
@@ -341,18 +353,16 @@ def XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength,
 
 def main():
     # Call the ChannelSlope function with command line parameters
-    XSLayout(workspace, Lines, SplitType, DistanceSplit, TransecLength, 
-             TransecLength_Unit, OutputTransect, ReachName)
+    XSLayout(output_workspace, flowline, split_type, transect_spacing, 
+             transect_width, transect_width_unit)
 
 if __name__ == "__main__":
     # Get input parameters
-    workspace          = arcpy.GetParameterAsText(0)
-    Lines              = arcpy.GetParameterAsText(1)
-    SplitType          = arcpy.GetParameterAsText(2)
-    DistanceSplit      = float(arcpy.GetParameterAsText(3))
-    TransecLength      = arcpy.GetParameterAsText(4)
-    TransecLength_Unit = arcpy.GetParameterAsText(5)
-    OutputTransect     = arcpy.GetParameterAsText(6)
-    ReachName          = arcpy.GetParameterAsText(7)
+    output_workspace    = arcpy.GetParameterAsText(0)
+    flowline            = arcpy.GetParameterAsText(1)
+    split_type          = arcpy.GetParameterAsText(2)
+    transect_spacing    = float(arcpy.GetParameterAsText(3))
+    transect_width      = float(arcpy.GetParameterAsText(4))
+    transect_width_unit = arcpy.GetParameterAsText(5)
     
     main()
