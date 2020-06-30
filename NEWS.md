@@ -1,3 +1,20 @@
+# FluvialGeomorph v0.1.30 (Release date: 2020-06-30)
+
+## Major Changes
+* FluvialGeomorph `R` packages (i.e., `RegionalCurve`, `fluvgeo`) now install directly from GitHub using the `Install R packages` tool. 
+
+
+# FluvialGeomorph v0.1.29 (Release date: 2020-06-18)
+
+## Major Changes
+* Added the `Longitudinal Profile Compare` tool to the Reports toolset. 
+* Added the `XS Longitudinal Profile Compare` tool to the Reports toolset.
+* Added the `Level 1 Report` tool to the Reports toolset.
+
+## Bug Fixes
+* Added the Cole Creek test datasets (2004, 2010, 2016) for tools that need multiple time periods. 
+
+
 # FluvialGeomorph v0.1.28 (Release date: 2020-05-28)
 
 ## Major Changes
@@ -39,8 +56,5 @@
 
 ## Bug Fixes
 * Fixed bug in `Burn Cutlines` when `widen_cells` = 0. 
-
 * Fixed bug in `Channel Slope`. 
-
 * Updated the help text for all tools. 
-
