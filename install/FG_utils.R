@@ -25,45 +25,20 @@ load_packages <- function(need_pkgs) {
 }
 
 
-#' @title Uninstall FluvialGeomorph R packages
-#' 
-#' @description Uninstalls the the required R packages for the ArcGIS FluvialGeomorph
-#'     toolbox. 
-#'     
-#' @export
-#' 
-#' @return None
-#' 
-#' @details This function installs the \code{RegionalCurve} R package from 
-#'     GitHub and the \code{fluvgeo} R package from a local source tarball. 
-#'     
-uninstall_fluvgeo_packages <- function() {
-    # Test if RegionalCurve is installed
-    if ("RegionalCurve" %in% rownames(installed.packages()) == TRUE) {
-        remove.packages(pkgs = "RegionalCurve")
-        message("The RegionalCurve package was uninstalled")
-    }
-    # Test if fluvgeo is installed
-    if ("fluvgeo" %in% rownames(installed.packages()) == TRUE) {
-        remove.packages(pkgs = "fluvgeo")
-        message("The fluvgeo package was uninstalled")
-    }
-}
-
-
 #' @title Load FluvialGeomorph R packages
 #' 
 #' @description Installs the required R packages for the ArcGIS FluvialGeomorph
 #'     toolbox. 
 #' 
 #' @export
+#' @param force      logical; Force installation? Defaults to FALSE.
 #'  
 #' @return Installs the required ArcGIS FluvialGeomorph R packages. 
 #' 
 #' @details This function installs the \code{RegionalCurve} R package from 
 #'     GitHub and the \code{fluvgeo} R package from a local source tarball. 
 #' 
-load_fluvgeo_packages <- function() {
+load_fluvgeo_packages <- function(force = FALSE) {
     # Install devtools
     if (!require("devtools")) { 
         install.packages("devtools", dependencies = TRUE)
@@ -72,37 +47,23 @@ load_fluvgeo_packages <- function() {
         }
     }
     
-    # Install `RegionalCurve` from github
-    if (!require("RegionalCurve")) {
-        devtools::install_github(repo = "FluvialGeomorph/RegionalCurve",
-                                 force = TRUE,
-                                 upgrade = TRUE,
-                                 dependencies = TRUE,
-                                 options(install.packages.check.source = "no"))
-        if ("RegionalCurve" %in% rownames(installed.packages()) == TRUE) {
-            message("The `RegionalCurve` package was installed.")
-        }
-    } else {
-        if ("RegionalCurve" %in% rownames(installed.packages()) == TRUE) {
-            message("The `RegionalCurve` package was already installed.")
-        }
-    }
+    # Install `RegionalCurve` from GitHub
+    devtools::install_github(repo = "FluvialGeomorph/RegionalCurve",
+                             force = force,
+                             upgrade = TRUE,
+                             dependencies = TRUE)
     
-    # Install `fluvgeo` from a local source tarball
-    if (!require("fluvgeo")) {
-        devtools::install_local("//mvrdfs//egis//Work//Office//Regional//ERDC/EMRRP_Sediment//Methods//fluvgeo_0.1.12.zip",
-                                force = TRUE,
+    # Install facet_scales from GitHub
+    devtools::install_github(repo = "zeehio/facetscales",
+                             force = force,
+                             upgrade = TRUE,
+                             dependencies = TRUE)
+    
+    # Install `fluvgeo` from from GitHub
+    devtools::install_github(repo = "FluvialGeomorph/fluvgeo",
+                                force = force,
                                 upgrade = TRUE, 
-                                dependencies = TRUE,
-                                options(install.packages.check.source = "no"))
-        if ("fluvgeo" %in% rownames(installed.packages()) == TRUE) {
-           message("The `fluvgeo` package was installed.")
-        }
-    } else {
-        if ("fluvgeo" %in% rownames(installed.packages()) == TRUE) {
-           message("The `fluvgeo` package was already installed.")
-        }
-    }
+                                dependencies = TRUE)
 }
 
 
