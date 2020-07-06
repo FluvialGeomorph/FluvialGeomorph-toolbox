@@ -40,30 +40,33 @@ load_packages <- function(need_pkgs) {
 #' 
 load_fluvgeo_packages <- function(force = FALSE) {
     # Install devtools
-    if (!require("devtools")) { 
-        install.packages("devtools", dependencies = TRUE)
-        if ("devtools" %in% rownames(installed.packages()) == TRUE) {
-            message("The `devtools` package was installed.")
+    if (!require("remotes")) { 
+        install.packages("remotes", dependencies = TRUE)
+        if ("remotes" %in% rownames(installed.packages()) == TRUE) {
+            message("The `remotes` package was installed.")
         }
     }
     
     # Install `RegionalCurve` from GitHub
-    devtools::install_github(repo = "FluvialGeomorph/RegionalCurve",
+    remotes::install_github(repo = "FluvialGeomorph/RegionalCurve",
                              force = force,
                              upgrade = TRUE,
                              dependencies = TRUE)
+    require(RegionalCurve)
     
     # Install facet_scales from GitHub
-    devtools::install_github(repo = "zeehio/facetscales",
+    remotes::install_github(repo = "zeehio/facetscales",
                              force = force,
                              upgrade = TRUE,
                              dependencies = TRUE)
+    require(facetscales)
     
     # Install `fluvgeo` from from GitHub
-    devtools::install_github(repo = "FluvialGeomorph/fluvgeo",
+    remotes::install_github(repo = "FluvialGeomorph/fluvgeo",
                                 force = force,
                                 upgrade = TRUE, 
                                 dependencies = TRUE)
+    require(fluvgeo)
 }
 
 
