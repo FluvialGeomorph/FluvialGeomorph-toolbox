@@ -46,8 +46,6 @@ tool_exec <- function(in_params, out_params) {
     
     # Inputs for testing in RStudio
     # library(purrr)
-    # library(arcgisbinding)
-    # arc.check_product()
     # library(fluvgeo)
     # 
     # stream <- "Cole Creek R1"
