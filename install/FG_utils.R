@@ -49,23 +49,23 @@ load_fluvgeo_packages <- function(force = FALSE) {
     
     # Install `RegionalCurve` from GitHub
     remotes::install_github(repo = "FluvialGeomorph/RegionalCurve",
-                             force = force,
-                             upgrade = TRUE,
-                             dependencies = TRUE)
+                            force = force,
+                            upgrade = TRUE,
+                            dependencies = TRUE)
     require(RegionalCurve)
     
     # Install facet_scales from GitHub
     remotes::install_github(repo = "zeehio/facetscales",
-                             force = force,
-                             upgrade = TRUE,
-                             dependencies = TRUE)
+                            force = force,
+                            upgrade = TRUE,
+                            dependencies = TRUE)
     require(facetscales)
     
     # Install `fluvgeo` from from GitHub
     remotes::install_github(repo = "FluvialGeomorph/fluvgeo",
-                                force = force,
-                                upgrade = TRUE, 
-                                dependencies = TRUE)
+                            force = force,
+                            upgrade = TRUE, 
+                            dependencies = TRUE)
     require(fluvgeo)
 }
 
