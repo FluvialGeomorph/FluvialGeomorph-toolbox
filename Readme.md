@@ -1,5 +1,7 @@
+<img src="docs/images/FG-hex.png" width=250 align="right" />
+
 # FluvialGeomorph
-The FluvialGeomorph ArcGIS toolbox. <img src="docs/images/HDQLO-03_h120.jpg" align="right" />
+The FluvialGeomorph ArcGIS toolbox. 
 
 ## Project Status
 [![Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle)
@@ -9,14 +11,16 @@ The FluvialGeomorph ArcGIS toolbox. <img src="docs/images/HDQLO-03_h120.jpg" ali
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 ## Description
-The FluvialGeomorph ArcGIS toolbox is the primary interface for the FluvialGeomorph project. 
+The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river channel dimensions from high resolution terrain data. 
 
 ## Funding
 Funding for development and maintenance of FluvialGeomorph has been provided by the US Army Corps of Engineers (USACE):
 
 * [Ecosystem Management and Restoration Research Program (EMRRP)](https://emrrp.el.erdc.dren.mil). 
 
+<img src="docs/images/HDQLO-03_h120.jpg" align="right" />
 <img src="docs/images/EMRRP_logo_300.png" align="right" />
+
 
 ## Latest Updates
 Check out the [NEWS](NEWS.md) for details on the latest updates. 
@@ -29,7 +33,12 @@ Check out the [NEWS](NEWS.md) for details on the latest updates.
 ## Install
 To install `FluvialGeomorph`, click the green "Clone" button above, and click "Download ZIP". Unzip this archive into a working folder and open the `FluvialGeomorph` ArcGIS toolbox in ArcMap or ArcGIS Pro. `R` must be installed for many of the tools in this toolbox to work. See the [User Manual](https://FluvialGeomorph.github.io/FG-User-Manual/index.html) for more details on getting started. 
 
+<!-- ![](docs/images/hexwall_6.png) -->
+
 ## Getting Started
+
+<img src="docs/images/python_r_toolbox.png" width=150 align="right" />
+
 Use the following guides to learn how to use the `FluvialGeomorph` ArcGIS toolbox. 
 
 * User Manual: [https://FluvialGeomorph.github.io/FG-User-Manual](https://FluvialGeomorph.github.io/FG-User-Manual/index.html)
@@ -37,3 +46,7 @@ Use the following guides to learn how to use the `FluvialGeomorph` ArcGIS toolbo
 
 ## Bug Reports
 If you find any bugs while using `FluvialGeomorph`, please open an [issue](https://github.com/FluvialGeomorph/FluvialGeomorph/issues) in this repository. 
+
+### Credits
+* [hex logo from vecteezy.com](https://www.vecteezy.com/free-vector/natural)
+* [hex aerial photo from pexels.com](https://www.pexels.com/@donaldtong94)
