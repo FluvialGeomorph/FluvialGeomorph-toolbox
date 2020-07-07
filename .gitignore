@@ -10,3 +10,6 @@
 
 # ArcGIS geodatabase lock files
 .lock
+
+# Cache
+.cache
