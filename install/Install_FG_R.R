@@ -4,7 +4,7 @@
 #'     the analysis and reporting. 
 #' 
 #' @export
-#' @param reinstall logical; Forces installed packages to be reinstalled.
+#' @param reinstall logical; Forces installed packages to be re-installed.
 #' 
 #' @return Nothing. Installs needed R packages. 
 #'
@@ -16,6 +16,12 @@ tool_exec <- function(in_params, out_params) {
     
     # gp tool parameters
     reinstall <- in_params[[1]]
+    
+    # Install needed packages
+    needed_pkgs <- c("assertthat", "dplyr", "ggplot2", "knitr", 
+                     "purrr", "raster", "remotes", "rlang", "rmarkdown", 
+                     "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools")
+    load_packages(needed_pkgs)
     
     # Load FluvialGeomorph R packages
     load_fluvgeo_packages(force = reinstall)
