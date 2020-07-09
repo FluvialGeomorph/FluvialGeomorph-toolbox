@@ -18,8 +18,14 @@
 load_packages <- function(need_pkgs) {
     # Determine the uninstalled packages from need_pkgs
     uninst_pkgs <- need_pkgs[!(need_pkgs %in% installed.packages()[, "Package"])]
+    
     # Install uninstalled packages
-    if (length(uninst_pkgs)) install.packages(uninst_pkgs, dependencies = TRUE)
+    if (length(uninst_pkgs)) {
+        install.packages(uninst_pkgs, 
+                         repos = "https://cran.r-project.org",
+                         dependencies = TRUE)
+    }
+    
     # Load all needed packages
     lapply(need_pkgs, require, character.only = TRUE)
 }
