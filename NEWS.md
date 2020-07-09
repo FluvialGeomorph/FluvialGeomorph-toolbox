@@ -1,3 +1,9 @@
+# FluvialGeomorph v0.1.32 (Release date: 2020-07-09)
+
+## Bug Fix
+* Overhauled the `R` package install process to make it more robust and secure on a wider range of previous `R` installs. 
+
+
 # FluvialGeomorph v0.1.31 (Release date: 2020-07-06)
 
 ## Major Changes
