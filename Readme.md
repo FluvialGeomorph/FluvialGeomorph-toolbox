@@ -13,14 +13,13 @@ The FluvialGeomorph ArcGIS toolbox.
 ## Description
 The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river channel dimensions from high resolution terrain data. 
 
+<img src="docs/images/HDQLO-03_h120.jpg" align="right" />
+<img src="docs/images/EMRRP_logo_300.png" align="right" />
+
 ## Funding
 Funding for development and maintenance of FluvialGeomorph has been provided by the US Army Corps of Engineers (USACE):
 
 * [Ecosystem Management and Restoration Research Program (EMRRP)](https://emrrp.el.erdc.dren.mil). 
-
-<img src="docs/images/HDQLO-03_h120.jpg" align="right" />
-<img src="docs/images/EMRRP_logo_300.png" align="right" />
-
 
 ## Latest Updates
 Check out the [NEWS](NEWS.md) for details on the latest updates. 
