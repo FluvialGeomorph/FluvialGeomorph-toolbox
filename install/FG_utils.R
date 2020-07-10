@@ -16,13 +16,21 @@
 #'     CRANextra). 
 #' 
 load_packages <- function(need_pkgs) {
+    # Set CRAN repository
+    r <- getOption("repos")
+    r["CRAN"] <- "https://cran.rstudio.com/"
+    options(repos = r)
+    
+    # Update existing packages
+    update.packages(ask = FALSE)
+    
     # Determine the uninstalled packages from need_pkgs
     uninst_pkgs <- need_pkgs[!(need_pkgs %in% installed.packages()[, "Package"])]
     
     # Install uninstalled packages
     if (length(uninst_pkgs)) {
         install.packages(uninst_pkgs, 
-                         repos = "https://cran.r-project.org",
+                         Ncpus = 5,
                          dependencies = TRUE)
     }
     

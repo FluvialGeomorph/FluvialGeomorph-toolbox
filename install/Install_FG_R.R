@@ -17,9 +17,6 @@ tool_exec <- function(in_params, out_params) {
     # gp tool parameters
     reinstall <- in_params[[1]]
     
-    # Update existing packages
-    update.packages(ask = FALSE)
-    
     # Install needed packages
     needed_pkgs <- c("assertthat", "dplyr", "ggplot2", "knitr", 
                      "purrr", "raster", "remotes", "rlang", "rmarkdown", 
