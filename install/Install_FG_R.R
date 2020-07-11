@@ -21,10 +21,13 @@ tool_exec <- function(in_params, out_params) {
     needed_pkgs <- c("assertthat", "dplyr", "ggplot2", "knitr", 
                      "purrr", "raster", "remotes", "rlang", "rmarkdown", 
                      "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools")
-    load_packages(needed_pkgs)
+    install_packages(needed_pkgs)
     
     # Load FluvialGeomorph R packages
-    load_fluvgeo_packages(force = reinstall)
+    install_fluvgeo_packages(force = reinstall)
+    
+    # load packages
+    load_packages("fluvgeo")
     
     # Set pandoc
     set_pandoc()

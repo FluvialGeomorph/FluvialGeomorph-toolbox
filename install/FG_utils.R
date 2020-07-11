@@ -1,28 +1,38 @@
 # Utility R functions for the ArcGIS FluvialGeomorph toolbox. 
 
-#' @title Install and load needed packages
+#' @title Load needed packages
 #' 
-#' @description Tests if packages are installed and if not installs them. Once
-#'     packages are installed it loads them. 
+#' @description Loads specified packages. 
 #' 
 #' @export
 #' @param need_pkgs      A character vector of package names.
 #' 
-#' @return Installs and loads the requested packages.
-#' 
-#' @details Replaces the `pacman::p_load` function that requires the latest R 
-#'     version. This function uses only base R functions. This function only 
-#'     installs packages from the currently set repositories (e.g., CRAN, 
-#'     CRANextra). 
+#' @return Loads the requested packages.
 #' 
 load_packages <- function(need_pkgs) {
+    # Load all needed packages
+    lapply(need_pkgs, require, character.only = TRUE)
+}
+
+
+#' @title Install needed packages
+#' 
+#' @description Tests if packages are installed and if not installs them.
+#' 
+#' @export
+#' @param need_pkgs      A character vector of package names.
+#' 
+#' @return Installs the requested packages.
+#' 
+install_packages <- function(need_pkgs) {
     # Set CRAN repository
     r <- getOption("repos")
     r["CRAN"] <- "https://cran.rstudio.com/"
     options(repos = r)
     
     # Update existing packages
-    update.packages(ask = FALSE)
+    lib_loc <- .libPaths()[1]
+    update.packages(lib.loc = lib_loc, ask = FALSE)
     
     # Determine the uninstalled packages from need_pkgs
     uninst_pkgs <- need_pkgs[!(need_pkgs %in% installed.packages()[, "Package"])]
@@ -33,13 +43,10 @@ load_packages <- function(need_pkgs) {
                          Ncpus = 5,
                          dependencies = TRUE)
     }
-    
-    # Load all needed packages
-    lapply(need_pkgs, require, character.only = TRUE)
 }
 
 
-#' @title Load FluvialGeomorph R packages
+#' @title Install FluvialGeomorph R packages
 #' 
 #' @description Installs the required R packages for the ArcGIS FluvialGeomorph
 #'     toolbox. 
@@ -52,7 +59,7 @@ load_packages <- function(need_pkgs) {
 #' @details This function installs the \code{RegionalCurve} R package from 
 #'     GitHub and the \code{fluvgeo} R package from a local source tarball. 
 #' 
-load_fluvgeo_packages <- function(force = FALSE) {
+install_fluvgeo_packages <- function(force = FALSE) {
     # Install devtools
     if (!require("remotes")) { 
         install.packages("remotes", dependencies = TRUE)
@@ -66,21 +73,18 @@ load_fluvgeo_packages <- function(force = FALSE) {
                             force = force,
                             upgrade = TRUE,
                             dependencies = TRUE)
-    require(RegionalCurve)
     
     # Install facet_scales from GitHub
     remotes::install_github(repo = "zeehio/facetscales",
                             force = force,
                             upgrade = TRUE,
                             dependencies = TRUE)
-    require(facetscales)
     
     # Install `fluvgeo` from from GitHub
     remotes::install_github(repo = "FluvialGeomorph/fluvgeo",
                             force = force,
                             upgrade = TRUE, 
                             dependencies = TRUE)
-    require(fluvgeo)
 }
 
 
@@ -108,6 +112,10 @@ set_pandoc <- function() {
     } else {
         message("pandoc installation not detected.")
     }
+    
+    # Determine if pandoc is available
+    message(paste("Pandoc available: ", rmarkdown::pandoc_available()))
+    
 }
 
 
