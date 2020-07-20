@@ -12,24 +12,28 @@ tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     dir_name <- getSrcDirectory(function(x) {x})
     source(file.path(dir_name, "FG_utils.R"))
-    message(paste(objects()))
+    # message(paste(objects()))
     
     # gp tool parameters
     reinstall <- in_params[[1]]
     
     # Install needed packages
+    message("Installing needed pacakges...")
     needed_pkgs <- c("assertthat", "dplyr", "ggplot2", "knitr", 
                      "purrr", "raster", "remotes", "rlang", "rmarkdown", 
                      "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools")
     install_packages(needed_pkgs)
     
     # Load FluvialGeomorph R packages
+    message("Installing FluvialGeomorph packages...")
     install_fluvgeo_packages(force = reinstall)
     
     # load packages
+    message("Loading packages...")
     load_packages("fluvgeo")
     
     # Set pandoc
+    message("Setting pandoc directory...")
     set_pandoc()
     
     return(out_params)
