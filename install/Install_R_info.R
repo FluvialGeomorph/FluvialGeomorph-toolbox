@@ -14,8 +14,5 @@ tool_exec <- function(in_params, out_params) {
     # System environment variables
     print(Sys.getenv())
     
-    # Determine if pandoc is available
-    print(paste("Pandoc available: ", rmarkdown::pandoc_available()))
-    
     return(out_params)
 }
