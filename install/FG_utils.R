@@ -26,19 +26,24 @@ load_packages <- function(need_pkgs) {
 #' 
 install_packages <- function(need_pkgs) {
     # Set CRAN repository
+    message("Setting CRAN repository...")
     r <- getOption("repos")
     r["CRAN"] <- "https://cran.rstudio.com/"
     options(repos = r)
     
     # Update existing packages
-    lib_loc <- .libPaths()[1]
-    update.packages(lib.loc = lib_loc, ask = FALSE)
+    message("Updating packages...")
+    update.packages(lib.loc = .libPaths()[1], 
+                    ask = FALSE, 
+                    checkBuilt = TRUE,
+                    type = "win.binary")
     
     # Determine the uninstalled packages from need_pkgs
     uninst_pkgs <- need_pkgs[!(need_pkgs %in% installed.packages()[, "Package"])]
     
     # Install uninstalled packages
     if (length(uninst_pkgs)) {
+        message("Installing missing packages...")
         install.packages(uninst_pkgs, 
                          Ncpus = 5,
                          dependencies = TRUE)
@@ -60,7 +65,7 @@ install_packages <- function(need_pkgs) {
 #'     GitHub and the \code{fluvgeo} R package from a local source tarball. 
 #' 
 install_fluvgeo_packages <- function(force = FALSE) {
-    # Install devtools
+    # Install remotes
     if (!require("remotes")) { 
         install.packages("remotes", dependencies = TRUE)
         if ("remotes" %in% rownames(installed.packages()) == TRUE) {
@@ -69,22 +74,28 @@ install_fluvgeo_packages <- function(force = FALSE) {
     }
     
     # Install `RegionalCurve` from GitHub
+    message("Installing RegionaCurve from GitHub...")
     remotes::install_github(repo = "FluvialGeomorph/RegionalCurve",
                             force = force,
                             upgrade = TRUE,
-                            dependencies = TRUE)
+                            dependencies = TRUE,
+                            type = "win.binary")
     
     # Install facet_scales from GitHub
+    message("Installing facetscales from GitHub...")
     remotes::install_github(repo = "zeehio/facetscales",
                             force = force,
                             upgrade = TRUE,
-                            dependencies = TRUE)
+                            dependencies = TRUE,
+                            type = "win.binary")
     
     # Install `fluvgeo` from from GitHub
+    message("Installing fluvgeo from GitHub...")
     remotes::install_github(repo = "FluvialGeomorph/fluvgeo",
                             force = force,
                             upgrade = TRUE, 
-                            dependencies = TRUE)
+                            dependencies = TRUE,
+                            type = "win.binary")
 }
 
 
