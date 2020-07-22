@@ -25,12 +25,15 @@ load_packages <- function(need_pkgs) {
 #' 
 #' @return Installs the requested packages.
 #' 
-install_packages <- function(need_pkgs) {
+install_needed_packages <- function(need_pkgs) {
     # Set CRAN repository
     message("Setting CRAN repository...")
     r <- getOption("repos")
     r["CRAN"] <- "https://cran.rstudio.com/"
     options(repos = r)
+    
+    # Don't compile from source
+    #options(install.packages.check.source = "no")
     
     # Update existing packages
     message("Updating packages...")
@@ -47,7 +50,8 @@ install_packages <- function(need_pkgs) {
         message("Installing missing packages...")
         install.packages(uninst_pkgs, 
                          Ncpus = 5,
-                         dependencies = TRUE)
+                         dependencies = TRUE,
+                         type = "win.binary")
     }
 }
 
