@@ -12,7 +12,6 @@ tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     dir_name <- getSrcDirectory(function(x) {x})
     source(file.path(dir_name, "FG_utils.R"))
-    # message(paste(objects()))
     
     # gp tool parameters
     reinstall <- in_params[[1]]
@@ -22,7 +21,7 @@ tool_exec <- function(in_params, out_params) {
     needed_pkgs <- c("assertthat", "dplyr", "ggplot2", "knitr", 
                      "purrr", "raster", "remotes", "rlang", "rmarkdown", 
                      "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools")
-    install_packages(needed_pkgs)
+    install_needed_packages(needed_pkgs)
     
     # Load FluvialGeomorph R packages
     message("Installing FluvialGeomorph packages...")

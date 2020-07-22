@@ -15,6 +15,7 @@ load_packages <- function(need_pkgs) {
 }
 
 
+
 #' @title Install needed packages
 #' 
 #' @description Tests if packages are installed and if not installs them.
