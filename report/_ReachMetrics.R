@@ -31,9 +31,7 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", "ggplot2",
                     "ggrepel", "knitr", "rmarkdown", "kableExtra", "reshape2",
-                    "assertthat"))
-    # Load FluvialGeomorph R packages
-    load_fluvgeo_packages()
+                    "assertthat", "fluvgeo"))
     # Set pandoc
     set_pandoc()
     

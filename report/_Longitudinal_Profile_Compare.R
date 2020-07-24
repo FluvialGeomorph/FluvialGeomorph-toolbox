@@ -31,9 +31,7 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("dplyr", "purrr", "sp", "ggplot2"))
-    # Load FluvialGeomorph R packages
-    load_fluvgeo_packages()
+    load_packages(c("dplyr", "purrr", "sp", "ggplot2", "fluvgeo"))
     
     # gp tool parameters
     stream            <- in_params[[1]]

@@ -19,10 +19,8 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "dplyr", "purrr", "tibble"))
-    # Load FluvialGeomorph R packages
-    load_fluvgeo_packages()
-    
+    load_packages(c("sp", "dplyr", "purrr", "tibble", "fluvgeo"))
+
     # gp tool parameters
     xs_dimensions      <- in_params[[1]]
     bankline_points    <- in_params[[2]]

@@ -23,10 +23,9 @@ tool_exec <- function(in_params, out_params) {
   fg_install <- file.path(fg, "install")
   source(file.path(fg_install, "FG_utils.R"))
   # Load required libraries
-  load_packages(c("sp", "dplyr", "tibble", "tidyr", "ggplot2", "ggrepel"))
-  # Load FluvialGeomorph R packages
-  load_fluvgeo_packages()
-  
+  load_packages(c("sp", "dplyr", "tibble", "tidyr", "ggplot2", "ggrepel", 
+                  "fluvgeo"))
+
   # gp tool parameters
   xs_points_fc        <- in_params[[1]]
   regions             <- c(in_params[[2]], recursive = TRUE)

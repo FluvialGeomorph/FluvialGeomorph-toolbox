@@ -9,10 +9,7 @@ tool_exec <- function(in_params, out_params) {
     dir_name <- getSrcDirectory(function(x) {x})
     source(file.path(dir_name, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "dplyr", "raster"))
-    # Load FluvialGeomorph R packages
-    load_fluvgeo_packages()
-    
+    load_packages(c("sp", "dplyr", "raster", "fluvgeo"))
     # gp tool parameters
     cross_section_fc  <- in_params[[1]]
     
