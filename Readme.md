@@ -11,8 +11,10 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 ## Description
+
 <img src="docs/images/python_r_toolbox.png" style="width: 125px; padding: 5px; float: left;" />
-The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess stream condition and health using remotely sensed terrain data (LiDAR) at fine scale and for large spatial extents. This toolbox was initially inspired by the approach and techniques of the [River Bathymetry Toolkit (RBT)](https://essa.com/explore-essa/tools/river-bathymetry-toolkit-rbt/#1512261459195-77c49866-a2eb) but expanded upon their effort adding additional analysis tools and reports. This project is open source to help ensure that thsese fluvial geomorphology tools remain available for the widest use, maintenance, and adaptation. 
+
+The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess stream condition and health using remotely sensed terrain data (LiDAR) at fine scale and for large spatial extents. This toolbox was initially inspired by the approach and techniques of the [River Bathymetry Toolkit, RBT](https://essa.com/explore-essa/tools/river-bathymetry-toolkit-rbt/#1512261459195-77c49866-a2eb) but expanded upon their effort adding additional analysis tools and reports. This project is open source to help ensure that thsese fluvial geomorphology tools remain available for the widest use, maintenance, and adaptation. 
 
 <img src="docs/images/HDQLO-03_h120.jpg" style="width: 150px; float: right;" /><img src="docs/images/EMRRP_logo_300.png" style="width: 150px; float: right;" />
 
