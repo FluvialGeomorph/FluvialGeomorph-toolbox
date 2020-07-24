@@ -16,7 +16,7 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 
 The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess stream condition and health using remotely sensed terrain data (LiDAR) at fine scale and for large spatial extents. This toolbox was initially inspired by the approach and techniques of the [River Bathymetry Toolkit, RBT](https://essa.com/explore-essa/tools/river-bathymetry-toolkit-rbt/#1512261459195-77c49866-a2eb) but expanded upon their effort adding additional analysis tools and reports. This project is open source to help ensure that these fluvial geomorphology tools remain available for the widest use, maintenance, and adaptation. 
 
-<img src="docs/images/HDQLO-03_h120.jpg" width=100 align="right" />
+<img src="docs/images/HDQLO-03_h120.jpg" width=125 align="right" />
 
 ## Funding
 Funding for development and maintenance of FluvialGeomorph has been provided by the following US Army Corps of Engineers (USACE) programs:
@@ -26,7 +26,7 @@ Funding for development and maintenance of FluvialGeomorph has been provided by 
 * [Mississippi River Geomorphology and Potamology Program (MRG&P)](https://www.mvd.usace.army.mil/Missions/Mississippi-River-Science-Technology/MS-River-Geomorphology-Potamology/)
 * [Flood Risk Management Program (FRM)](https://www.iwr.usace.army.mil/Missions/Flood-Risk-Management/Flood-Risk-Management-Program/)
 
-<img src="docs/images/FRMP_300.png" height=100 align="right" /><img src="docs/images/MRG&P_300.png" height=100 align="right" /><img src="docs/images/RSMlogo.png" height=100 align="right" /><img src="docs/images/EMRRP_logo_300.png" height=100 align="right" />
+<img src="docs/images/FRMP_300.png" height=75 align="right" /><img src="docs/images/MRG&P_300.png" height=75 align="right" /><img src="docs/images/RSMlogo.png" height=75 align="right" /><img src="docs/images/EMRRP_logo_300.png" height=75 align="right" />
 
 ## Latest Updates
 Check out the [NEWS](NEWS.md) for details on the latest updates. 
