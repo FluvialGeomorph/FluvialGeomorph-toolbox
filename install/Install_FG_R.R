@@ -18,7 +18,7 @@ tool_exec <- function(in_params, out_params) {
     
     # Install needed packages
     message("Installing needed pacakges...")
-    needed_pkgs <- c("assertthat", "dplyr", "ggplot2", "knitr", 
+    needed_pkgs <- c("assertthat", "backports", "dplyr", "ggplot2", "knitr", 
                      "purrr", "raster", "remotes", "rlang", "rmarkdown", 
                      "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools")
     install_needed_packages(needed_pkgs)

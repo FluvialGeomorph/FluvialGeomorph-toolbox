@@ -1,6 +1,13 @@
+# FluvialGeomorph v0.1.33 (Release date: 2020-07-24)
+
+## Bug Fixes
+* Continued improvements to the install process to be more resilient. 
+* Updated R functions to use the new package load process.  
+
+
 # FluvialGeomorph v0.1.32 (Release date: 2020-07-09)
 
-## Bug Fix
+## Bug Fixes
 * Overhauled the `R` package install process to make it more robust and secure on a wider range of previous `R` installs. 
 
 
@@ -9,7 +16,7 @@
 ## Major Changes
 * Tested toolbox to ensure it supports `R` 4.0 on both ArcGIS Pro (2.5) and ArcMap (10.7.1). 
 
-## Bug Fix
+## Bug Fixes
 * Fixed a bug that was preventing tools from running in ArcGIS Pro due to an apparent circular dependency reference (`devtools` unable to install `pkgload`). 
 
 

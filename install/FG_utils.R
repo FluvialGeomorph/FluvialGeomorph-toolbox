@@ -15,7 +15,6 @@ load_packages <- function(need_pkgs) {
 }
 
 
-
 #' @title Install needed packages
 #' 
 #' @description Tests if packages are installed and if not installs them.
@@ -96,7 +95,7 @@ install_fluvgeo_packages <- function(force = FALSE) {
     
     # Install `fluvgeo` from from GitHub
     message("Installing fluvgeo from GitHub...")
-    remotes::install_github(repo = "FluvialGeomorph/fluvgeo",
+    remotes::install_github(repo = "FluvialGeomorph/fluvgeo@*release",
                             force = force,
                             upgrade = TRUE, 
                             dependencies = TRUE,
