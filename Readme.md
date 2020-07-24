@@ -1,7 +1,7 @@
 <img src="docs/images/FG-hex.png" width=250 align="right" />
 
-# FluvialGeomorph
-The FluvialGeomorph ArcGIS toolbox. 
+# FluvialGeomorph ArcGIS toolbox
+The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river channel dimensions from high resolution terrain data.  
 
 ## Project Status
 [![Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle)
@@ -11,15 +11,19 @@ The FluvialGeomorph ArcGIS toolbox.
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 ## Description
-The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river channel dimensions from high resolution terrain data. 
+<img src="docs/images/python_r_toolbox.png" style="width: 125px; padding: 5px; float: left;" />
+The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess stream condition and health using remotely sensed terrain data (LiDAR) at fine scale and for large spatial extents. This toolbox was initially inspired by the approach and techniques of the [River Bathymetry Toolkit (RBT)](https://essa.com/explore-essa/tools/river-bathymetry-toolkit-rbt/#1512261459195-77c49866-a2eb) but expanded upon their effort adding additional analysis tools and reports. This project is open source to help ensure that thsese fluvial geomorphology tools remain available for the widest use, maintenance, and adaptation. 
 
-<img src="docs/images/HDQLO-03_h120.jpg" align="right" />
-<img src="docs/images/EMRRP_logo_300.png" align="right" />
+<img src="docs/images/HDQLO-03_h120.jpg" style="width: 150px; float: right;" /><img src="docs/images/EMRRP_logo_300.png" style="width: 150px; float: right;" />
 
 ## Funding
 Funding for development and maintenance of FluvialGeomorph has been provided by the US Army Corps of Engineers (USACE):
 
-* [Ecosystem Management and Restoration Research Program (EMRRP)](https://emrrp.el.erdc.dren.mil). 
+* [Ecosystem Management and Restoration Research Program (EMRRP)](https://emrrp.el.erdc.dren.mil).
+* [Regional Sediment Management (RSM) Program](https://rsm.usace.army.mil/)
+* [Mississippi River Geomorphology and Potamology (MRG&P) Program](https://www.mvd.usace.army.mil/Missions/Mississippi-River-Science-Technology/MS-River-Geomorphology-Potamology/)
+* [Flood Risk Management Program](https://www.iwr.usace.army.mil/Missions/Flood-Risk-Management/Flood-Risk-Management-Program/)
+
 
 ## Latest Updates
 Check out the [NEWS](NEWS.md) for details on the latest updates. 
@@ -35,9 +39,6 @@ To install `FluvialGeomorph`, click the green "Clone" button above, and click "D
 <!-- ![](docs/images/hexwall_6.png) -->
 
 ## Getting Started
-
-<img src="docs/images/python_r_toolbox.png" width=150 align="right" />
-
 Use the following guides to learn how to use the `FluvialGeomorph` ArcGIS toolbox. 
 
 * User Manual: [https://FluvialGeomorph.github.io/FG-User-Manual](https://FluvialGeomorph.github.io/FG-User-Manual/index.html)
@@ -47,5 +48,6 @@ Use the following guides to learn how to use the `FluvialGeomorph` ArcGIS toolbo
 If you find any bugs while using `FluvialGeomorph`, please open an [issue](https://github.com/FluvialGeomorph/FluvialGeomorph/issues) in this repository. 
 
 ### Credits
+* [hex created using the `hexSticker` package](https://github.com/GuangchuangYu/hexSticker)
 * [hex logo from vecteezy.com](https://www.vecteezy.com/free-vector/natural)
-* [hex aerial photo from pexels.com](https://www.pexels.com/@donaldtong94)
+* [hex oblique aerial photo from pexels.com](https://www.pexels.com/@donaldtong94)
