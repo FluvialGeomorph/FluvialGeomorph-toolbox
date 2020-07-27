@@ -1,8 +1,21 @@
-# FluvialGeomorph v0.1.33 (Release date: 2020-07-24)
+# FluvialGeomorph v0.1.33 (Release date: 2020-07-27)
 
 ## Bug Fixes
-* Continued improvements to the install process to be more resilient. 
-* Updated R functions to use the new package load process.  
+* Continued improvements to the R package install process to be more resilient. 
+* Updated all toolbox R functions to use the new R package load process.  
+
+## Compatibility Matrix
+Please follow the compatibility matrix below to determine the required combination of software components necessary to run the toolbox. 
+
+Software        |Suported  |Not Supported
+---             |---       |---          
+ArcGIS Pro      |2.5       |2.5          
+ArcMap          |10.7      |10.8         
+R               |3.6       |![](https://img.shields.io/badge/-4.0-red)          
+R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
+FluvialGeomorph |0.1.33    |0.1.33             
+
+*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
 
 
 # FluvialGeomorph v0.1.32 (Release date: 2020-07-09)

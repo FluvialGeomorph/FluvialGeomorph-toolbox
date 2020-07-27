@@ -7,7 +7,7 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 [![Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle)
 [![Project Status: Active The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![packageversion](https://img.shields.io/badge/Package%20version-0.1.33-orange.svg?style=flat-square)](commits/master)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2020--07--24-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2020--07--27-yellowgreen.svg)](/commits/master)
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 ## Description
@@ -37,18 +37,18 @@ Check out the [NEWS](NEWS.md) for details on the latest updates.
 * [Charles Theiling](mailto:Charles.H.Theiling@usace.army.mil), Ecologist, Ecological Laboratory, U.S. Army Corps of Engineers
 
 ## Install
-To install `FluvialGeomorph`, click the green "Clone" button above, and click "Download ZIP". Unzip this archive into a working folder and open the `FluvialGeomorph` ArcGIS toolbox in ArcMap or ArcGIS Pro. `R` must be installed for many of the tools in this toolbox to work. See the [User Manual](https://FluvialGeomorph.github.io/FG-User-Manual/index.html) for more details on getting started. 
+To install the FluvialGeomorph ArcGIS toolbox, click the [latest release](https://github.com/FluvialGeomorph/fluvgeo/releases/latest) above, and download the `.zip` archive. Unzip this archive into a working folder and open the FluvialGeomorph ArcGIS toolbox in ArcMap or ArcGIS Pro. `R` must be installed for many of the tools in this toolbox to work. Please see the [NEWS](NEWS.md) for the software compatibility matrix and release notes. See the [User Manual](https://FluvialGeomorph.github.io/FG-User-Manual/index.html) for more details on getting started. 
 
 <!-- ![](docs/images/hexwall_6.png) -->
 
 ## Getting Started
-Use the following guides to learn how to use the `FluvialGeomorph` ArcGIS toolbox. 
+Use the following guides to learn how to use the FluvialGeomorph ArcGIS toolbox. 
 
 * User Manual: [https://FluvialGeomorph.github.io/FG-User-Manual](https://FluvialGeomorph.github.io/FG-User-Manual/index.html)
 * Tech Manual: [https://FluvialGeomorph.github.io/FG-Tech-Manual](https://FluvialGeomorph.github.io/FG-Tech-Manual/index.html)
 
 ## Bug Reports
-If you find any bugs while using `FluvialGeomorph`, please open an [issue](https://github.com/FluvialGeomorph/FluvialGeomorph/issues) in this repository. 
+If you find any bugs while using the FluvialGeomorph ArcGIS toolbox, please open an [issue](https://github.com/FluvialGeomorph/FluvialGeomorph/issues) in this repository. 
 
 ### Credits
 * [hex created using the `hexSticker` package](https://github.com/GuangchuangYu/hexSticker)
