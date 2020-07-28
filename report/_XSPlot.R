@@ -28,7 +28,7 @@ tool_exec <- function(in_params, out_params) {
   bankfull_elevation <- as.numeric(in_params[[3]])
 
   # Import fc to sp
-  xs_points <- arc2sp(xs_points_fc)
+  xs_points <- fluvgeo::arc2sp(xs_points_fc)
   
   # Determine the stream names
   stream <- unique(xs_points$ReachName)
@@ -37,10 +37,10 @@ tool_exec <- function(in_params, out_params) {
   xs_pts <- xs_points@data
 
   # Call xs_plot function
-  print(xs_plot(xs_points = xs_pts, 
-                stream = stream, 
-                xs_number = xs_number, 
-                bankfull_elevation = bankfull_elevation))
+  print(fluvgeo::xs_plot(xs_points = xs_pts, 
+                         stream = stream, 
+                         xs_number = xs_number, 
+                         bankfull_elevation = bankfull_elevation))
 
   return(out_params)
 }

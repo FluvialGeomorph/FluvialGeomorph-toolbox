@@ -23,16 +23,16 @@ tool_exec <- function(in_params, out_params) {
   fg_install <- file.path(fg, "install")
   source(file.path(fg_install, "FG_utils.R"))
   # Load required libraries
-  load_packages(c("sp", "dplyr", "tibble", "tidyr", "ggplot2", "ggrepel", 
-                  "fluvgeo"))
-
+  load_packages(c("sp", "dplyr", "tibble", "tidyr", "ggplot2", 
+                  "ggrepel", "fluvgeo"))
+  
   # gp tool parameters
   xs_points_fc        <- in_params[[1]]
   regions             <- c(in_params[[2]], recursive = TRUE)
   bankfull_elevation  <- in_params[[3]]
   
   # Import fc to sp
-  xs_points <- arc2sp(xs_points_fc)
+  xs_points <- fluvgeo::arc2sp(xs_points_fc)
 
   # Determine the stream names
   streams <- unique(xs_points$ReachName)
@@ -41,15 +41,15 @@ tool_exec <- function(in_params, out_params) {
   xs_pts <- xs_points@data
   
   # Calculate cross section dimensions
-  xs_dims <- xs_dimensions(xs_points = xs_pts, 
-                           streams = streams, 
-                           regions = regions, 
-                           bankfull_elevation = bankfull_elevation)
+  xs_dims <- fluvgeo::xs_dimensions(xs_points = xs_pts, 
+                                    streams = streams, 
+                                    regions = regions, 
+                                    bankfull_elevation = bankfull_elevation)
 
   # Call the gof_graph plot function
-  print(reach_rhg_graph(xs_dims = xs_dims, 
-                        streams = streams, 
-                        bf_elevation = bankfull_elevation))
+  print(fluvgeo::reach_rhg_graph(xs_dims = xs_dims, 
+                                 streams = streams, 
+                                 bf_elevation = bankfull_elevation))
   
   return(out_params)
 }

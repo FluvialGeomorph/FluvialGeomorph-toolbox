@@ -33,6 +33,10 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("dplyr", "purrr", "sp", "ggplot2", "fluvgeo"))
     
+    # Ensure pandoc can be found
+    message("Setting pandoc directory...")
+    set_pandoc()
+    
     # gp tool parameters
     stream            <- in_params[[1]]
     flowline_points_1 <- in_params[[2]]
@@ -106,9 +110,9 @@ tool_exec <- function(in_params, out_params) {
     # Call the graph function
     print("Calling plot")
     print(fluvgeo::compare_long_profile(stream = stream,
-                                        flowline_pts_sf_list = flowline_pts_sf_list,
-                                        features_sf = features_sf,
-                                        profile_units = profile_units))
+                                    flowline_pts_sf_list = flowline_pts_sf_list,
+                                    features_sf = features_sf,
+                                    profile_units = profile_units))
     
     return(out_params)
 }

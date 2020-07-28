@@ -1,4 +1,4 @@
-#' @title Estimate bankfull report
+#' @title Estimate Bankfull Report
 #' 
 #' @description Produces the bankfull estimate report.
 #' 
@@ -32,10 +32,12 @@ tool_exec <- function(in_params, out_params) {
     dir_name <- getSrcDirectory(function(x) {x})
     source(file.path(dir_name, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", "ggplot2",
-                    "ggrepel", "knitr", "rmarkdown", "kableExtra", "reshape2",
-                    "assertthat", "fluvgeo"))
-    # Set pandoc
+    load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", 
+                    "ggplot2", "ggrepel", "knitr", "rmarkdown", 
+                    "kableExtra", "reshape2", "assertthat", "fluvgeo"))
+    
+    # Ensure pandoc can be found
+    message("Setting pandoc directory...")
     set_pandoc()
     
     # gp tool parameters
@@ -50,7 +52,7 @@ tool_exec <- function(in_params, out_params) {
     output_format       <- in_params[[9]]
     
     # Import fc to sp
-    xs_points <- arc2sp(xs_points_fc)
+    xs_points <- fluvgeo::arc2sp(xs_points_fc)
     
     # Determine the stream names
     streams <- unique(xs_points$ReachName)
@@ -64,14 +66,14 @@ tool_exec <- function(in_params, out_params) {
     xs_pts <- xs_points@data
     
     # Call the estimate_bankfull function to create the report
-    estimate_bankfull(xs_points = xs_pts,
-                      streams = streams,
-                      regions = regions,
-                      bankfull_elevations = bankfull_elevations,
-                      bf_estimate = bf_estimate,
-                      stat = stat,
-                      output_dir = output_dir,
-                      output_format = output_format)
+    fluvgeo::estimate_bankfull(xs_points = xs_pts,
+                               streams = streams,
+                               regions = regions,
+                               bankfull_elevations = bankfull_elevations,
+                               bf_estimate = bf_estimate,
+                               stat = stat,
+                               output_dir = output_dir,
+                               output_format = output_format)
     
     return(out_params)
 }

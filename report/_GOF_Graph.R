@@ -30,8 +30,8 @@ tool_exec <- function(in_params, out_params) {
   fg_install <- file.path(fg, "install")
   source(file.path(fg_install, "FG_utils.R"))
   # Load required libraries
-  load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", "ggplot2", 
-                  "fluvgeo"))
+  load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", 
+                  "ggplot2", "fluvgeo"))
 
   # gp tool parameters
   xs_points_fc        <- in_params[[1]]
@@ -56,22 +56,22 @@ tool_exec <- function(in_params, out_params) {
   xs_pts <- xs_points@data
 
   # Calculate cross section dimensions
-  xs_dims <- xs_dimensions(xs_points = xs_pts, 
-                           streams = streams, 
-                           regions = regions, 
-                           bankfull_elevation = bankfull_elevations)
+  xs_dims <- fluvgeo::xs_dimensions(xs_points = xs_pts, 
+                                    streams = streams, 
+                                    regions = regions, 
+                                    bankfull_elevation = bankfull_elevations)
   
   # Calculate GOF stats for all `streams`, `regions` and `bankfull_elevations`
-  gof_stats <- build_gof_stats(xs_dims = xs_dims, 
-                               streams = streams, 
-                               regions = regions, 
-                               bankfull_elevations = bankfull_elevations)
+  gof_stats <- fluvgeo::build_gof_stats(xs_dims = xs_dims, 
+                                     streams = streams, 
+                                     regions = regions, 
+                                     bankfull_elevations = bankfull_elevations)
   
   # Call the gof_graph plot function
-  print(gof_graph(gof_stats = gof_stats, 
-                  stream = streams, 
-                  bankfull_elevation = bankfull_elevation, 
-                  stat = "MAE"))
+  print(fluvgeo::gof_graph(gof_stats = gof_stats, 
+                           stream = streams, 
+                           bankfull_elevation = bankfull_elevation, 
+                           stat = "MAE"))
 
   return(out_params)
 }

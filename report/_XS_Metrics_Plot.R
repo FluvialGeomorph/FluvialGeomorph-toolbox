@@ -27,16 +27,16 @@ tool_exec <- function(in_params, out_params) {
     label_xs            <- as.logical(in_params[[3]])
     
     # Import fc to sp
-    xs_dimensions <- arc2sp(xs_dimensions_fc)
-    features_sp <- arc2sp(features_fc)
+    xs_dimensions <- fluvgeo::arc2sp(xs_dimensions_fc)
+    features_sp   <- fluvgeo::arc2sp(features_fc)
 
     # Convert to a data frame
     xs_dims <- xs_dimensions@data
 
     # Call xs_plot function
-    print(xs_metrics_plot(reach_xs_dims = xs_dims, 
-                          features_sp = features_sp,
-                          label_xs = label_xs))
+    print(fluvgeo::xs_metrics_plot(reach_xs_dims = xs_dims, 
+                                   features_sp = features_sp,
+                                   label_xs = label_xs))
     
     return(out_params)
 }

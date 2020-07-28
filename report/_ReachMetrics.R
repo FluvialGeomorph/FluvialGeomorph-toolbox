@@ -29,10 +29,11 @@ tool_exec <- function(in_params, out_params) {
     dir_name <- getSrcDirectory(function(x) {x})
     source(file.path(dir_name, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", "ggplot2",
-                    "ggrepel", "knitr", "rmarkdown", "kableExtra", "reshape2",
-                    "assertthat", "fluvgeo"))
-    # Set pandoc
+    load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", 
+                             "ggplot2", "ggrepel", "knitr", "rmarkdown", 
+                             "kableExtra", "reshape2", "assertthat", "fluvgeo"))
+    # Ensure pandoc can be found
+    message("Setting pandoc directory...")
     set_pandoc()
     
     # gp tool parameters
@@ -48,10 +49,10 @@ tool_exec <- function(in_params, out_params) {
     output_format       <- in_params[[10]]
     
     # Import fc to sp
-    xs_points_sp        <- arc2sp(xs_points_fc)
-    xs_dims_planform_sp <- arc2sp(xs_dims_planform_fc)
-    bankline_sp         <- arc2sp(banklines_fc)
-    features_sp         <- arc2sp(features_fc)
+    xs_points_sp        <- fluvgeo::arc2sp(xs_points_fc)
+    xs_dims_planform_sp <- fluvgeo::arc2sp(xs_dims_planform_fc)
+    bankline_sp         <- fluvgeo::arc2sp(banklines_fc)
+    features_sp         <- fluvgeo::arc2sp(features_fc)
     
     # Determine the stream names
     streams <- unique(xs_points$ReachName)
@@ -62,17 +63,17 @@ tool_exec <- function(in_params, out_params) {
     features         <- features_sp@data
     
     # Call the estimate_bankfull function to create the report
-    xs_metrics_report(xs_points = xs_points,
-                      xs_dims_planform = xs_dims_planform,
-                      dem = dem,
-                      banklines = bankline_sp,
-                      extent_factor = extent_factor,
-                      streams = streams,
-                      regions = regions,
-                      features = features,
-                      label_xs = label_xs,
-                      output_dir = output_dir,
-                      output_format = output_format)
+    fluvgeo::xs_metrics_report(xs_points = xs_points,
+                               xs_dims_planform = xs_dims_planform,
+                               dem = dem,
+                               banklines = bankline_sp,
+                               extent_factor = extent_factor,
+                               streams = streams,
+                               regions = regions,
+                               features = features,
+                               label_xs = label_xs,
+                               output_dir = output_dir,
+                               output_format = output_format)
     
     return(out_params)
 }
