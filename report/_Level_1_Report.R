@@ -50,6 +50,10 @@ tool_exec <- function(in_params, out_params) {
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
     load_packages(c("purrr", "rmarkdown", "ggplot2", "fluvgeo"))
+    
+    # Ensure pandoc can be found
+    message("Setting pandoc directory...")
+    set_pandoc()
 
     # gp tool parameters
     stream             <- in_params[[1]]
