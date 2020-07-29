@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='FluvialGeomorph',
-      version='0.1.34',
+      version='0.1.34.9000',
       author='Michael Dougherty',
       author_email='Michael.P.Dougherty@usace.army.mil',
       description='The FluvialGeomorph toolbox contains a set of tools for measuring river geometry and assessing river conditions.',
