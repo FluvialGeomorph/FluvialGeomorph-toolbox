@@ -1,31 +1,33 @@
-#' Calculates stream gradient (or slope) for a flowline_points feature
-#' class.
+#' @title Calculate Slope and Sinuosity
+#' 
+#' @description Calculates stream gradient (or slope) ans sinuosity for a 
+#' `flowline_points` or `stream_network` feature class.
 #'
-#' Args:
-#'    flowline_points_fc: character; the full path to an ESRI flowline 
-#'                        points feature class
-#'    gradient_distance:  numeric; the window size (in feet) around each 
-#'                        point that will be used to calculate the stream 
-#'                        gradient
-#'    use_smoothing:      boolean; determines if smoothed elevation values
-#'                        are used to calculate gradient. values are: 
-#'                        TRUE, FALSE (default)
-#'    loess_span:         numeric; the loess regression span parameter, 
-#'                        defaults to 0.05
+#' @export
+#' @param flowline_points_fc  character; the full path to a `flowline_points` 
+#'                            feature class
+#' @param gradient_distance   numeric; the number of features to lead (upstream)
+#'                            and lag (downstream) to calculate the slope and 
+#'                            sinuosity. Must be an integer.
+#' @param use_smoothing       logical; determines if smoothed elevation values
+#'                            are used to calculate gradient and sinuosity 
+#'                            (default is FALSE). 
+#' @param loess_span          numeric; the loess regression span parameter, 
+#'                            defaults to 0.05
 #'
-#' Usage:
-#'    Positive slope values represent elevations decreasing as one moves 
+#' @details Positive slope values represent elevations decreasing as one moves 
 #'    downstream. Negative slope values represent elevations increasing as 
 #'    one moves downstream (caused by error in the terrain data). 
 #'
-#' Returns:
-#'    A new flowline_points feature class called 'gradient' with the new
-#'    fields 'slope', `sinuosity`. 
+#' @return A new feature class called `gradient_<gradient_distance>` with new
+#'    fields added describing slope and sinuosity. 
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     dir_name <- getSrcDirectory(function(x) {x})
-    source(file.path(dir_name, "FG_utils.R"))
+    fg <- dirname(dir_name)
+    fg_install <- file.path(fg, "install")
+    source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
     load_packages(c("sp", "dplyr", "raster", "fluvgeo"))
 
@@ -36,13 +38,13 @@ tool_exec <- function(in_params, out_params) {
     loess_span          <- as.numeric(in_params[[4]])
     
     # temp variables for development within R
-    #library(arcgisbinding)
-    #arc.check_product()
-    #library(raster)
-    #flowline_points_fc <- "//mvrdfs/egis/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/flowline_points"
-    #gradient_distance  <- 1000
-    #use_smoothing      <- TRUE
-    #loess_span         <- 0.05
+    # library(arcgisbinding)
+    # arc.check_product()
+    # library(raster)
+    # flowline_points_fc <- "D:/Workspace/EMRRP_Sediment/09_LittleSenachwineCreek/LittleSenachwineCreek.gdb/flowline_points"
+    # gradient_distance  <- 1000
+    # use_smoothing      <- TRUE
+    # loess_span         <- 0.05
     
     # Set default values
     if(length(use_smoothing) < 1) {
@@ -53,18 +55,19 @@ tool_exec <- function(in_params, out_params) {
     }
 
     # Import fc to sp
-    flowline_points <- arc2sp(flowline_points_fc)
+    flowline_points <- fluvgeo::arc2sp(flowline_points_fc)
     
-    # Convert to data frame
-    flowline_pts <- data.frame(flowline_points@data)
-    
-    # Call the fluvgeo::slope_sinuosity function
-    fl_pts <- slope_sinuosity(channel_features = flowline_pts, 
-                              lead_lag = gradient_distance,
-                              use_smoothing = use_smoothing,
-                              loess_span = loess_span)
+    # Calculate slope and sinuosity
+    message("Calculating slope and sinuosity...")
+    fl_pts <- fluvgeo::slope_sinuosity(channel_features = flowline_points, 
+                                       lead_n = gradient_distance,
+                                       lag_n = gradient_distance,
+                                       use_smoothing = use_smoothing,
+                                       loess_span = loess_span,
+                                       vert_units = "ft")
     
     # Join slope attributes back to sp object
+    message("Joining slope-sinuosity attributes...")
     gradient <- sp::merge(x = flowline_points, 
                           y = fl_pts[,c("OBJECTID","Z_smooth", 
                                         "upstream_x","upstream_y", 
@@ -76,9 +79,11 @@ tool_exec <- function(in_params, out_params) {
                           by.x = "OBJECTID", by.y = "OBJECTID")
     
     # Convert sp object back to new feature class
-    gradient_path <- paste0(dirname(flowline_points_fc), "/", "gradient_", 
-                            as.character(gradient_distance))
-    sp2arc(sp_obj = gradient, fc_path = gradient_path)
+    message("Writing the new gradient feature class...")
+    gradient_path <- file.path(dirname(flowline_points_fc), 
+                               paste0("gradient_", 
+                               as.character(gradient_distance)))
+    fluvgeo::sp2arc(sp_obj = gradient, fc_path = gradient_path)
     
     return(out_params)
 }
