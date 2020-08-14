@@ -1,6 +1,10 @@
 # FluvialGeomorph v0.1.35 (Release date: 2020-08-00)
 
+## Major Changes
+* Updated the `Slope and Sinuosity` tool. 
+
 ## Bug fixes
+* Fixed the `Estimate Bankfull` tool. 
 
 
 ## Compatibility Matrix
