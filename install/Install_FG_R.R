@@ -20,7 +20,8 @@ tool_exec <- function(in_params, out_params) {
     message("Installing needed pacakges...")
     needed_pkgs <- c("assertthat", "backports", "dplyr", "ggplot2", "knitr", 
                      "purrr", "raster", "remotes", "rlang", "rmarkdown", 
-                     "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools")
+                     "sf", "sp", "testthat", "tidyr", "tmap", "tmaptools",
+                     "ceramic", "grDevices")
     install_needed_packages(needed_pkgs)
     
     # Load FluvialGeomorph R packages

@@ -20,7 +20,7 @@ R               |3.6       |![](https://img.shields.io/badge/-4.0-red)
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
 FluvialGeomorph |0.1.37    |0.1.37             
 
-*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
 
 
@@ -43,7 +43,7 @@ R               |3.6       |![](https://img.shields.io/badge/-4.0-red)
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
 FluvialGeomorph |0.1.36    |0.1.36             
 
-*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
 
 # FluvialGeomorph v0.1.35 (Release date: 2020-08-15)
@@ -67,7 +67,7 @@ R               |3.6       |![](https://img.shields.io/badge/-4.0-red)
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
 FluvialGeomorph |0.1.35    |0.1.35             
 
-*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
 
 # FluvialGeomorph v0.1.34 (Release date: 2020-07-27)
@@ -86,7 +86,7 @@ R               |3.6       |![](https://img.shields.io/badge/-4.0-red)
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
 FluvialGeomorph |0.1.34    |0.1.34             
 
-*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
 
 # FluvialGeomorph v0.1.33 (Release date: 2020-07-27)
@@ -106,7 +106,7 @@ R               |3.6       |![](https://img.shields.io/badge/-4.0-red)
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
 FluvialGeomorph |0.1.33    |0.1.33             
 
-*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
 
 # FluvialGeomorph v0.1.32 (Release date: 2020-07-09)

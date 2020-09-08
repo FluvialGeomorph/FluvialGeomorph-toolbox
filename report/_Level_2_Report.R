@@ -60,7 +60,8 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("sp", "sf", "tmap", "rmarkdown", "ggplot2", "fluvgeo"))
+    load_packages(c("sp", "sf", "tmap", "rmarkdown", "ggplot2", "ceramic",
+                    "fluvgeo"))
     
     # Ensure pandoc can be found
     message("Setting pandoc directory...")
