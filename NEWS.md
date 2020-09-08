@@ -1,3 +1,29 @@
+# FluvialGeomorph v0.1.37 (Release date: 2020-09-07)
+
+## Major Changes
+* Updated the Level 1 Report with new options. 
+* Updated the Estimate Bankfull Report with new options.
+* Updated the Level 2 Report with new options.
+
+## Bug fixes
+* Lots of little bug fixes in the `fluvgeo` R package. 
+* The Level 2 Report option `Show XS Map` will cause the report to fail. 
+
+## Compatibility Matrix
+Please follow the compatibility matrix below to determine the required combination of software components necessary to run the toolbox. 
+
+Software        |Suported  |Not Supported
+---             |---       |---          
+ArcGIS Pro      |2.5       |2.5          
+ArcMap          |10.7      |10.8         
+R               |3.6       |![](https://img.shields.io/badge/-4.0-red)          
+R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
+FluvialGeomorph |0.1.37    |0.1.37             
+
+*Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools. *
+
+
+
 # FluvialGeomorph v0.1.36 (Release date: 2020-08-31)
 
 ## Major Changes
