@@ -34,6 +34,16 @@
 #' @param profile_units      character; The units to be used for the x-axis of
 #'                           the longitudinal profile graphs. One of "feet",
 #'                           "miles", "meters", "kilometers".
+#' @param aerial             logical; Display an overview map with an aerial
+#'                           photo background?
+#' @param elevation          logical; Display an overview map with an elevation
+#'                           background?
+#' @param xs_label_freq      numeric; An integer indicating the frequency of
+#'                           cross section labels.
+#' @param exaggeration       numeric; The degree of terrain exaggeration.
+#' @param extent_factor      numeric; The amount the extent is expanded around
+#'                           the cross section feature class. Values greater
+#'                           than one zoom out, values less than one zoom in.
 #' @param output_dir         character; The path to the folder in which to write
 #'                           the report.
 #' @param output_format      character; The file format of the report. One of
@@ -49,7 +59,7 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("purrr", "rmarkdown", "ggplot2", "fluvgeo"))
+    load_packages(c("purrr", "rmarkdown", "ggplot2", "tibble", "fluvgeo"))
     
     # Ensure pandoc can be found
     message("Setting pandoc directory...")
@@ -73,8 +83,33 @@ tool_exec <- function(in_params, out_params) {
     survey_name_4      <- in_params[[15]]
     features_fc        <- in_params[[16]]
     profile_units      <- in_params[[17]]
-    output_dir         <- in_params[[18]]
-    output_format      <- in_params[[19]]
+    aerial             <- in_params[[18]]
+    elevation          <- in_params[[19]]
+    xs_label_freq      <- in_params[[20]]
+    exaggeration       <- in_params[[21]]
+    extent_factor      <- in_params[[22]]
+    output_dir         <- in_params[[23]]
+    output_format      <- in_params[[24]]
+    
+    # Verify parameters
+    ## Create list of parameters (named using the parameter names)
+    param_list <- tibble::lst(stream, flowline_fc, cross_section_fc,
+                              flowline_points_1, flowline_points_2,
+                              flowline_points_3, flowline_points_4,
+                              xs_points_1, xs_points_2, 
+                              xs_points_3, xs_points_4,
+                              survey_name_1, survey_name_2,
+                              survey_name_3, survey_name_4,
+                              features_fc, profile_units,
+                              aerial, elevation,
+                              xs_label_freq, exaggeration,
+                              extent_factor,
+                              output_dir, output_format)
+    
+    ## Get parameter verification table
+    message("Compare input tool parameters")
+    param_table <- compare_params(in_params, param_list)
+    print(tibble::as_tibble(param_table), n = 24)
     
     # Render the report
     fluvgeo::level_1_report(stream, flowline_fc, cross_section_fc,
@@ -84,6 +119,9 @@ tool_exec <- function(in_params, out_params) {
                             survey_name_1, survey_name_2,
                             survey_name_3, survey_name_4,
                             features_fc, profile_units,
+                            aerial, elevation,
+                            xs_label_freq, exaggeration,
+                            extent_factor,
                             output_dir, output_format)
     
     return(out_params)
