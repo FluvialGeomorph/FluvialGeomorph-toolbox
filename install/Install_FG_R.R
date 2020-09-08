@@ -36,5 +36,9 @@ tool_exec <- function(in_params, out_params) {
     message("Setting pandoc directory...")
     set_pandoc()
     
+    # Set Mapbox API key
+    message("Setting Mapbox API key...")
+    Sys.setenv(MAPBOX_API_KEY="pk.eyJ1IjoibWlrZWRvYyIsImEiOiJja2VwcThtcm4wbHMxMnJxdm1wNjE5eXhmIn0.WE_PG_GiKhpqr6JIJbTsmQ")
+    
     return(out_params)
 }
