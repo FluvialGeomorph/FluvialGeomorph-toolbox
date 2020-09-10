@@ -1,7 +1,7 @@
 """____________________________________________________________________________
 Script Name:          _Export_Level_1.py
 Description:          Exports the attrbute tables of Level 1 feature classes. 
-Date:                 05/27/2020
+Date:                 09/10/2020
 
 Usage:
 Exports the attrbute tables of requested Level 1 feature classes to a new 
@@ -12,7 +12,9 @@ attribute table is created for each requested level one feature class.
 Parameters:
 output_workspace      -- Path to the output workspace.
 flowline_points       -- Path to the flowline_points feature class.
+xs                    -- Path to the cross section feature class.
 xs_points             -- Path to the xs_points feature class.
+features              -- Path to the features feature class.
 
 Outputs:
 Exports .csv files of the attribute tables of the requested feature classes. 
@@ -22,7 +24,7 @@ import os
 import arcpy
 import shutil
 
-def Export_Level_1(output_workspace, flowline_points, xs_points):
+def Export_Level_1(output_workspace, flowline_points, xs, xs_points, features):
     # Set environment variables 
     arcpy.env.overwriteOutput = True
     
@@ -50,21 +52,35 @@ def Export_Level_1(output_workspace, flowline_points, xs_points):
                                       out_path = archive_folder,
                                       out_name = "flowline_points.csv")
                                       
+    if xs:
+        xs_basename = os.path.splitext(os.path.basename(xs))[0]
+        xs_csv = "{}.csv".format(xs_basename)
+        arcpy.TableToTable_conversion(in_rows = xs,
+                                      out_path = archive_folder,
+                                      out_name = xs_csv)
+                                      
     if xs_points:
         xs_points_basename = os.path.splitext(os.path.basename(xs_points))[0]
         xs_points_csv = "{}.csv".format(xs_points_basename)
         arcpy.TableToTable_conversion(in_rows = xs_points,
                                       out_path = archive_folder,
                                       out_name = xs_points_csv)
+    
+    if features:
+        arcpy.TableToTable_conversion(in_rows = features,
+                                      out_path = archive_folder,
+                                      out_name = "features.csv")
 
 
 def main():
-    Export_Level_1(output_workspace, flowline_points, xs_points)
+    Export_Level_1(output_workspace, flowline_points, xs, xs_points, features)
 
 if __name__ == "__main__":
     # Get input parameters
     output_workspace = arcpy.GetParameterAsText(0)
     flowline_points  = arcpy.GetParameterAsText(1)
-    xs_points        = arcpy.GetParameterAsText(2)
+    xs               = arcpy.GetParameterAsText(2)
+    xs_points        = arcpy.GetParameterAsText(3)
+    features         = arcpy.GetParameterAsText(4)
     
     main()
