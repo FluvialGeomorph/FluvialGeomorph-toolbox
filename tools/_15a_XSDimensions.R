@@ -4,16 +4,16 @@
 #' cross section feature class. 
 #' 
 #' @export
-#' @param xs_fc               feature class; the full path to a cross section 
-#'                            line feature class
+#' @param xs_fc               feature class; The full path to a cross section 
+#'                            line feature class.
 #' @param lead_n              numeric; The number of features to lead/lag on
 #'                            either side of each feature that will be used to
 #'                            calculate the slope and sinuosity.
-#' @param use_smoothing       boolean; determines if smoothed elevation values
+#' @param use_smoothing       boolean; Determines if smoothed elevation values
 #'                            are used to calculate gradient. values are:
 #'                            TRUE, FALSE (default)
-#' @param loess_span          numeric; the loess regression span parameter,
-#'                            defaults to 0.05
+#' @param loess_span          numeric; The loess regression span parameter. 
+#'                            Use values 0.05 - 1. Defaults to 0.05
 #' @param vert_units	      character; The DEM vertical units. One of: "m"
 #'                            (meter), "ft" (foot), "us-ft" (us survey foot)
 #'
