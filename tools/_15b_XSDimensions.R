@@ -136,7 +136,7 @@ tool_exec <- function(in_params, out_params) {
     message("join table of metrics to fc complete")
     
     # Write the xs with hydraulic dimensions
-    xs_dims_path <- paste0(xs_fc, "_dims")
+    xs_dims_path <- paste0(xs_fc, "_dims_L2")
     fluvgeo::sp2arc(sp_obj = xs_dims_sp, fc_path = xs_dims_path)
     
     return(out_params)
