@@ -1,3 +1,16 @@
+"""____________________________________________________________________________
+Script Name:          _validate_Estimate_Bankfull.py
+Description:          Used to validate the script tool _Estimate_Bankfull.py. 
+Date:                 09/12/2020
+
+Usage:
+This code gets copied into the Validation tab of the script tool. 
+
+Features:
+* Populates the `regions` parameter's value list. Use the `update_regions.R` 
+function to get the latest list of regions. 
+____________________________________________________________________________"""
+
 import arcpy
 
 class ToolValidator(object):
@@ -12,7 +25,7 @@ class ToolValidator(object):
         """Refine the properties of a tool's parameters.  This method is
         called when the tool is opened."""
         # Set the list of regions
-        self.params[12].filter.list =   ["Altlantic Plain", 
+        self.params[14].filter.list =   ["Altlantic Plain", 
                                         "Appalachain Highlands", 
                                         "Central and Southern AZ", 
                                         "Eastern - Appalachian Plateau, New England, Valley and Ridge", 
@@ -86,7 +99,7 @@ class ToolValidator(object):
                                         "WV Western Appalachian Plateau"]
 
         # Set the default region
-        self.params[12].value = "USA"
+        self.params[14].value = "USA"
         return
     
     def updateParameters(self):

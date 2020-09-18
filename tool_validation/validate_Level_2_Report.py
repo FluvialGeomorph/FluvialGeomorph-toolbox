@@ -1,3 +1,16 @@
+"""____________________________________________________________________________
+Script Name:          _validate_Level_2_Report.py
+Description:          Used to validate the script tool _Level_2_Report.py. 
+Date:                 09/12/2020
+
+Usage:
+This code gets copied into the Validation tab of the script tool. 
+
+Features:
+* Populates the `regions` parameter's value list. Use the `update_regions.R` 
+function to get the latest list of regions. 
+____________________________________________________________________________"""
+
 import arcpy
 
 class ToolValidator(object):
