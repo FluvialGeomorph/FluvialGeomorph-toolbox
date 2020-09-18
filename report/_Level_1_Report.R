@@ -8,8 +8,8 @@
 #'                           match a stream name in `ReachName` field in the
 #'                           other parameters.
 #' @param flowline_fc        character; The path to a `flowline` feature class.
-#' @param cross_section_fc   character; The path to a cross section feature
-#'                           class.
+#' @param xs_dimensions_fc   character; The path to a Level 1 cross section 
+#'                           dimensions feature class.
 #' @param flowline_points_1  character; The path to a `flowline_points` feature
 #'                           class for the first time period.
 #' @param flowline_points_2  character; The path to a `flowline_points` feature
@@ -31,6 +31,8 @@
 #' @param survey_name_3      character: The name or date of the third survey.
 #' @param survey_name_4      character: The name or date of the fourth survey.
 #' @param features_fc        character; The path to a `features` feature class.
+#' @param dem                character; The path to the DEM raster.
+#' @param show_xs_map        logical; Add the cross section maps to the report?
 #' @param profile_units      character; The units to be used for the x-axis of
 #'                           the longitudinal profile graphs. One of "feet",
 #'                           "miles", "meters", "kilometers".
@@ -59,8 +61,8 @@ tool_exec <- function(in_params, out_params) {
     fg_install <- file.path(fg, "install")
     source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
-    load_packages(c("purrr", "rmarkdown", "ggplot2", "tibble", "ceramic",
-                    "fluvgeo"))
+    load_packages(c("purrr", "sf", "sp", "raster", "rgdal", "tmap", 
+                    "ggplot2", "tibble", "ceramic", "fluvgeo"))
     
     # Ensure pandoc can be found
     message("Setting pandoc directory...")
@@ -69,7 +71,7 @@ tool_exec <- function(in_params, out_params) {
     # gp tool parameters
     stream             <- in_params[[1]]
     flowline_fc        <- in_params[[2]]
-    cross_section_fc   <- in_params[[3]]
+    xs_dimensions_fc   <- in_params[[3]]
     flowline_points_1  <- in_params[[4]]
     flowline_points_2  <- in_params[[5]]
     flowline_points_3  <- in_params[[6]]
@@ -83,25 +85,27 @@ tool_exec <- function(in_params, out_params) {
     survey_name_3      <- in_params[[14]]
     survey_name_4      <- in_params[[15]]
     features_fc        <- in_params[[16]]
-    profile_units      <- in_params[[17]]
-    aerial             <- in_params[[18]]
-    elevation          <- in_params[[19]]
-    xs_label_freq      <- in_params[[20]]
-    exaggeration       <- in_params[[21]]
-    extent_factor      <- in_params[[22]]
-    output_dir         <- in_params[[23]]
-    output_format      <- in_params[[24]]
+    dem                <- in_params[[17]]
+    show_xs_map        <- in_params[[18]]
+    profile_units      <- in_params[[19]]
+    aerial             <- in_params[[20]]
+    elevation          <- in_params[[21]]
+    xs_label_freq      <- in_params[[22]]
+    exaggeration       <- in_params[[23]]
+    extent_factor      <- in_params[[24]]
+    output_dir         <- in_params[[25]]
+    output_format      <- in_params[[26]]
     
     # Verify parameters
     ## Create list of parameters (named using the parameter names)
-    param_list <- tibble::lst(stream, flowline_fc, cross_section_fc,
+    param_list <- tibble::lst(stream, flowline_fc, xs_dimensions_fc,
                               flowline_points_1, flowline_points_2,
                               flowline_points_3, flowline_points_4,
                               xs_points_1, xs_points_2, 
                               xs_points_3, xs_points_4,
                               survey_name_1, survey_name_2,
                               survey_name_3, survey_name_4,
-                              features_fc, profile_units,
+                              features_fc, dem, show_xs_map, profile_units,
                               aerial, elevation,
                               xs_label_freq, exaggeration,
                               extent_factor,
@@ -113,13 +117,13 @@ tool_exec <- function(in_params, out_params) {
     print(tibble::as_tibble(param_table), n = 24)
     
     # Render the report
-    fluvgeo::level_1_report(stream, flowline_fc, cross_section_fc,
+    fluvgeo::level_1_report(stream, flowline_fc, xs_dimensions_fc,
                             flowline_points_1, flowline_points_2,
                             flowline_points_3, flowline_points_4,
                             xs_points_1, xs_points_2, xs_points_3, xs_points_4,
                             survey_name_1, survey_name_2,
                             survey_name_3, survey_name_4,
-                            features_fc, profile_units,
+                            features_fc, dem, show_xs_map, profile_units,
                             aerial, elevation,
                             xs_label_freq, exaggeration,
                             extent_factor,
