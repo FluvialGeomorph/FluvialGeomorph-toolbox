@@ -1,13 +1,13 @@
-#' @title Calculate cross section planform dimensions
+#' @title Calculate Level 3 Cross Section Planform Dimensions
 #' 
-#' @description  Calculates stream planform statistics for the input cross 
-#' section feature class. 
+#' @description  Calculates Level 3 stream planform statistics for the input 
+#' cross section feature class. 
 #' 
 #' @export
-#' @param xs_dimensions       character; the full path to an ESRI cross section 
-#'                            dimension line feature class
-#' @param bankline_points     character; the full path to an ESRI cross section 
-#'                            points feature class
+#' @param xs_dimensions       character; The full path to a Level 2 cross 
+#'                            section dimension line feature class. 
+#' @param bankline_points     character; The full path to an bankline points 
+#'                            feature class. 
 #'
 #' @return A new cross section feature class with the planform dimensions added 
 #' to the attribute table.
@@ -50,7 +50,7 @@ tool_exec <- function(in_params, out_params) {
 
     # Calculate planform dimensions
     xs_dims_plan <- fluvgeo::planform_dimensions(xs_dimensions_sp, 
-                                             bankline_points_sp)
+                                                 bankline_points_sp)
     message("planform dimensions complete")
     
     # Calculate metric ratios
@@ -62,11 +62,11 @@ tool_exec <- function(in_params, out_params) {
     message("conversion to points complete")
     
     # Write the xs lines with the planform dimensions
-    xs_dims_path <- paste0(xs_dimensions, "_planform")
+    xs_dims_path <- gsub("_L2", "_L3", xs_dimensions, fixed = TRUE)
     fluvgeo::sp2arc(sp_obj = xs_dims_ratios, fc_path = xs_dims_path)
     
     # Write the xs points with the planform dimensions
-    xs_dims_path <- paste0(xs_dimensions, "_planform_pts")
+    xs_dims_path <- gsub("_L2", "_L3_pts", xs_dimensions, fixed = TRUE)
     fluvgeo::sp2arc(sp_obj = xs_dims_pts, fc_path = xs_dims_path)
     
     return(out_params)
