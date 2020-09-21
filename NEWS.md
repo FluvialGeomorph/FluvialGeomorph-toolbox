@@ -1,3 +1,29 @@
+# FluvialGeomorph v0.1.39 (Release date: 2020-09-21)
+
+## Major Changes
+* Added the Level 3 Report. 
+* Added cross section maps to the Level 1 and Estimate Bankful reports. 
+
+## Bug fixes
+* Clarified the x-axis label in the `xs_compare_plot_*` to more clearly communicate the orientation of the cross section. 
+* The Level 1, Estimate Bankfull, and Level 2 reports option `Show XS Map` no longer causes the reports to fail. 
+
+## Compatibility Matrix
+Please follow the compatibility matrix below to determine the required combination of software components necessary to run the toolbox. 
+
+Software        |Suported  |Not Supported
+---             |---       |---          
+ArcGIS Pro      |2.5       |2.5          
+ArcMap          |10.7      |10.8         
+R               |3.6       |![](https://img.shields.io/badge/-4.0-red)          
+R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
+FluvialGeomorph |0.1.39    |0.1.39             
+
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
+
+
+
+
 # FluvialGeomorph v0.1.38 (Release date: 2020-09-13)
 
 ## Major Changes
