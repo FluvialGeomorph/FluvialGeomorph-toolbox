@@ -1,6 +1,6 @@
-#' @title Level 2 Report
+#' @title Level 3 Report
 #' 
-#' @description  Creates the FluvialGeomorph Level 2 report.
+#' @description  Creates the FluvialGeomorph Level 3 report.
 #'
 #' @export
 #' @param stream             character; The stream name. The stream name must
@@ -9,7 +9,7 @@
 #' @param flowline_fc        character; The path to a `flowline` feature class.
 #' @param xs_fc              character; The path to the cross section feature
 #'                           class.
-#' @param xs_dims_fc         character; The path to a "*_dims_L2" feature class.
+#' @param xs_dims_fc         character; The path to a "*_dims_L3" feature class.
 #' @param xs_points_1        character; The path to a `xs_points` feature
 #'                           class for the "base year".
 #' @param xs_points_2        character; The path to a `xs_points` feature
@@ -96,6 +96,43 @@ tool_exec <- function(in_params, out_params) {
     output_dir         <- in_params[[26]]
     output_format      <- in_params[[27]]
     
+    # Code for testing in RStudio
+    # library(fluvgeo)
+    # library(sp)
+    # library(sf)
+    # library(tibble)
+    # library(dplyr)
+    # library(arcgisbinding)
+    # arc.check_product()
+    # 
+    # stream        <- "Cole Creek R3"
+    # flowline_fc   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/flowline"
+    # xs_fc         <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/xs_50"
+    # xs_dims_fc    <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/xs_50_dims_L3"
+    # xs_points_1   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/xs_50_points"
+    # xs_points_2   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2010_R3.gdb/xs_50_points"
+    # xs_points_3   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2004_R3.gdb/xs_50_points"
+    # xs_points_4   <- NULL
+    # survey_name_1 <- "2016"
+    # survey_name_2 <- "2010"
+    # survey_name_3 <- "2006"
+    # survey_name_4 <- NULL
+    # dem           <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/dem_2016_hydro"
+    # banklines_fc  <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/banklines"
+    # features_fc   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/features"
+    # bf_estimate   <- 106
+    # regions       <- c("USA")
+    # label_xs      <- TRUE
+    # show_xs_map   <- FALSE
+    # profile_units <- "feet"
+    # aerial        <- TRUE
+    # elevation     <- TRUE
+    # xs_label_freq <- 10
+    # exaggeration  <- 10
+    # extent_factor <- 1.3
+    # output_dir    <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Reports"
+    # output_format <- "word_document"
+    
     # Verify parameters
     ## Create list of parameters (named using the parameter names)
     param_list <- tibble::lst(stream, flowline_fc, xs_fc, xs_dims_fc,
@@ -116,7 +153,7 @@ tool_exec <- function(in_params, out_params) {
     print(tibble::as_tibble(param_table), n = 27)
     
     # Render the report
-    fluvgeo::level_2_report(stream, flowline_fc, xs_fc, xs_dims_fc,
+    fluvgeo::level_3_report(stream, flowline_fc, xs_fc, xs_dims_fc,
                             xs_points_1, xs_points_2,
                             xs_points_3, xs_points_4,
                             survey_name_1, survey_name_2,
