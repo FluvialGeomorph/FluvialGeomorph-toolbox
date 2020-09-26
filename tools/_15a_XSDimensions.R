@@ -60,9 +60,9 @@ tool_exec <- function(in_params, out_params) {
     message("Compare input tool parameters")
     print(compare_params(in_params, param_list))
     
-    # Convert ArcGIS fc to sp format
+    # Convert ArcGIS fc to sf format
     xs_sf <- fluvgeo::fc2sf(xs_fc)
-    message("Conversion to sp complete")
+    message("Conversion to sf complete")
     
     # Calculate cross section dimensions
     xs_dims <- fluvgeo::cross_section_dimensions_L1(xs_sf = xs_sf,
