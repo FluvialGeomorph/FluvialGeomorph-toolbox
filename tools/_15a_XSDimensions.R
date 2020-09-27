@@ -74,7 +74,8 @@ tool_exec <- function(in_params, out_params) {
     
     # Join the xs_dims to xs
     xs_dims_sp <- sp::merge(xs_sf[, c("Seq")], 
-                            xs_dims, by = "Seq")
+                            xs_dims, 
+                            by = "Seq")
     message("join table of metrics to fc complete")
     
     # Write the xs with hydraulic dimensions

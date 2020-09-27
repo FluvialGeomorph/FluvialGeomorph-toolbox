@@ -75,8 +75,8 @@ tool_exec <- function(in_params, out_params) {
     # library(fluvgeo)
     # library(arcgisbinding)
     # arc.check_product()
-    # xs_fc              <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph\\tests\\data\\test.gdb\\xs_200"
-    # xs_points_fc       <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph\\tests\\data\\test.gdb\\xs_200_points"
+    # xs_fc              <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph-toolbox\\tests\\data\\testing_Cole_2016.gdb\\xs_250_25"
+    # xs_points_fc       <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph-toolbox\\tests\\data\\testing_Cole_2016.gdb\\xs_250_25_points"
     # bankfull_elevation <- 104.5
     # lead_n             <- 1
     # use_smoothing      <- TRUE
@@ -89,7 +89,7 @@ tool_exec <- function(in_params, out_params) {
     # width_method       <- NULL
     # in_params <- list(xs_fc, xs_points_fc, bankfull_elevation, lead_n,
     #                   use_smoothing, loess_span, vert_units,
-    #                   discharge_method, discharge_value, region, 
+    #                   discharge_method, discharge_value, region,
     #                   drainage_area, width_method)
     
     # Verify parameters
@@ -109,7 +109,7 @@ tool_exec <- function(in_params, out_params) {
     message("Conversion to sp complete")
     
     # Calculate cross section dimensions
-    xs_dims <- fluvgeo::cross_section_dimensions(xs = xs,
+    xs_dims <- fluvgeo::cross_section_dimensions_L2(xs = xs,
                                         xs_points = xs_points,
                                         bankfull_elevation = bankfull_elevation,
                                         lead_n = lead_n,
@@ -132,7 +132,9 @@ tool_exec <- function(in_params, out_params) {
     message("Calculated stream power")
     
     # Join the xs_dims to xs
-    xs_dims_sp <- sp::merge(xs, xs_dims_spow, by.x = "Seq", by.y = "Seq")
+    xs_dims_sp <- sp::merge(xs[, c("Seq")], 
+                            xs_dims_spow, 
+                            by = "Seq")
     message("join table of metrics to fc complete")
     
     # Write the xs with hydraulic dimensions
