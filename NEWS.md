@@ -1,3 +1,23 @@
+# FluvialGeomorph v0.1.40 (Release date: 2020-09-27)
+
+## Bug fixes
+* Fixed a bug that prevented the Level 1 and 2 reports from displaying slope. 
+* Adjusted the `loess_span` default values. 
+
+## Compatibility Matrix
+Please follow the compatibility matrix below to determine the required combination of software components necessary to run the toolbox. 
+
+Software        |Suported  |Not Supported
+---             |---       |---          
+ArcGIS Pro      |2.5       |2.5          
+ArcMap          |10.7      |10.8         
+R               |3.6       |![](https://img.shields.io/badge/-4.0-red)          
+R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
+FluvialGeomorph |0.1.40    |0.1.40             
+
+**Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
+
+
 # FluvialGeomorph v0.1.39 (Release date: 2020-09-21)
 
 ## Major Changes
@@ -20,8 +40,6 @@ R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)
 FluvialGeomorph |0.1.39    |0.1.39             
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
-
-
 
 
 # FluvialGeomorph v0.1.38 (Release date: 2020-09-13)
