@@ -86,10 +86,27 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     
     # Return
     arcpy.SetParameter(3, cross_section)
+    add_chart(cross_section)
 
     # Cleanup
     arcpy.Delete_management(in_data = cross_section_flowline_point)
     return
+
+def add_chart(cross_section):
+    if arcpy.GetInstallInfo()['ProductName'] == "ArcGISPro":
+      aprx = arcpy.mp.ArcGISProject("current")
+      map = aprx.listMaps()[0]
+      cross_section_layer = map.addDataFromPath(cross_section)
+      chart = arcpy.Chart('XS_Seq_by_POINT_M')
+    
+      chart.type = 'scatter'
+      chart.title = 'XS Seq by River Position'
+      chart.description = 'Ensure that XS numbering starts at the downstream end.'
+      chart.xAxis.field = 'Seq'
+      chart.yAxis.field = 'POINT_M'
+      chart.xAxis.title = 'Seq'
+      chart.yAxis.title = 'POINT_M'
+      chart.addToLayer(cross_section_layer)
 
 def main():
     # Call the XSAssignRiverPosition function with command line parameters
