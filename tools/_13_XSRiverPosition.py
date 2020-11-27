@@ -97,16 +97,26 @@ def add_chart(cross_section):
       aprx = arcpy.mp.ArcGISProject("current")
       map = aprx.listMaps()[0]
       cross_section_layer = map.addDataFromPath(cross_section)
-      chart = arcpy.Chart('XS_Seq_by_POINT_M')
+      seq_m = arcpy.Chart('XS_Seq_by_POINT_M')
+      seq_w = arcpy.Chart('XS_Seq_by_Watershed_Area_SqMile')
     
-      chart.type = 'scatter'
-      chart.title = 'XS Seq by River Position'
-      chart.description = 'Ensure that XS numbering starts at the downstream end.'
-      chart.xAxis.field = 'Seq'
-      chart.yAxis.field = 'POINT_M'
-      chart.xAxis.title = 'Seq'
-      chart.yAxis.title = 'POINT_M'
-      chart.addToLayer(cross_section_layer)
+      seq_m.type = 'scatter'
+      seq_m.title = 'XS Seq by km_to_mouth'
+      seq_m.description = 'Ensure that XS numbering starts at the downstream end.'
+      seq_m.xAxis.field = 'Seq'
+      seq_m.yAxis.field = 'km_to_mouth'
+      seq_m.xAxis.title = 'Seq'
+      seq_m.yAxis.title = 'km_to_mouth'
+      seq_m.addToLayer(cross_section_layer)
+      
+      seq_w.type = 'scatter'
+      seq_w.title = 'XS Seq by Watershed Area (sq mile)'
+      seq_w.description = 'Ensure that XS watershed areas increase downstream.'
+      seq_w.xAxis.field = 'Seq'
+      seq_w.yAxis.field = 'Watershed_Area_SqMile'
+      seq_w.xAxis.title = 'Seq'
+      seq_w.yAxis.title = 'Watershed_Area_SqMile'
+      seq_w.addToLayer(cross_section_layer)
 
 def main():
     # Call the XSAssignRiverPosition function with command line parameters
