@@ -25,7 +25,7 @@ class ToolValidator(object):
         """Refine the properties of a tool's parameters.  This method is
         called when the tool is opened."""
         # Set the list of regions
-        self.params[14].filter.list =   ["Altlantic Plain", 
+        self.params[18].filter.list =   ["Altlantic Plain", 
                                         "Appalachain Highlands", 
                                         "Central and Southern AZ", 
                                         "Eastern - Appalachian Plateau, New England, Valley and Ridge", 
@@ -99,7 +99,7 @@ class ToolValidator(object):
                                         "WV Western Appalachian Plateau"]
 
         # Set the default region
-        self.params[14].value = "USA"
+        self.params[18].value = "USA"
         return
     
     def updateParameters(self):
