@@ -7,7 +7,9 @@
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     dir_name <- getSrcDirectory(function(x) {x})
-    source(file.path(dir_name, "FG_utils.R"))
+    fg <- dirname(dir_name)
+    fg_install <- file.path(fg, "install")
+    source(file.path(fg_install, "FG_utils.R"))
     # Load required libraries
     load_packages(c("sp", "dplyr", "raster", "fluvgeo"))
     
