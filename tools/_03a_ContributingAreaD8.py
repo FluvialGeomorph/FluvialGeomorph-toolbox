@@ -56,8 +56,7 @@ def StudyAreaWatershed(output_workspace, dem_hydro, processes):
     flow_dir_d8 = arcpy.sa.FlowDirection(in_surface_raster = dem_fill, 
                                          flow_direction_type = "D8")
     flow_direction_d8 = os.path.join(output_workspace, "flow_direction_d8")
-    arcpy.CopyRaster_management(in_raster = flow_dir_d8, 
-                                out_rasterdataset = flow_direction_d8)
+    flow_dir_d8.save(flow_direction_d8)
     
     # Calculate raster statistics and build pyramids
     arcpy.AddMessage("    Calculating statistics...")
@@ -72,8 +71,7 @@ def StudyAreaWatershed(output_workspace, dem_hydro, processes):
                                               data_type = "FLOAT", 
                                               flow_direction_type = "D8")
     flow_accumulation_d8 = os.path.join(output_workspace, "flow_accumulation_d8")
-    arcpy.CopyRaster_management(in_raster = flow_accum_d8, 
-                                out_rasterdataset = flow_accumulation_d8)
+    flow_accum_d8.save(flow_accumulation_d8)
     
     # Calculate raster statistics and build pyramids
     arcpy.AddMessage("    Calculating statistics...")
