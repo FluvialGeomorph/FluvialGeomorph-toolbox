@@ -147,14 +147,15 @@ def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth,
         arcpy.AddMessage("Calibrated route")
     
     # Convert flowline feature vertices to points
+    flowline_points = os.path.join(output_workspace, "flowline_points")
     arcpy.FeatureVerticesToPoints_management(
                      in_features = "flowline_densify_route", 
-                     out_feature_class = "flowline_points")
+                     out_feature_class = flowline_points)
     arcpy.AddMessage("Converted densified flowline route to points: "
                      "flowline_points")
 
     # Add x, y, z, and m values to the `flowline_points` feature class
-    arcpy.AddGeometryAttributes_management(Input_Features = "flowline_points", 
+    arcpy.AddGeometryAttributes_management(Input_Features = flowline_points, 
                                            Geometry_Properties = "POINT_X_Y_Z_M", 
                                            Length_Unit = "METERS")
 
@@ -169,7 +170,7 @@ def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth,
                            return {}
                        else:
                            return m""".format(km_to_mouth)
-    arcpy.CalculateField_management(in_table = "flowline_points", 
+    arcpy.CalculateField_management(in_table = flowline_points, 
                                 field = "POINT_M", 
                                 expression = "setNull2Zero(!POINT_M!)", 
                                 code_block = codeBlock,
@@ -177,18 +178,18 @@ def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth,
     #arcpy.AddMessage("Set Null m-values to zero - end: {}".format(datetime.now().strftime("%H:%M:%S")))
 
     # Delete un-needed fields
-    arcpy.DeleteField_management(in_table = "flowline_points", 
+    arcpy.DeleteField_management(in_table = flowline_points, 
                                  drop_field = ["ORIG_FID","POINT_Z"])
 
     # Add elevations to the `flowline_points` feature class
-    arcpy.AddSurfaceInformation_3d(in_feature_class = "flowline_points", 
+    arcpy.AddSurfaceInformation_3d(in_feature_class = flowline_points, 
                                    in_surface = dem, 
                                    out_property = "Z",
                                    z_factor = 1.0)
     arcpy.AddMessage("Added geometry fields to flowline points.")
     
     # Return
-    arcpy.SetParameter(5, "flowline_points")
+    arcpy.SetParameter(9, flowline_points)
     
     # Cleanup
     arcpy.Delete_management(in_data = "flowline_simplify")
