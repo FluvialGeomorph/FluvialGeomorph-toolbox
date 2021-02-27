@@ -40,6 +40,10 @@ tool_exec <- function(in_params, out_params) {
     message("Setting Mapbox API key...")
     Sys.setenv(MAPBOX_API_KEY="pk.eyJ1IjoibWlrZWRvYyIsImEiOiJja2VwcThtcm4wbHMxMnJxdm1wNjE5eXhmIn0.WE_PG_GiKhpqr6JIJbTsmQ")
     
+    # Set ceramic cache
+    message("Setting ceramic cache folder...")
+    ceramic::ceramic_cache(force = TRUE)
+    
     # Mute warnings of possible GDAL/OSR exportToProj4() degradation
     options("rgdal_show_exportToProj4_warnings"="none")
     return(out_params)
