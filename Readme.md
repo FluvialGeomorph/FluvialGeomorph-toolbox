@@ -6,8 +6,8 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 ## Project Status
 [![Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle)
 [![Project Status: Active The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![packageversion](https://img.shields.io/badge/Package%20version-0.1.41-orange.svg?style=flat-square)](commits/master)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2020--12--14-yellowgreen.svg)](/commits/master)
+[![packageversion](https://img.shields.io/badge/Package%20version-0.1.42-orange.svg?style=flat-square)](commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2021--02--28-yellowgreen.svg)](/commits/master)
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 ## Description
@@ -16,7 +16,7 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 
 The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess stream condition and health using remotely sensed terrain data (LiDAR) at fine scale and for large spatial extents. This toolbox was initially inspired by the approach and techniques of the [River Bathymetry Toolkit, RBT](https://essa.com/explore-essa/tools/river-bathymetry-toolkit-rbt/#1512261459195-77c49866-a2eb) but expanded upon their effort adding additional analysis tools and reports. This project is open source to help ensure that these fluvial geomorphology tools remain available for the widest use, maintenance, and adaptation. 
 
-<img src="docs/images/HDQLO-03_h120.jpg" width=125 align="right" />
+<img src="docs/images/USACE_200.png" width=125 align="right" />
 
 ## Funding
 Funding for development and maintenance of FluvialGeomorph has been provided by the following US Army Corps of Engineers (USACE) programs:
@@ -25,8 +25,14 @@ Funding for development and maintenance of FluvialGeomorph has been provided by 
 * [Regional Sediment Management Program (RSM)](https://rsm.usace.army.mil/)
 * [Mississippi River Geomorphology and Potamology Program (MRG&P)](https://www.mvd.usace.army.mil/Missions/Mississippi-River-Science-Technology/MS-River-Geomorphology-Potamology/)
 * [Flood Risk Management Program (FRM)](https://www.iwr.usace.army.mil/Missions/Flood-Risk-Management/Flood-Risk-Management-Program/)
+* [Engineering With Nature (EWN)](https://ewn.el.erdc.dren.mil/)
 
-<img src="docs/images/FRMP_300.png" height=75 align="right" /><img src="docs/images/MRG&P_300.png" height=75 align="right" /><img src="docs/images/RSMlogo.png" height=75 align="right" /><img src="docs/images/EMRRP_logo_300.png" height=75 align="right" />
+<img src="docs/images/EWN_200.png" height=75 align="right" />
+<img src="docs/images/SilverJackets_200.png" height=75 align="right" />
+<img src="docs/images/FRMP_200.png" height=75 align="right" />
+<img src="docs/images/MRG&P_300.png" height=75 align="right" />
+<img src="docs/images/RSM_200.png" height=75 align="right" />
+<img src="docs/images/EMRRP_logo_200.png" height=75 align="right" />
 
 ## Latest Updates
 Check out the [NEWS](NEWS.md) for details on the latest updates. 
