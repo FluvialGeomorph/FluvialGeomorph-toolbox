@@ -1,3 +1,12 @@
+# FluvialGeomorph v0.1.42 (Release date: 2021-02-28)
+
+# Major Changes
+* The R-bridge (arcgisbinding v1.0.1.244) now fully supports R 4.x. Therefore, the FluvialGeomorph toolbox can now be used in ArcGIS Pro and Map with the latest version of R. 
+
+# Bug fixes
+* The install script now creates the ceramic cache directory. If this directory doesn't previously exist, tools calling ceramic would fail when the interactive prompt wasn't responded to. On certian computers, this bug prevented all reports from running since a map calling ceramic is at the beginning of each report. 
+
+
 # FluvialGeomorph v0.1.41 (Release date: 2020-12-14)
 
 # Major Changes
@@ -15,7 +24,7 @@ ArcGIS Pro      |2.5       |2.6
 ArcMap          |10.7      |10.8         
 R               |3.6       |![](https://img.shields.io/badge/-4.0-red)          
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
-FluvialGeomorph |0.1.43    |0.1.43             
+FluvialGeomorph |0.1.41    |0.1.41             
 
 
 # FluvialGeomorph v0.1.40 (Release date: 2020-09-27)
