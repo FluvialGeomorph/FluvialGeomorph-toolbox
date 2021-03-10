@@ -6,6 +6,17 @@
 # Bug fixes
 * The install script now creates the ceramic cache directory. If this directory doesn't previously exist, tools calling ceramic would fail when the interactive prompt wasn't responded to. On certian computers, this bug prevented all reports from running since a map calling ceramic is at the beginning of each report. 
 
+# Compatability Matrix
+This table describes the latest versions the software has been tested with. 
+
+Software        |Tested    |Not Tested
+---             |---       |---          
+ArcGIS Pro      |2.6.1     |2.7+          
+ArcMap          |10.7.1    |10.8+         
+R               |4.0.3     |4.0.4          
+R-bridge        |1.0.1.244 | -   
+FluvialGeomorph |0.1.42    | -  
+
 
 # FluvialGeomorph v0.1.41 (Release date: 2020-12-14)
 
