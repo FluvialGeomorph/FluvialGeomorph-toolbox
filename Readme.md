@@ -1,5 +1,5 @@
 # FluvialGeomorph ArcGIS toolbox
-<img src="docs/images/FG-hex.png" width=250 align="right" />
+<img src="images/FG-hex.png" width=250 align="right" />
 The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river channel dimensions from high resolution terrain data.  
 
 ## Project Status
@@ -11,13 +11,13 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 
 ## Description
 
-<img src="docs/images/python_r_toolbox.png" width=125 align="left"  />
+<img src="images/python_r_toolbox.png" width=125 align="left"  />
 
 The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess stream condition and health using remotely sensed terrain data (LiDAR) at fine scale and for large spatial extents. This toolbox was initially inspired by the approach and techniques of the [River Bathymetry Toolkit, RBT](https://essa.com/explore-essa/tools/river-bathymetry-toolkit-rbt/#1512261459195-77c49866-a2eb) but expanded upon their effort by adding additional analysis tools and reports. This project is open source to help ensure that these fluvial geomorphology tools remain available for the widest use, maintenance, and adaptation. 
 
 ***  
 
-<img src="docs/images/USACE_200.png" width=125 align="right" />
+<img src="images/USACE_200.png" width=125 align="right" />
 
 ## Funding
 Funding for development and maintenance of FluvialGeomorph has been provided by the following US Army Corps of Engineers (USACE) programs:
@@ -28,12 +28,13 @@ Funding for development and maintenance of FluvialGeomorph has been provided by 
 * [Flood Risk Management Program (FRM)](https://www.iwr.usace.army.mil/Missions/Flood-Risk-Management/Flood-Risk-Management-Program/)
 * [Engineering With Nature (EWN)](https://ewn.el.erdc.dren.mil/)
 
-<img src="docs/images/EMRRP_logo_200.png" height=75/>
-<img src="docs/images/RSM_200.png" height=75/>
-<img src="docs/images/MRG&P_300.png" height=75/>
-<img src="docs/images/FRMP_200.png" height=75/>
-<img src="docs/images/SilverJackets_200.png" height=75/>
-<img src="docs/images/EWN_200.png" height=75/>
+
+![](images/EMRRP_logo_75.png)
+![](images/RSM_75.png)
+![](images/MRG&P_75.png)
+![](images/FRMP_75.png)
+![](images/SilverJackets_75.png)
+![](images/EWN_75.png)
 
 ***  
 
