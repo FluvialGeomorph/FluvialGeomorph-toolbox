@@ -6,7 +6,7 @@
 #' @export
 #' @param reinstall logical; Forces installed packages to be re-installed.
 #' 
-#' @return Nothing. Installs needed R packages. 
+#' @return None. Installs needed R packages. 
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
