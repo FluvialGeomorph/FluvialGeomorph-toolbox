@@ -8,7 +8,7 @@
 #' @param flowline_pts_1      character; Path to the flowline points feature 
 #'                            class of the first survey.
 #' @param flowline_pts_2      character; Path to the flowline points feature 
-#'                            class of the secind survey.
+#'                            class of the second survey.
 #' @param flowline_pts_3      character; Path to the flowline points feature 
 #'                            class of the third survey.
 #' @param flowline_pts_4      character; Path to the flowline points feature 
