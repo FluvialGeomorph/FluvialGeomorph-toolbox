@@ -11,7 +11,8 @@ Parameters:
 output_workspace (str)-- Path to the output workspace
 xs_dims (str)         -- Path to the cross section dimension points feature 
                          class.
-RAS_depth (str)       -- Path to the RAS model depth raster.
+RAS_depth (str)       -- Path to the RAS model depth raster (elevation units 
+                         feet).
 RAS_model_name (str)  -- Name of the RAS model that the depth raster represents.
                       This name will be used to name the calculated WSE fields. 
 
