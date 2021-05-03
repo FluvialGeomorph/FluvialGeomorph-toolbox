@@ -40,7 +40,7 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
     arcpy.env.scratchWorkspace = output_workspace
 
     # Cast flow_accum as a raster
-    FAC = arcpy.Raster(flow_accum)
+    FAC_orig = arcpy.Raster(flow_accum)
 
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -48,11 +48,34 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
                      "{}".format(arcpy.Describe(cross_section).baseName))
     arcpy.AddMessage("Flowline: "
                      "{}".format(arcpy.Describe(flowline).baseName))
-    arcpy.AddMessage("FAC: {}".format(arcpy.Describe(FAC).baseName))
+    arcpy.AddMessage("FAC: {}".format(arcpy.Describe(FAC_orig).baseName))
     arcpy.AddMessage("Snap distance: {}".format(snap_distance))
 
     # Get spatial reference of FAC
-    spatial_ref = arcpy.Describe(FAC).spatialReference
+    spatial_ref = arcpy.Describe(FAC_orig).spatialReference
+
+    # Buffer flowline
+    linear_unit = spatial_ref.linearUnitName.replace(" ", "")
+    buffer_distance = int(float(snap_distance) * 1.2)
+    buffer_distance_string = '"{} {}"'.format(buffer_distance, linear_unit)
+    
+    flowline_buffer = os.path.join(output_workspace, "flowline_buffer")
+    arcpy.analysis.Buffer(in_features = flowline,
+                          out_feature_class = flowline_buffer,
+                          buffer_distance_or_field = buffer_distance,
+                          dissolve_option = "ALL")
+
+    # Clip FAC
+    FAC = os.path.join(output_workspace, "FAC")
+    ex = arcpy.Describe(flowline_buffer).extent
+    rectangle = '"{} {} {} {}"'.format(ex.XMin, ex.YMin, ex.XMax, ex.YMax)
+    arcpy.AddMessage("Clipping extent: {}".format(rectangle))
+    arcpy.management.Clip(in_raster = FAC_orig, 
+                          rectangle = rectangle, 
+                          out_raster = FAC,
+                          in_template_dataset = flowline_buffer,
+                          clipping_geometry = "ClippingGeometry",
+                          maintain_clipping_extent = "NO_MAINTAIN_EXTENT")
 
     # Check if the ReachName field exists in the cross_section fc. If so delete
     # it so that it can be updated. It must be deleted so that it does not get
@@ -188,6 +211,8 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
     # Cleanup
     arcpy.Delete_management(in_data = xs_flowline_pt)
     arcpy.Delete_management(in_data = watershed_area)
+    #arcpy.Delete_management(in_data = flowline_buffer)
+    #arcpy.Delete_management(in_data = FAC)
 
 
 def main():

@@ -69,13 +69,15 @@ tool_exec <- function(in_params, out_params) {
     # Join slope attributes back to sp object
     message("Joining slope-sinuosity attributes...")
     gradient <- sp::merge(x = flowline_points, 
-                          y = fl_pts[,c("OBJECTID","Z_smooth", 
+                          y = fl_pts[,c("OBJECTID","z_smooth", 
                                         "upstream_x","upstream_y", 
                                         "downstream_x","downstream_y",
                                         "upstream_z","downstream_z",
-                                        "upstream_m","downstream_m","rise","run",
+                                        "upstream_m","downstream_m", 
+                                        "rise","run",
                                         "stream_length","valley_length",
-                                        "sinuosity","slope")], 
+                                        "sinuosity", "sinuosity_gte_one",
+                                        "slope", "slope_gte_zero")], 
                           by.x = "OBJECTID", by.y = "OBJECTID")
     
     # Convert sp object back to new feature class
