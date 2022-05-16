@@ -118,11 +118,22 @@ set_pandoc <- function() {
         # Check if pandoc is on the path
         # Set R environment variable
         Sys.setenv(RSTUDIO_PANDOC = dirname(Sys.which("pandoc")))
+        # Tell rmarkdown directly
+        rmarkdown::find_pandoc(dir = dirname(Sys.which("pandoc")))
         message("Using pandoc: ", dirname(Sys.which("pandoc")))
-    } else if (file.exists("C:\\Program Files\\RStudio\\bin\\pandoc\\pandoc.exe")) {
-        # Check if pandoc is installed by RStudio
+    } else if (file.exists("C:/Program Files/RStudio/bin/quarto/bin/pandoc.exe")) {
+        # Check if pandoc is installed by RStudio, post quarto
         # Set R environment variable
-        Sys.setenv(RSTUDIO_PANDOC = "C:/Program Files/RStudio/bin/pandoc")
+        Sys.setenv(RSTUDIO_PANDOC  = "C:/Program Files/RStudio/bin/quarto/bin")
+        # Tell rmarkdown directly
+        rmarkdown::find_pandoc(dir = "C:/Program Files/RStudio/bin/quarto/bin")
+        message("Using pandoc: C:/Program Files/RStudio/bin/quarto" )
+    } else if (file.exists("C:/Program Files/RStudio/bin/pandoc/pandoc.exe")) {
+        # Check if pandoc is installed by RStudio, pre quarto
+        # Set R environment variable
+        Sys.setenv(RSTUDIO_PANDOC  = "C:/Program Files/RStudio/bin/pandoc")
+        # Tell rmarkdown directly
+        rmarkdown::find_pandoc(dir = "C:/Program Files/RStudio/bin/pandoc")
         message("Using pandoc: C:/Program Files/RStudio/bin/pandoc" )
     } else {
         message("pandoc installation not detected.")
