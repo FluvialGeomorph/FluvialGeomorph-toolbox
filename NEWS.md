@@ -1,3 +1,22 @@
+# FluvialGeomorph v0.1.5 (Release date: 2022-05-16)
+
+# Major Changes
+* None
+
+# Bug fixes
+* Updated the install tool to handle Pandoc located within the RStudio Quarto distribution
+
+# Compatability Matrix
+This table describes the latest versions the software has been tested with. 
+
+Software        |Tested    
+---             |---               
+ArcGIS Pro      |2.9.2              
+ArcMap          |-                
+R               |4.1.3             
+R-bridge        |1.0.1.244  
+FluvialGeomorph |0.1.5     
+
 # FluvialGeomorph v0.1.42 (Release date: 2021-02-28)
 
 # Major Changes
