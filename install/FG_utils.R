@@ -87,7 +87,7 @@ install_fluvgeo_packages <- function(force = FALSE) {
     
     # Install facet_scales from GitHub (no longer required by fluvgeo)
     message("Installing facetscales from GitHub...")
-    remotes::install_github(repo = "zeehio/facetscales",
+    remotes::install_github(repo = "zeehio/facetscales@archived",
                             force = force,
                             upgrade = TRUE,
                             dependencies = TRUE,
