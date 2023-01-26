@@ -62,12 +62,20 @@ tool_exec <- function(in_params, out_params) {
     message("conversion to points complete")
     
     # Write the xs lines with the planform dimensions
-    xs_dims_path <- gsub("_L2", "_L3", xs_dimensions, fixed = TRUE)
-    fluvgeo::sp2arc(sp_obj = xs_dims_ratios, fc_path = xs_dims_path)
+    #xs_dims_path <- gsub("_L2", "_L3", xs_dimensions, fixed = TRUE)
+    #fluvgeo::sp2arc(sp_obj = xs_dims_ratios, fc_path = xs_dims_path)
     
     # Write the xs points with the planform dimensions
-    xs_dims_path <- gsub("_L2", "_L3_pts", xs_dimensions, fixed = TRUE)
-    fluvgeo::sp2arc(sp_obj = xs_dims_pts, fc_path = xs_dims_path)
+    #xs_dims_path <- gsub("_L2", "_L3_pts", xs_dimensions, fixed = TRUE)
+    #fluvgeo::sp2arc(sp_obj = xs_dims_pts, fc_path = xs_dims_path)
+    
+    # Write the hydraulic dimensions to a file geodatabase table
+    xs_dimensions_name <- paste0(basename(xs_dimensions))
+    table_name <- gsub("_L2", "_L3_table", xs_dimensions_name, fixed = TRUE)
+    gdb_path   <- dirname(dirname(xs_dimensions))
+    table_path <- file.path(gdb_path, table_name)
+    fluvgeo::sx2arc_table(sx_obj = xs_dims_pts, table_path = table_path)
+    message("saving table complete")
     
     return(out_params)
 }    

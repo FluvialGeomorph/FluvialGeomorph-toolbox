@@ -137,9 +137,12 @@ tool_exec <- function(in_params, out_params) {
                             by = "Seq")
     message("join table of metrics to fc complete")
     
-    # Write the xs with hydraulic dimensions
-    xs_dims_path <- paste0(xs_fc, "_dims_L2")
-    fluvgeo::sp2arc(sp_obj = xs_dims_sp, fc_path = xs_dims_path)
+    # Write the hydraulic dimensions to a file geodatabase table
+    table_name <- paste0(basename(xs_fc), "_dims_L2_table")
+    gdb_path   <- dirname(dirname(xs_fc))
+    table_path <- file.path(gdb_path, table_name)
+    fluvgeo::sx2arc_table(sx_obj = xs_dims_sp, table_path = table_path)
+    message("saving table complete")
     
     return(out_params)
 }
