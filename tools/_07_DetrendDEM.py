@@ -7,7 +7,7 @@ Usage:
 This tool is based on the detrending method used in the River Bathymetry Toolkit (RBT) http://essa.com/tools/river-bathymetry-toolkit-rbt/. 
 
 Parameters:
-output_workspace (str)-- Path to the output workspace.
+feature_dataset (str) -- Path to the feature dataset.
 flowline (str)        -- Path to the flowline feature class.
 flowline_points (str) -- Path to the flowline_points feature class.
 dem (str)             -- Path to the digital elevation model (DEM).
@@ -25,14 +25,14 @@ from datetime import datetime
 import arcpy
 from arcpy.sa import *
 
-def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance):
+def DetrendDEM(feature_dataset, flowline, flowline_points, dem, buffer_distance):
     # Check out the extension license 
     arcpy.CheckOutExtension("3D")
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = dem
     arcpy.env.snapRaster = dem
     arcpy.env.cellSize = arcpy.Describe(dem).meanCellHeight
@@ -49,7 +49,7 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
     arcpy.AddMessage("Buffer Distance: {}".format(str(buffer_distance)))
     
     # Buffer the flowline_points
-    flowline_buffer = os.path.join(output_workspace, "flowline_buffer")
+    flowline_buffer = os.path.join(feature_dataset, "flowline_buffer")
     arcpy.Buffer_analysis(in_features = flowline, 
                           out_feature_class = flowline_buffer, 
                           buffer_distance_or_field = buffer_distance, 
@@ -65,7 +65,7 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
     
     # Create the trend raster
     arcpy.AddMessage("Creating trend raster...")
-    trend = os.path.join(output_workspace, "trend")
+    trend = os.path.join(arcpy.env.workspace, "trend")
     arcpy.Idw_3d(in_point_features = flowline_points, 
                  z_field = "Z", 
                  out_raster = trend, 
@@ -79,14 +79,14 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
                              in_raster = trend, 
                              neighborhood = arcpy.sa.NbrCircle(50, "CELL"), 
                              statistics_type = "Mean")
-    trend_smooth_path = os.path.join(output_workspace, "trend_smooth")
+    trend_smooth_path = os.path.join(arcpy.env.workspace, "trend_smooth")
     arcpy.CopyRaster_management(in_raster = trend_smooth, 
                                 out_rasterdataset = trend_smooth_path)
     arcpy.AddMessage("Smoothed trend raster.")
     
     # Create the detrended raster
     detrend = (Raster(dem) - Raster(trend_smooth_path)) + float(100)
-    detrend_path = os.path.join(output_workspace, "detrend")
+    detrend_path = os.path.join(arcpy.env.workspace, "detrend")
     arcpy.CopyRaster_management(in_raster = detrend, 
                                 out_rasterdataset = detrend_path)
     arcpy.AddMessage("Created detrended raster.")
@@ -107,11 +107,11 @@ def DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance
 
 def main():
     # Call the DetrendDEM function with command line parameters
-    DetrendDEM(output_workspace, flowline, flowline_points, dem, buffer_distance)
+    DetrendDEM(feature_dataset, flowline, flowline_points, dem, buffer_distance)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     flowline         = arcpy.GetParameterAsText(1)
     flowline_points  = arcpy.GetParameterAsText(2)
     dem              = arcpy.GetParameterAsText(3)

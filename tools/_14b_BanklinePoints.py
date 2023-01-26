@@ -15,7 +15,7 @@ The station distance parameter is specified in the linear units of the
 flowline feature class.
 
 Parameters:
-output_workspace      -- Path to the output workspace.
+feature_dataset       -- Path to the feature dataset.
 loop_points           -- Path to the loop_points feature class.
 banklines             -- Path to the banklines feature class.
 valleyline            -- Path to the valleyline feature class.
@@ -113,14 +113,14 @@ def assignLoopAndBend(bankline_loop_points, loop_points):
     arcpy.AddMessage("Assigned loop and bend values to bankline_loop_points")
 
 
-def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem, 
+def BanklinePoints(feature_dataset, loop_points, banklines, valleyline, dem, 
                    station_distance):
     # Check out the extension licenses 
     arcpy.CheckOutExtension("3D")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -137,7 +137,7 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     arcpy.AddMessage("loop_points snapped to banklines")
     
     # Convert banklines to points
-    banklines_points = line_route_points(output_workspace = output_workspace,
+    banklines_points = line_route_points(feature_dataset = feature_dataset,
                                          line = banklines, 
                                          station_distance = station_distance, 
                                          route_id_field = "bank_id",
@@ -147,13 +147,13 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     add_elevation(banklines_points, dem)
     
     # Buffer loop_points to use for spatal join
-    loop_points_buffer = os.path.join(output_workspace, "loop_points_buffer")
+    loop_points_buffer = os.path.join(feature_dataset, "loop_points_buffer")
     arcpy.Buffer_analysis(in_features = loop_points, 
                           out_feature_class = loop_points_buffer, 
                           buffer_distance_or_field = "1 Meters")
     
     # Identify loop_points close to bankline_points and transfer attributes
-    bankline_loop_points = os.path.join(output_workspace, "bankline_loop_points")
+    bankline_loop_points = os.path.join(feature_dataset, "bankline_loop_points")
     arcpy.SpatialJoin_analysis(target_features = banklines_points, 
                                join_features = loop_points_buffer, 
                                out_feature_class = bankline_loop_points, 
@@ -168,14 +168,14 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     assignLoopAndBend(bankline_loop_points, loop_points)
     
     # Convert valleyline to points
-    valleyline_points = line_route_points(output_workspace = output_workspace,
+    valleyline_points = line_route_points(feature_dataset = feature_dataset,
                                           line = valleyline,
                                           station_distance = station_distance,
                                           route_id_field = "ReachName",
                                           fields = [])
 
     # Assign valleyline_points values to bankline_points
-    bankline_points = os.path.join(output_workspace, "bankline_points")
+    bankline_points = os.path.join(feature_dataset, "bankline_points")
     arcpy.SpatialJoin_analysis(target_features = bankline_loop_points,
                                join_features = valleyline_points,
                                out_feature_class = bankline_points,
@@ -215,12 +215,12 @@ def BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem,
     
 def main():
     # Call the BanklinePoints function with command line parameters
-    BanklinePoints(output_workspace, loop_points, banklines, valleyline, dem, 
+    BanklinePoints(feature_dataset, loop_points, banklines, valleyline, dem, 
                    station_distance)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     loop_points      = arcpy.GetParameterAsText(1)
     banklines        = arcpy.GetParameterAsText(2)
     valleyline       = arcpy.GetParameterAsText(3)

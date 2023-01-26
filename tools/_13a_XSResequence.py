@@ -22,7 +22,7 @@ This tool assumes:
 * The fields `POINT_M` and `Seq` exist in the input cross section feature class.
 
 Parameters:
-output_workspace (str)-- Path to the output workspace.
+feature_dataset  (str)-- Path to the feature dataset.
 xs_fc (str)           -- Path to a cross section feature class.
 start_seq (int)       -- The starting value of the `Seq` field.
 
@@ -34,13 +34,13 @@ import os
 import sys
 import arcpy
 
-def BankfullPolygon(output_workspace, xs_fc, start_seq):
+def BankfullPolygon(feature_dataset, xs_fc, start_seq):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
 
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -78,11 +78,11 @@ def BankfullPolygon(output_workspace, xs_fc, start_seq):
 
 def main():
     # Call the BankfullPolygon function with command line parameters
-    BankfullPolygon(output_workspace, xs_fc, start_seq)
+    BankfullPolygon(feature_dataset, xs_fc, start_seq)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     xs_fc            = arcpy.GetParameterAsText(1)
     start_seq        = arcpy.GetParameterAsText(2)
     

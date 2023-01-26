@@ -7,7 +7,7 @@ Date:                 05/22/2020
 Functions:
 line_route_points     -- Converts an input line feature class into a route, 
                          densifies its vertices, and ctreates a point feature 
-                         class in the output_workspace.  
+                         class in the feature_dataset.  
 add_elevation         -- Adds elevation fields to the input feature class.
 ____________________________________________________________________________"""
 
@@ -58,16 +58,16 @@ def add_elevation(points, dem = "", detrend_dem = ""):
 
 
 
-def line_route_points(output_workspace, line, station_distance, 
+def line_route_points(feature_dataset, line, station_distance, 
                       route_id_field, fields):
     """
     Converts an input line feature class into a route, densifies its vertices, 
-    and ctreates a point feature class in the output_workspace. 
+    and ctreates a point feature class in the feature_dataset. 
     
-    Writes all outputs to the specified output_workspace. 
+    Writes all outputs to the specified feature_dataset. 
     
     Args:
-    output_workspace  -- Path to the output workspace.
+    feature_dataset   -- Path to the feature dataset.
     line              -- Path to a line feature class
     station_distance  -- (numeric) Distance between output line station points 
                          (in the linear units of the line feature class)
@@ -78,7 +78,7 @@ def line_route_points(output_workspace, line, station_distance,
     
     Outputs:
     <line>_points     -- a point feature class named the same as the line 
-                         input feature class written to the output_workspace
+                         input feature class written to the feature_dataset
     """
     # Set line name
     line_name = arcpy.Describe(line).baseName
@@ -114,7 +114,7 @@ def line_route_points(output_workspace, line, station_distance,
     
     # Densify vertices of the line feature class using the Densify tool. 
     line_densify_name = line_name + "_densify"
-    line_densify = os.path.join(output_workspace, line_densify_name)
+    line_densify = os.path.join(feature_dataset, line_densify_name)
     arcpy.CopyFeatures_management(in_features = line, 
                                   out_feature_class = line_densify)
     arcpy.Densify_edit(in_features = line_densify, 
@@ -123,7 +123,7 @@ def line_route_points(output_workspace, line, station_distance,
 
     # Convert the line feature class to a route
     line_densify_route_name = line_name + "_densify_route"
-    line_densify_route = os.path.join(output_workspace, line_densify_route_name)
+    line_densify_route = os.path.join(feature_dataset, line_densify_route_name)
     arcpy.CreateRoutes_lr(in_line_features = line_densify, 
                           route_id_field = route_id_field, 
                           out_feature_class = line_densify_route, 
@@ -134,7 +134,7 @@ def line_route_points(output_workspace, line, station_distance,
 
     # Convert line feature vertices to points
     line_points_name = line_name + "_points"
-    line_points = os.path.join(output_workspace, line_points_name)
+    line_points = os.path.join(feature_dataset, line_points_name)
     arcpy.FeatureVerticesToPoints_management(
                      in_features = line_densify_route, 
                      out_feature_class = line_points)

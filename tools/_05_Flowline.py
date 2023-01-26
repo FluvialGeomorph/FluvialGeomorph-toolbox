@@ -17,7 +17,7 @@ dissolve stream line segments into reaches. The resulting flowline feature
 class will have a record for each unique value in the ReachName field. 
 
 Parameters:
-output_workspace (str)-- Path to the output workspace.
+feature_dataset (str) -- Path to the feature dataset.
 stream_network (str)  -- Path to the edited stream network feature class.
 smooth_tolerance (int)-- The PAEK smoothing tolerance that controls the 
                          calculating of new vertices. Acceptable smoothing 
@@ -30,10 +30,10 @@ ____________________________________________________________________________"""
 import os
 import arcpy
 
-def CleanFlowline(output_workspace, stream_network, smooth_tolerance):
+def CleanFlowline(feature_dataset, stream_network, smooth_tolerance):
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -41,7 +41,7 @@ def CleanFlowline(output_workspace, stream_network, smooth_tolerance):
                      "{}".format(arcpy.Describe(stream_network).baseName))
     
     # Dissolve by `ReachName` field
-    stream_network_dissolve = os.path.join(output_workspace, 
+    stream_network_dissolve = os.path.join(feature_dataset, 
                                            "stream_network_dissolve")
     arcpy.Dissolve_management(in_features = stream_network, 
                               out_feature_class = stream_network_dissolve,  
@@ -51,7 +51,7 @@ def CleanFlowline(output_workspace, stream_network, smooth_tolerance):
     arcpy.AddMessage("Stream Network Dissolved")
     
     # Smooth the stream network
-    flowline = os.path.join(output_workspace, "flowline")
+    flowline = os.path.join(feature_dataset, "flowline")
     arcpy.SmoothLine_cartography(in_features = stream_network_dissolve, 
                                  out_feature_class = flowline, 
                                  algorithm = "PAEK", 
@@ -68,11 +68,11 @@ def CleanFlowline(output_workspace, stream_network, smooth_tolerance):
     
 def main():
     # Call the CleanFlowline function with command line parameters
-    CleanFlowline(output_workspace, stream_network, smooth_tolerance)
+    CleanFlowline(feature_dataset, stream_network, smooth_tolerance)
     
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset = arcpy.GetParameterAsText(0)
     stream_network   = arcpy.GetParameterAsText(1)
     smooth_tolerance = arcpy.GetParameterAsText(2)
     

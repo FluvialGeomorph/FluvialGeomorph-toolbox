@@ -11,7 +11,7 @@ relatively homogeneous segments based on drainage area.
 Drainage area will be in the units of the flow accumulation model. 
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature dataset
 stream_network        -- Path to the edited stream network feature class
 flow_accum            -- Path to the flow accumulation model
 dem                   -- Path to the digital elevation model (DEM)
@@ -26,13 +26,13 @@ import os
 import arcpy
 from arcpy.sa import *
 
-def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
+def StreamNetworkPoints(feature_dataset, stream_network, flow_accum, dem):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # Get spatial reference of FAC
     spatial_ref = arcpy.Describe(flow_accum).spatialReference
@@ -75,7 +75,7 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                                     expression_type = "PYTHON_9.3")
     
     # Convert stream_network fc into a route
-    stream_network_route = os.path.join(output_workspace, "stream_network_route")
+    stream_network_route = os.path.join(feature_dataset, "stream_network_route")
     arcpy.CreateRoutes_lr(in_line_features = stream_network, 
                           route_id_field = "ReachName", 
                           out_feature_class = stream_network_route, 
@@ -83,8 +83,9 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
                           from_measure_field = "from_measure", 
                           to_measure_field = "to_measure")
     arcpy.AddMessage("Stream network route created")
+    
     # Convert stream network feature vertices to points
-    stream_network_points = os.path.join(output_workspace, "stream_network_points")
+    stream_network_points = os.path.join(feature_dataset, "stream_network_points")
     arcpy.FeatureVerticesToPoints_management(in_features = stream_network_route, 
                                     out_feature_class = stream_network_points)
     arcpy.AddMessage("Converted the stream network to points")
@@ -165,11 +166,11 @@ def StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem):
 
 def main():
     # Call the StreamNetworkPoints function with command line parameters
-    StreamNetworkPoints(output_workspace, stream_network, flow_accum, dem)
+    StreamNetworkPoints(feature_dataset, stream_network, flow_accum, dem)
     
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     stream_network   = arcpy.GetParameterAsText(1)
     flow_accum       = arcpy.GetParameterAsText(2)
     dem              = arcpy.GetParameterAsText(3)

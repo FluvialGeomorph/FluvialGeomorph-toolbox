@@ -21,7 +21,7 @@ choose to edit vertices, and ensure that the red endpoint is at the
 downstream end of the flowline. 
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature_dataset
 cross_section         -- Path to the cross section line feature class
 flowline_points       -- Path to the flowline route feature class
 
@@ -39,10 +39,10 @@ def DeleteExistingFields(in_table, field):
         arcpy.DeleteField_management(in_table = cross_section, 
                                      drop_field = [field])
 
-def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
+def XSAssignRiverPosition(feature_dataset, cross_section, flowline_points):
     # Set environment variables
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -60,7 +60,7 @@ def XSAssignRiverPosition(output_workspace, cross_section, flowline_points):
     DeleteExistingFields(cross_section, "Z")
     
     # Spatial Join the cross sections with the closest flowline point
-    cross_section_flowline_point = os.path.join(output_workspace, 
+    cross_section_flowline_point = os.path.join(feature_dataset, 
                                                 "cross_section_flowline_point")
     arcpy.SpatialJoin_analysis(target_features = cross_section, 
                                join_features = flowline_points, 
@@ -120,11 +120,11 @@ def add_chart(cross_section):
 
 def main():
     # Call the XSAssignRiverPosition function with command line parameters
-    XSAssignRiverPosition(output_workspace, cross_section, flowline_points)
+    XSAssignRiverPosition(feature_dataset, cross_section, flowline_points)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     cross_section    = arcpy.GetParameterAsText(1)
     flowline_points  = arcpy.GetParameterAsText(2)
     

@@ -8,7 +8,7 @@ Calculates the area for each NLCD landcover class for each input point. Writes
 the values to a set of new fields in the input point feature class. 
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature dataset
 points                -- Path to the points feature class
 point_ID_field        -- Field that contains the point IDs
 nlcd                  -- Path to the NLCD raster
@@ -26,12 +26,12 @@ import arcpy
 
 def main():
     # Call the Point Landcover with command line parameters
-    PointLandcover(output_workspace, points, point_ID_field, nlcd, 
+    PointLandcover(feature_dataset, points, point_ID_field, nlcd, 
                    flow_accum, fdr, snap_distance)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     points           = arcpy.GetParameterAsText(1)
     point_ID_field   = arcpy.GetParameterAsText(2)
     nlcd             = arcpy.GetParameterAsText(3)

@@ -22,7 +22,7 @@ This tool names the output feature class using the base name of the input
 cross section feature class. 
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature_dataset
 cross_section         -- Path to the cross section line feature class
 dem                   -- Path to the digital elevation model (DEM)
 dem_units             -- Vertical units of the DEM. Select one of "m" or "ft"
@@ -54,14 +54,14 @@ ____________________________________________________________________________"""
 import os
 import arcpy
 
-def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units, 
+def XSCreateStationPoints(feature_dataset, cross_section, dem, dem_units, 
                           detrend_dem, station_distance):
     # Check out the extension licenses
     arcpy.CheckOutExtension("3D")
     
     # Set environment variables
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -106,7 +106,7 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
                                     
     # Densify vertices of the cross_section fc 
     arcpy.AddMessage("Densifying cross section vertices...")
-    xs_densify = os.path.join(output_workspace, 
+    xs_densify = os.path.join(feature_dataset, 
                               xs_name + "_densify")
     arcpy.CopyFeatures_management(in_features = cross_section, 
                                   out_feature_class = xs_densify)
@@ -116,7 +116,7 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
 
     # Convert the cross_section fc to a route
     arcpy.AddMessage("Creating cross section routes...")
-    xs_densify_route = os.path.join(output_workspace, 
+    xs_densify_route = os.path.join(feature_dataset, 
                                     xs_name + "_densify_route")
     arcpy.CreateRoutes_lr(in_line_features = xs_densify, 
                           route_id_field = "Seq", 
@@ -127,7 +127,7 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
 
     # Convert cross section feature vertices to points
     arcpy.AddMessage("Converting cross section vertices to points...")
-    xs_points = os.path.join(output_workspace, 
+    xs_points = os.path.join(feature_dataset, 
                              xs_name + "_points")
     arcpy.FeatureVerticesToPoints_management(
                      in_features = xs_densify_route, 
@@ -223,12 +223,12 @@ def XSCreateStationPoints(output_workspace, cross_section, dem, dem_units,
 
 def main():
     # Call the XSCreateStationPoints function with command line parameters
-    XSCreateStationPoints(output_workspace, cross_section, dem, dem_units, 
+    XSCreateStationPoints(feature_dataset, cross_section, dem, dem_units, 
                           detrend_dem, station_distance)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     cross_section    = arcpy.GetParameterAsText(1)
     dem              = arcpy.GetParameterAsText(2)
     dem_units        = arcpy.GetParameterAsText(3)

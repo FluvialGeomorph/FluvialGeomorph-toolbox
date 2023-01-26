@@ -21,7 +21,7 @@ The station distance parameter is specified in the linear units of the
 flowline feature class.
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature dataset
 flowline              -- Path to the flowline feature class
 dem                   -- Path to the digital elevation model (DEM)
 km_to_mouth           -- Kilometers to the mouth of the study area outlet.
@@ -54,7 +54,7 @@ from datetime import datetime
 import arcpy
 
 # Define the StreamProfilePoints function
-def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth, 
+def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth, 
                         station_distance, 
                         calibration_points, point_id_field, measure_field,
                         search_radius):
@@ -63,7 +63,7 @@ def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth,
 
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -147,7 +147,7 @@ def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth,
         arcpy.AddMessage("Calibrated route")
     
     # Convert flowline feature vertices to points
-    flowline_points = os.path.join(output_workspace, "flowline_points")
+    flowline_points = os.path.join(feature_dataset, "flowline_points")
     arcpy.FeatureVerticesToPoints_management(
                      in_features = "flowline_densify_route", 
                      out_feature_class = flowline_points)
@@ -201,14 +201,14 @@ def StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth,
     
 def main():
     # Call the StreamProfilePoints function with command line parameters
-    StreamProfilePoints(output_workspace, flowline, dem, km_to_mouth, 
+    StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth, 
                         station_distance, 
                         calibration_points, point_id_field, measure_field,
                         search_radius)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace   = arcpy.GetParameterAsText(0)
+    feature_dataset    = arcpy.GetParameterAsText(0)
     flowline           = arcpy.GetParameterAsText(1)
     dem                = arcpy.GetParameterAsText(2)
     km_to_mouth        = arcpy.GetParameterAsText(3)

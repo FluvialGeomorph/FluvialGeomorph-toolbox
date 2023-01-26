@@ -20,7 +20,7 @@ Mateus Ferreira - https://web.archive.org/web/20161229230139/
 
 
 Parameters:
-output_workspace      -- Path to the output workspace. 
+feature_dataset       -- Path to the feature dataset. 
 flowline              -- Path to the flowline feature class.
 split_type            -- Method for placing cross sections along the 
                          flowline. "Split at approximate distance" places
@@ -208,7 +208,7 @@ def splitline(inFC, FCName, alongDist):
     del outputRows
 
 
-def XSLayout(output_workspace, flowline, split_type, transect_spacing, 
+def XSLayout(feature_dataset, flowline, split_type, transect_spacing, 
              transect_width, transect_width_unit):
         
     # Set environment variables 
@@ -217,13 +217,14 @@ def XSLayout(output_workspace, flowline, split_type, transect_spacing,
     arcpy.env.XYTolerance = "0.0001 Meters"
 
     # Create "General" file geodatabase
-    WorkFolder = os.path.dirname(output_workspace)
+    project_gdb = os.path.dirname(feature_dataset)
+    WorkFolder = os.path.dirname(project_gdb)
     General_GDB = WorkFolder + "\General.gdb"
     arcpy.CreateFileGDB_management(WorkFolder, "General", "CURRENT")
     arcpy.env.workspace = General_GDB
     
     # List parameter values
-    arcpy.AddMessage("Output Workspace: {}".format(output_workspace))
+    arcpy.AddMessage("Output Workspace: {}".format(project_gdb))
     arcpy.AddMessage("Workfolder: {}".format(WorkFolder))
     arcpy.AddMessage("Flowline: "
                      "{}".format(arcpy.Describe(flowline).baseName))
@@ -320,7 +321,7 @@ def XSLayout(output_workspace, flowline, split_type, transect_spacing,
     #Generate output file
     out_transect_name = "xs_{}_{}".format(int(round(transect_spacing)),
                                           int(round(transect_width)))
-    output_transect = os.path.join(output_workspace, out_transect_name)
+    output_transect = os.path.join(feature_dataset, out_transect_name)
     arcpy.XYToLine_management(Azline_Dissolve, output_transect,
                               "x_start", "y_start", "x_end","y_end", 
                               "", "", spatial_reference)
@@ -353,12 +354,12 @@ def XSLayout(output_workspace, flowline, split_type, transect_spacing,
 
 def main():
     # Call the ChannelSlope function with command line parameters
-    XSLayout(output_workspace, flowline, split_type, transect_spacing, 
+    XSLayout(feature_dataset, flowline, split_type, transect_spacing, 
              transect_width, transect_width_unit)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace    = arcpy.GetParameterAsText(0)
+    feature_dataset     = arcpy.GetParameterAsText(0)
     flowline            = arcpy.GetParameterAsText(1)
     split_type          = arcpy.GetParameterAsText(2)
     transect_spacing    = float(arcpy.GetParameterAsText(3))

@@ -8,7 +8,7 @@ Usage:
 
 
 Parameters:
-output_workspace (str)-- Path to the output workspace
+feature_dataset  (str)-- Path to the feature dataset.
 xs_dims (str)         -- Path to the cross section dimension points feature 
                          class.
 RAS_depth (str)       -- Path to the RAS model depth raster (elevation units 
@@ -24,14 +24,14 @@ import os
 import arcpy
 from arcpy.sa import *
 
-def ras_wse(output_workspace, xs_dims, RAS_depth, RAS_model_name):
+def ras_wse(feature_dataset, xs_dims, RAS_depth, RAS_model_name):
     # Check out the extension license 
     arcpy.CheckOutExtension("3D")
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = RAS_depth
     arcpy.env.snapRaster = RAS_depth
     arcpy.env.cellSize = arcpy.Describe(RAS_depth).meanCellHeight
@@ -71,11 +71,11 @@ def ras_wse(output_workspace, xs_dims, RAS_depth, RAS_model_name):
 
 def main():
     # Call the ras_wse function with command line parameters
-    ras_wse(output_workspace, xs_dims, RAS_depth, RAS_model_name)
+    ras_wse(feature_dataset, xs_dims, RAS_depth, RAS_model_name)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     xs_dims          = arcpy.GetParameterAsText(1)
     RAS_depth        = arcpy.GetParameterAsText(2)
     RAS_model_name   = arcpy.GetParameterAsText(3)

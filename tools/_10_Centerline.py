@@ -8,7 +8,7 @@ Creates a new feature class representing the centerline of the input bankfull
 polygon.  
 
 Parameters:
-output_workspace      -- Path to the output workspace.
+feature_dataset       -- Path to the feature dataset.
 dem                   -- Path to the digital elevation model (DEM).
 banks_poly            -- Path to a banks polygon representing the channel area 
                          for which slope will be calculated. 
@@ -24,13 +24,13 @@ import os
 import arcpy
 from arcpy.sa import *
 
-def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
+def Centerline(feature_dataset, dem, banks_poly, smooth_tolerance):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = dem
     arcpy.env.snapRaster = dem
     arcpy.env.cellSize = 2
@@ -47,7 +47,7 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
     arcpy.env.mask = banks_poly
     
     # Convert the banks polygon to raster
-    banks_path = os.path.join(output_workspace, "banks")
+    banks_path = os.path.join(arcpy.env.workspace, "banks")
     arcpy.PolygonToRaster_conversion(in_features = banks_poly, 
                                      value_field = "gridcode", 
                                      out_rasterdataset = banks_path)
@@ -61,7 +61,7 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
     arcpy.AddMessage("Used the Thin tool on the banks raster.")
     
     # Convert the synthetic stream to a centerline feature class
-    cl_raw_path = os.path.join(output_workspace, "centerline_raw")
+    cl_raw_path = os.path.join(feature_dataset, "centerline_raw")
     arcpy.RasterToPolyline_conversion(in_raster = stream, 
                                       out_polyline_features = cl_raw_path,
                                       background_value = "ZERO",
@@ -70,7 +70,7 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
     arcpy.AddMessage("Convert thinned raster stream to a polyline.")
     
     # Smooth centerline
-    centerline_path = os.path.join(output_workspace, "centerline")
+    centerline_path = os.path.join(feature_dataset, "centerline")
     arcpy.SmoothLine_cartography(in_features = cl_raw_path, 
                                  out_feature_class = centerline_path, 
                                  algorithm = "PAEK", 
@@ -87,11 +87,11 @@ def Centerline(output_workspace, dem, banks_poly, smooth_tolerance):
 
 def main():
     # Call the ChannelSlope function with command line parameters
-    Centerline(output_workspace, dem, banks_poly, smooth_tolerance)
+    Centerline(feature_dataset, dem, banks_poly, smooth_tolerance)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     dem              = arcpy.GetParameterAsText(1)
     banks_poly       = arcpy.GetParameterAsText(2)
     smooth_tolerance = arcpy.GetParameterAsText(3)

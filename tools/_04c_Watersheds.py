@@ -20,7 +20,7 @@ landcover raster) will be calculated in a field named for the landcover class
 integer value. 
 
 Parameters:
-output_workspace      -- Path to the output workspace.
+feature_dataset       -- Path to the feature dataset.
 points                -- Path to the points feature class.
 point_ID_field        -- Field in the points feature class that contains the 
                          point IDs.
@@ -42,7 +42,7 @@ ____________________________________________________________________________"""
 import os
 import arcpy
 
-def PointLandcover(output_workspace, points, point_ID_field, 
+def PointLandcover(feature_dataset, points, point_ID_field, 
                    flow_accumulation, flow_direction_d8, snap_distance, 
                    landcover):
 
@@ -61,7 +61,7 @@ def PointLandcover(output_workspace, points, point_ID_field,
     
     # Set environment variables
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = flow_accumulation
     arcpy.env.snapRaster = flow_accumulation
     arcpy.env.mask = flow_accumulation
@@ -106,7 +106,7 @@ def PointLandcover(output_workspace, points, point_ID_field,
 
             # Convert watershed to polygon
             watershed_name = "watershed_{}".format(str(row[0]).replace(" ", "_"))
-            out_poly = os.path.join(output_workspace, watershed_name)
+            out_poly = os.path.join(feature_dataset, watershed_name)
             arcpy.RasterToPolygon_conversion(in_raster = watershed,
                                              out_polygon_features = out_poly)
             arcpy.AddMessage("    Delineate watershed complete")
@@ -114,7 +114,7 @@ def PointLandcover(output_workspace, points, point_ID_field,
             # Tabulate landcover area
             if landcover:
                 table_name = "lc_table_{}".format(str(row[0]).replace(" ", "_"))
-                out_table = os.path.join(output_workspace, table_name)
+                out_table = os.path.join(feature_dataset, table_name)
                 arcpy.sa.TabulateArea(in_zone_data = watershed,
                                       zone_field = "Value",
                                       in_class_data = LC,
@@ -127,7 +127,7 @@ def PointLandcover(output_workspace, points, point_ID_field,
     if landcover:
         lc_tables = arcpy.ListTables(wild_card = "lc_table_*")
         arcpy.AddMessage("landcover tables: {}".format(str(lc_tables)))
-        lc_table = os.path.join(output_workspace, "lc_table")
+        lc_table = os.path.join(arcpy.env.workspace, "lc_table")
         arcpy.Merge_management(inputs = lc_tables, 
                                output = lc_table)
         # Delete landcover lc_tables
@@ -138,7 +138,7 @@ def PointLandcover(output_workspace, points, point_ID_field,
     # Merge watershed polygons
     watershed_fcs = arcpy.ListFeatureClasses("watershed_*")
     arcpy.AddMessage("Watershed polygons: {}".format(str(watershed_fcs)))
-    watersheds = os.path.join(output_workspace, "watersheds")
+    watersheds = os.path.join(feature_dataset, "watersheds")
     arcpy.Merge_management(inputs = watershed_fcs,
                            output = watersheds)
     
@@ -175,13 +175,13 @@ def PointLandcover(output_workspace, points, point_ID_field,
 
 def main():
     # Call the Point Landcover with command line parameters
-    PointLandcover(output_workspace, points, point_ID_field, 
+    PointLandcover(feature_dataset, points, point_ID_field, 
                    flow_accumulation, flow_direction_d8, snap_distance, 
                    landcover)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace     = arcpy.GetParameterAsText(0)
+    feature_dataset      = arcpy.GetParameterAsText(0)
     points               = arcpy.GetParameterAsText(1)
     point_ID_field       = arcpy.GetParameterAsText(2)
     flow_accumulation    = arcpy.GetParameterAsText(3)

@@ -80,12 +80,13 @@ tool_exec <- function(in_params, out_params) {
                                         "slope", "slope_gte_zero")], 
                           by.x = "OBJECTID", by.y = "OBJECTID")
     
-    # Convert sp object back to new feature class
-    message("Writing the new gradient feature class...")
-    gradient_path <- file.path(dirname(flowline_points_fc), 
-                               paste0("gradient_", 
-                               as.character(gradient_distance)))
-    fluvgeo::sp2arc(sp_obj = gradient, fc_path = gradient_path)
+    # Write the hydraulic dimensions to a file geodatabase table
+    table_name <- paste0("gradient_", 
+                         as.character(gradient_distance))
+    gdb_path   <- dirname(dirname(xs_fc))
+    table_path <- file.path(gdb_path, table_name)
+    fluvgeo::sx2arc_table(sx_obj = gradient, table_path = table_path)
+    message("saving table complete")
     
     return(out_params)
 }

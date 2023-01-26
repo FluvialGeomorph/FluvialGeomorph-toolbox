@@ -6,7 +6,7 @@ Date:                 05/14/2020
 Usage:
 
 Parameters:
-output_workspace (str)-- Path to the output workspace.
+feature_dataset (str) -- Path to the feature_dataset.
 dem (str)             -- Path to the digital elevation model (DEM).
 banks_poly (str)      -- Path to a banks polygon representing the channel area 
                          for which slope will be calculated. 
@@ -35,13 +35,13 @@ import os
 import arcpy
 from arcpy.sa import *
 
-def ChannelSlope(output_workspace, dem, banks_poly, z_factor):
+def ChannelSlope(feature_dataset, dem, banks_poly, z_factor):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = dem
     arcpy.env.snapRaster = dem
     arcpy.env.cellSize = arcpy.Describe(dem).meanCellHeight
@@ -65,7 +65,7 @@ def ChannelSlope(output_workspace, dem, banks_poly, z_factor):
                                    output_measurement = "DEGREE", 
                                    z_factor = z_factor)
     
-    channel_slope_path = os.path.join(output_workspace, "channel_slope")
+    channel_slope_path = os.path.join(arcpy.env.workspace, "channel_slope")
     arcpy.CopyRaster_management(in_raster = channel_slope, 
                                 out_rasterdataset = channel_slope_path)
     
@@ -77,11 +77,11 @@ def ChannelSlope(output_workspace, dem, banks_poly, z_factor):
 
 def main():
     # Call the ChannelSlope function with command line parameters
-    ChannelSlope(output_workspace, dem, banks_poly, z_factor)
+    ChannelSlope(feature_dataset, dem, banks_poly, z_factor)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     dem              = arcpy.GetParameterAsText(1)
     banks_poly       = arcpy.GetParameterAsText(2)
     z_factor         = arcpy.GetParameterAsText(3)

@@ -12,7 +12,7 @@ This tool produces a polygon representing the area innundated by the
 detrended elevation value specified. 
 
 Parameters:
-output_workspace      -- Path to the output workspace.
+feature_dataset       -- Path to the feature dataset.
 detrend_dem           -- Path to the detrended digital elevation model (DEM).
 detrend_value         -- Detrended elevation value used to define the 
                          innundated area. All raster values below this value
@@ -29,13 +29,13 @@ import string
 import arcpy
 from arcpy.sa import *
 
-def BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing):
+def BankfullPolygon(feature_dataset, detrend_dem, detrend_value, smoothing):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = detrend_dem
     arcpy.env.snapRaster = detrend_dem
     arcpy.env.cellSize = arcpy.Describe(detrend_dem).meanCellHeight
@@ -70,7 +70,7 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing):
     
     # Convert the banks raster to a polygon
     banks_raw_name = "banks_raw_" + str(detrend_value).replace(".", "_")
-    banks_raw = os.path.join(output_workspace, banks_raw_name)
+    banks_raw = os.path.join(feature_dataset, banks_raw_name)
     arcpy.RasterToPolygon_conversion(
               in_raster = banks_clean, 
               out_polygon_features = banks_raw,
@@ -85,11 +85,11 @@ def BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing):
 
 def main():
     # Call the BankfullPolygon function with command line parameters
-    BankfullPolygon(output_workspace, detrend_dem, detrend_value, smoothing)
+    BankfullPolygon(feature_dataset, detrend_dem, detrend_value, smoothing)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     detrend_dem      = arcpy.GetParameterAsText(1)
     detrend_value    = arcpy.GetParameterAsText(2)
     smoothing        = arcpy.GetParameterAsText(3)

@@ -13,7 +13,7 @@ called `Seq` (long) that uniquely identifies each cross section.
 This tool also adds the stream `ReachName` field from the flowline feature class.
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature dataset
 cross_section         -- Path to the cross section line feature class
 flowline              -- Path to the flowline feature class
 flow_accum            -- Path to the flow accumulation model
@@ -29,15 +29,15 @@ ____________________________________________________________________________"""
 import os
 import arcpy
 
-def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
+def XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
                     snap_distance):
     # Check out the ArcGIS Spatial Analyst extension license
     arcpy.CheckOutExtension("Spatial")
 
     # Set environment variables
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
-    arcpy.env.scratchWorkspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
+    arcpy.env.scratchWorkspace = os.path.dirname(feature_dataset)
 
     # Cast flow_accum as a raster
     FAC_orig = arcpy.Raster(flow_accum)
@@ -59,14 +59,14 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
     buffer_distance = int(float(snap_distance) * 1.2)
     buffer_distance_string = '"{} {}"'.format(buffer_distance, linear_unit)
     
-    flowline_buffer = os.path.join(output_workspace, "flowline_buffer")
+    flowline_buffer = os.path.join(feature_dataset, "flowline_buffer")
     arcpy.analysis.Buffer(in_features = flowline,
                           out_feature_class = flowline_buffer,
                           buffer_distance_or_field = buffer_distance,
                           dissolve_option = "ALL")
 
     # Clip FAC
-    FAC = os.path.join(output_workspace, "FAC")
+    FAC = os.path.join(arcpy.env.workspace, "FAC")
     ex = arcpy.Describe(flowline_buffer).extent
     rectangle = '"{} {} {} {}"'.format(ex.XMin, ex.YMin, ex.XMax, ex.YMax)
     arcpy.AddMessage("Clipping extent: {}".format(rectangle))
@@ -86,7 +86,7 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
                                      drop_field = ["ReachName"])
 
     # Intersect cross_section with flowline
-    xs_flowline_pt = os.path.join(output_workspace, "xs_flowline_pt")
+    xs_flowline_pt = os.path.join(feature_dataset, "xs_flowline_pt")
     arcpy.Intersect_analysis(in_features = [cross_section, flowline],
                              out_feature_class = xs_flowline_pt,
                              output_type = "POINT")
@@ -142,7 +142,7 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
             arcpy.AddMessage("    Snap complete")
             
             ## Sample the flow accum raster to determine # of upstream cells
-            watershed_area = os.path.join(output_workspace, "watershed_area")
+            watershed_area = os.path.join(arcpy.env.workspace, "watershed_area")
             arcpy.sa.Sample(in_rasters = [FAC],
                             in_location_data = snapPour,
                             out_table = watershed_area,
@@ -217,12 +217,12 @@ def XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
 
 def main():
     # Call the XSWatershedArea function with command line parameters
-    XSWatershedArea(output_workspace, cross_section, flowline, flow_accum,
+    XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
                     snap_distance)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     cross_section    = arcpy.GetParameterAsText(1)
     flowline         = arcpy.GetParameterAsText(2)
     flow_accum       = arcpy.GetParameterAsText(3)

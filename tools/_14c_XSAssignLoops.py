@@ -11,7 +11,7 @@ This tool assumes that there is a field in the bankline feature class
 called `ReachName` that uniquely identifies each stream reach. 
 
 Parameters:
-output_workspace      -- Path to the output workspace.
+feature_dataset       -- Path to the feature dataset.
 cross_section         -- Path to the cross section feature class.
 bankline_points       -- Path to the bankline_points feature class.
 
@@ -22,10 +22,10 @@ ____________________________________________________________________________"""
 import os 
 import arcpy
 
-def XSAssignLoops(output_workspace, cross_section, bankline_points):
+def XSAssignLoops(feature_dataset, cross_section, bankline_points):
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -47,7 +47,7 @@ def XSAssignLoops(output_workspace, cross_section, bankline_points):
                             where_clause = "loop IS NOT NULL")
     
     # Spatial Join bankline_points with the closest (within 5m) loop_point
-    xs_fc = os.path.join(output_workspace, "xs_fc")
+    xs_fc = os.path.join(feature_dataset, "xs_fc")
     arcpy.SpatialJoin_analysis(target_features = cross_section, 
                                join_features = "loop_bl_pts", 
                                out_feature_class = xs_fc,  
@@ -68,11 +68,11 @@ def XSAssignLoops(output_workspace, cross_section, bankline_points):
     arcpy.Delete_management(xs_fc)
 
 def main():
-    XSAssignLoops(output_workspace, cross_section, bankline_points)
+    XSAssignLoops(feature_dataset, cross_section, bankline_points)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     cross_section    = arcpy.GetParameterAsText(1)
     bankline_points  = arcpy.GetParameterAsText(2)
     

@@ -15,7 +15,7 @@ The contributing area used in the tool must be calculated using the D-infinity
 method used in the Contributing Area tool. 
 
 Parameters:
-output_workspace      -- Path to the output workspace
+feature_dataset       -- Path to the feature dataset
 contrib_area          -- Path to the D-Infinity contributing area raster 
                          created by the Contributing Area tool. 
 threshold (long)      -- Flow accumulation threshold to initiate a stream 
@@ -34,13 +34,13 @@ import os
 import subprocess
 import arcpy
 
-def StreamNetwork(output_workspace, contrib_area, threshold, processes):
+def StreamNetwork(feature_dataset, contrib_area, threshold, processes):
     # Check out the ArcGIS Spatial Analyst extension license
     arcpy.CheckOutExtension("Spatial")
     
     # Set environment variables 
     arcpy.env.overwriteOutput = True
-    arcpy.env.workspace = output_workspace
+    arcpy.env.workspace = os.path.dirname(feature_dataset)
     
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -53,12 +53,12 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
     # TauDEM needs an uncompressed raster. Create in GDB because CopyRaster 
     # cannot control compression when exporting to .tif
     arcpy.env.compression = "NONE"
-    contrib_area_nocompression = os.path.join(output_workspace,
+    contrib_area_nocompression = os.path.join(arcpy.env.workspace,
                             os.path.basename(contrib_area) + "_nocompression")
     arcpy.CopyRaster_management(in_raster = contrib_area, 
                                 out_rasterdataset = contrib_area_nocompression)
     arcpy.AddMessage("Uncompressed contrib_area created")
-    contrib_area_tif = os.path.join(os.path.dirname(output_workspace), 
+    contrib_area_tif = os.path.join(os.path.dirname(arcpy.env.workspace), 
                                     "contrib_area.tif")
     arcpy.CopyRaster_management(in_raster = contrib_area_nocompression, 
                                 out_rasterdataset = contrib_area_tif)
@@ -66,7 +66,7 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
 
     # TauDEM Stream definition by threshold - Threshold _______________________
     # output thresholded stream raster
-    stream_grid = os.path.join(os.path.dirname(output_workspace), 
+    stream_grid = os.path.join(os.path.dirname(arcpy.env.workspace), 
                                "stream_grid.tif")
     # Construct command
     cmd = 'mpiexec -n ' + str(processes) + ' Threshold -ssa ' + '"' + contrib_area_tif + '"' + ' -src ' + '"' + stream_grid + '"' + ' -thresh ' + str(threshold)
@@ -82,14 +82,14 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
     # Thin stream network - arcpy.sa.Thin _____________________________________
     stream_thin = arcpy.sa.Thin(in_raster = stream_grid, 
                                 corners = "SHARP")
-    stream_thin_path = os.path.join(os.path.dirname(output_workspace), 
+    stream_thin_path = os.path.join(os.path.dirname(arcpy.env.workspace), 
                                     "stream_thin.tif")
     arcpy.CopyRaster_management(in_raster = stream_thin, 
                                 out_rasterdataset = stream_thin_path)
     
     # Convert raster stream to polyline _______________________________________
     # output vector stream network
-    stream_network = os.path.join(output_workspace, "stream_network")
+    stream_network = os.path.join(feature_dataset, "stream_network")
     # Convert the `stream_thin` raster to a polyline
     arcpy.RasterToPolyline_conversion(in_raster = stream_thin_path, 
                                       out_polyline_features = stream_network)
@@ -116,11 +116,11 @@ def StreamNetwork(output_workspace, contrib_area, threshold, processes):
     
 def main():
     # Call the StreamNetwork function with command line parameters
-    StreamNetwork(output_workspace, contrib_area, threshold, processes)
+    StreamNetwork(feature_dataset, contrib_area, threshold, processes)
 
 if __name__ == "__main__":
     # Get input parameters
-    output_workspace = arcpy.GetParameterAsText(0)
+    feature_dataset = arcpy.GetParameterAsText(0)
     contrib_area     = arcpy.GetParameterAsText(1)
     threshold        = arcpy.GetParameterAsText(2)
     processes        = arcpy.GetParameterAsText(3)
