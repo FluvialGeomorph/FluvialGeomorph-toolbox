@@ -1,3 +1,25 @@
+# FluvialGeomorph v0.1.6 (Release date: 2023-01-25)
+
+# Major Changes
+* To ensure that all feature classes are in the same coordinate system, each project file geodatabase will use a feature dataset to store all feature classes. To support this change, all tools have been refactored to expect feature classes to reside within a feature dataset. 
+* Discovered that `arcgisbinding::arc.write` frequently fails to write feature classes to a file geodatabase. To workaround this limitation, we have decided 
+to only write table data from R back to the file geodatabase. The tools `04b - Gradient`, `15a - XS Dimensions, Level 1`, `15b - XS Dimensions, Level 2`, and `15c - XS Planform, Level 3` now write their results as tables. 
+* Added a `JoinField` tool to the `Data Management` toolset. This allows calculations made in R and written to tables to be joined back to their geometry feature classes. 
+
+# Bug fixes
+* Removed dependency on the unmaintained package `facetscales`. 
+
+# Compatability Matrix
+This table describes the latest versions the software has been tested with. 
+
+Software        |Tested    
+---             |---               
+ArcGIS Pro      |3.0.2              
+R               |4.2.0             
+R-bridge        |1.0.1.300  
+FluvialGeomorph |0.1.6   
+
+
 # FluvialGeomorph v0.1.5 (Release date: 2022-05-16)
 
 # Major Changes
