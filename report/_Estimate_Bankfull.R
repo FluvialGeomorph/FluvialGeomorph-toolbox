@@ -83,7 +83,7 @@ tool_exec <- function(in_params, out_params) {
     # Load required libraries
     load_packages(c("tibble", "purrr", "rmarkdown", 
                     "sf", "sp", "raster", "rgdal", "tmap", 
-                    "ggplot2", "ceramic", "fluvgeo"))
+                    "ggplot2", "maptiles","terrainr","terra", "fluvgeo"))
     
     # Ensure pandoc can be found
     message("Setting pandoc directory...")

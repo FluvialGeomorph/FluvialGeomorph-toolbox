@@ -20,12 +20,12 @@ tool_exec <- function(in_params, out_params) {
     message("Installing needed pacakges...")
     needed_pkgs <- c("remotes",
                      "assertthat",
-                     "ceramic",
                      "conicfit",
                      "dplyr",
                      "ggplot2",
                      "ggrepel", 
                      "grDevices",
+                     "maptiles",
                      "methods",
                      "Metrics",
                      "purrr",
@@ -40,6 +40,7 @@ tool_exec <- function(in_params, out_params) {
                      "stats",
                      "stringr",
                      "terra",
+                     "terrainr",
                      "tidyr",
                      "tmap",
                      "utils")
@@ -56,15 +57,7 @@ tool_exec <- function(in_params, out_params) {
     # Set pandoc
     message("Setting pandoc directory...")
     set_pandoc()
-    
-    # Set Mapbox API key
-    message("Setting Mapbox API key...")
-    Sys.setenv(MAPBOX_API_KEY="pk.eyJ1IjoibWlrZWRvYyIsImEiOiJja2VwcThtcm4wbHMxMnJxdm1wNjE5eXhmIn0.WE_PG_GiKhpqr6JIJbTsmQ")
-    
-    # Set ceramic cache
-    ceramic::ceramic_cache(force = TRUE)
-    message("Set ceramic cache to: ", ceramic::ceramic_cache())
-    
+
     # Mute warnings of possible GDAL/OSR exportToProj4() degradation
     options("rgdal_show_exportToProj4_warnings"="none")
     return(out_params)

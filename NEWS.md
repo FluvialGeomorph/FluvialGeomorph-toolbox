@@ -1,3 +1,23 @@
+# FluvialGeomorph v0.1.7 (Release date: 2023-03-22)
+
+# Major Changes
+* Removed `ceramic` dependency and added in `maptiles` and `terrainr` to create 
+basemaps for aerial and elevation data. 
+
+
+# Bug fixes
+* Removed dependency on the  package `ceramic`. 
+
+# Compatability Matrix
+This table describes the latest versions the software has been tested with. 
+
+Software        |Tested    
+---             |---               
+ArcGIS Pro      |3.0.2              
+R               |4.2.2             
+R-bridge        |1.0.1.300  
+FluvialGeomorph |0.1.7  
+
 # FluvialGeomorph v0.1.6 (Release date: 2023-01-25)
 
 # Major Changes
