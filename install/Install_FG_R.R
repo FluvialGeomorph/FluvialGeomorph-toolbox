@@ -10,24 +10,23 @@
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
-    dir_name <- getSrcDirectory(function(x) {x})
-    source(file.path(dir_name, "FG_utils.R"))
+    message("Source utility functions...")
+    source("FG_utils.R")
     
     # gp tool parameters
     reinstall <- in_params[[1]]
     
     # Install needed packages
     message("Installing needed pacakges...")
-    needed_pkgs <- c("remotes",
-                     "assertthat",
+    needed_pkgs <- c("assertthat",
                      "conicfit",
                      "dplyr",
                      "ggplot2",
-                     "ggrepel", 
+                     "ggrepel",
                      "grDevices",
-                     "maptiles",
                      "methods",
                      "Metrics",
+                     "maptiles",
                      "purrr",
                      "raster",
                      "reshape2",
@@ -41,6 +40,7 @@ tool_exec <- function(in_params, out_params) {
                      "stringr",
                      "terra",
                      "terrainr",
+                     "testthat",
                      "tidyr",
                      "tmap",
                      "utils")
