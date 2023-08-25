@@ -1,4 +1,15 @@
-# FluvialGeomorph v0.1.7 (Release date: 2023-03-22)
+# FluvialGeomorph v0.1.8 (Release date: 2023-08-24)
+
+# Major Changes
+* None
+
+
+# Bug fixes
+* Install latest stable release of RegionalCurve.  
+
+
+
+ FluvialGeomorph v0.1.7 (Release date: 2023-03-22)
 
 # Major Changes
 * Removed `ceramic` dependency and added in `maptiles` and `terrainr` to create 

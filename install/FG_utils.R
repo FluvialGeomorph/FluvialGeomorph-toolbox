@@ -79,7 +79,7 @@ install_fluvgeo_packages <- function(force = FALSE) {
     
     # Install `RegionalCurve` from GitHub
     message("Installing RegionaCurve from GitHub...")
-    remotes::install_github(repo = "FluvialGeomorph/RegionalCurve",
+    remotes::install_github(repo = "FluvialGeomorph/RegionalCurve@*release",
                             force = force,
                             upgrade = TRUE,
                             dependencies = TRUE,
