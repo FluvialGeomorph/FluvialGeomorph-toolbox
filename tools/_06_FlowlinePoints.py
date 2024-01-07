@@ -26,7 +26,9 @@ flowline              -- Path to the flowline feature class
 dem                   -- Path to the digital elevation model (DEM)
 km_to_mouth           -- Kilometers to the mouth of the study area outlet.
 station_distance      -- Distance between output flowline station points (in 
-                         the linear units of the flowline feature class)
+                         the linear units of the flowline feature class). If 
+                         station_distance is set to zero, the original vertices
+                         of the flowline will be preserved. 
 calibration_points    -- A point feature class used to calibrate the output 
                          flowline points. 
 point_id_field        -- The field that identifies the route on which each 
@@ -107,20 +109,28 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
                                     expression = expression, 
                                     expression_type = "PYTHON_9.3")
 
-    # Simplify the flowline to speed interpolation
-    arcpy.SimplifyLine_cartography(in_features = flowline, 
-                                   out_feature_class = "flowline_simplify", 
-                                   algorithm = "POINT_REMOVE", 
-                                   tolerance = "1 Feet")
-    arcpy.AddMessage("Simplified flowline: flowline_simplify")
+    # Set the station distance
+    if station_distance == 0:
+        # If station_distance is zero, use original vertices unchanged
+        arcpy.CopyFeatures_management(in_features = flowline, 
+                                      out_feature_class = "flowline_densify")
+        arcpy.AddMessage("Verticies of flowline not changed")
     
-    # Densify vertices of the flowline_simplify feature class using the Densify tool.
-    arcpy.CopyFeatures_management(in_features = "flowline_simplify", 
-                                  out_feature_class = "flowline_densify")
-    arcpy.Densify_edit(in_features = "flowline_densify", 
-                       densification_method = "DISTANCE", 
-                       distance = station_distance)
-    arcpy.AddMessage("Densified verticies of flowline: flowline_densify")
+    else: 
+        # Simplify the flowline (speeds interpolation)
+        arcpy.SimplifyLine_cartography(in_features = flowline, 
+                                       out_feature_class = "flowline_simplify", 
+                                       algorithm = "POINT_REMOVE", 
+                                       tolerance = "1 Feet")
+        arcpy.AddMessage("Simplified flowline: flowline_simplify")
+    
+        # Set the station distance by densifying vertices of flowline_simplify.
+        arcpy.CopyFeatures_management(in_features = "flowline_simplify", 
+                                      out_feature_class = "flowline_densify")
+        arcpy.Densify_edit(in_features = "flowline_densify", 
+                           densification_method = "DISTANCE", 
+                           distance = station_distance)
+        arcpy.AddMessage("Densified verticies of flowline: flowline_densify")
 
     # Convert the flowline feature class to a route
     arcpy.CreateRoutes_lr(in_line_features = "flowline_densify", 
@@ -193,7 +203,6 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
     
     # Cleanup
     arcpy.Delete_management(in_data = "flowline_simplify")
-    arcpy.Delete_management(in_data = "flowline_simplify_Pnt")
     arcpy.Delete_management(in_data = "flowline_densify")
     arcpy.Delete_management(in_data = "flowline_route_calibrate")
     arcpy.Delete_management(in_data = "flowline_densify_route")
