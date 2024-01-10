@@ -59,7 +59,7 @@ def ImportThalweg(feature_dataset, thalweg, thalweg_srs, reach_name):
                                   field_type = "TEXT")
     
     expression = '"{}"'.format(str(reach_name))
-    arcpy.CalculateField_management(in_table = thalweg_points, 
+    arcpy.management.CalculateField(in_table = thalweg_points, 
                                     field = "ReachName", 
                                     expression = expression, 
                                     expression_type = "PYTHON_9.3")
@@ -68,12 +68,12 @@ def ImportThalweg(feature_dataset, thalweg, thalweg_srs, reach_name):
     arcpy.SetParameter(4, thalweg_points)
     
     # Cleanup
-    arcpy.Delete_management(in_data = thalweg_table)
+    arcpy.management.Delete(in_data = thalweg_table)
     arcpy.AddMessage("Temp datasets deleted")
     
     
 def main():
-    # Call the StreamNetwork function with command line parameters
+    # Call the function with command line parameters
     ImportThalweg(feature_dataset, thalweg, thalweg_srs, reach_name)
 
 if __name__ == "__main__":

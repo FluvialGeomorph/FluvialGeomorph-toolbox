@@ -3,10 +3,10 @@
 # Major Changes
 * Updated workflow to support importing on-the-ground field survey data. Added or modified the following tools:
   
-  * Added the `ImportThalweg` tool - 
-  * Added the `ImportXS` tool - 
-  * Added the `DEMFromField` tool - 
-  * Added the `FlowlineFromThalweg` tool - 
+  * Added the `ImportThalweg` tool - Creates a `thalweg_points` feature class from a field survey. 
+  * Added the `ImportFieldXS` tool - Creates a `field_xs_points` feature class from a field survey. 
+  * Added the `DEMFromField` tool - Creates a DEM from field survey points. 
+  * Added the `FlowlineFromThalweg` tool - Creates a `flowline` feature class from a `thalweg_points` feature class. 
   * Updated the `FlowlinePoints` tool  - It now allows setting the `station_distance` parameter to zero to support using field surveys. Setting `station_distance` to zero turns off simplification of the `flowline` and creating regularly spaced `flowline_points` at the station_distance spacing. This preserves the original field surveyed thalweg locations. 
   * Added the `XSFromField` tool - 
 

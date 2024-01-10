@@ -1,5 +1,5 @@
 """____________________________________________________________________________
-Script Name:          _01a_ImportXS.py
+Script Name:          _01a_ImportFieldXS.py
 Description:          Creates a cross section (XS) point feature class from a
                       field survey.  
 Date:                 1/9/2024
@@ -29,7 +29,7 @@ ____________________________________________________________________________"""
 import os
 import arcpy
 
-def ImportThalweg(feature_dataset, field_xs_csv, field_xs_srs, reach_name):
+def ImportFieldXS(feature_dataset, field_xs_csv, field_xs_srs, reach_name):
     # Set environment variables 
     arcpy.env.overwriteOutput = True
     arcpy.env.workspace = os.path.dirname(feature_dataset)
@@ -61,7 +61,7 @@ def ImportThalweg(feature_dataset, field_xs_csv, field_xs_srs, reach_name):
                                   field_type = "TEXT")
     
     expression = '"{}"'.format(str(reach_name))
-    arcpy.CalculateField_management(in_table = field_xs_points, 
+    arcpy.management.CalculateField(in_table = field_xs_points, 
                                     field = "ReachName", 
                                     expression = expression, 
                                     expression_type = "PYTHON_9.3")
@@ -70,13 +70,13 @@ def ImportThalweg(feature_dataset, field_xs_csv, field_xs_srs, reach_name):
     arcpy.SetParameter(4, field_xs_points)
     
     # Cleanup
-    arcpy.Delete_management(in_data = field_xs_table)
+    arcpy.management.Delete(in_data = field_xs_table)
     arcpy.AddMessage("Temp datasets deleted")
     
     
 def main():
-    # Call the StreamNetwork function with command line parameters
-    ImportThalweg(feature_dataset, field_xs_csv, field_xs_srs, reach_name)
+    # Call the function with command line parameters
+    ImportFieldXS(feature_dataset, field_xs_csv, field_xs_srs, reach_name)
 
 if __name__ == "__main__":
     # Get input parameters
