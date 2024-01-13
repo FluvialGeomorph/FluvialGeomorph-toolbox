@@ -60,7 +60,7 @@ def DEMFromField(feature_dataset, thalweg_points, field_xs_points, method,
     mch_buffer = os.path.join(feature_dataset, "mch_buffer")
     arcpy.analysis.Buffer(in_features = min_convex_hull, 
                           out_feature_class = mch_buffer, 
-                          buffer_distance_or_field = "5 Meters")
+                          buffer_distance_or_field = "1 Meters")
     arcpy.AddMessage("Created buffer")
     
     if method == "Spline":
@@ -104,7 +104,7 @@ def DEMFromField(feature_dataset, thalweg_points, field_xs_points, method,
         arcpy.AddMessage("Created DEM using TIN")
         
         # Cleanup
-        #arcpy.management.Delete(DEM_field_tin)
+        arcpy.management.Delete(DEM_field_tin)
     
     # Calculate DEM_field raster statistics
     arcpy.management.CalculateStatistics(in_raster_dataset = DEM_field, 
