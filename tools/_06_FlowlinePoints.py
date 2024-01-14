@@ -89,7 +89,7 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
                                   field_name = "to_measure", 
                                   field_type = "DOUBLE")
                                   
-    arcpy.AddMessage("Added required fields")
+    arcpy.AddMessage("Added required fields to flowline.")
                                   
     # Set the value of the flowline `from_measure` to the input parameter 
     # `km_to_mouth` in units kilometers
@@ -105,38 +105,38 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
                                     field = "to_measure", 
                                     expression = expression, 
                                     expression_type = "PYTHON_9.3")
+    arcpy.AddMessage("Calculated flowline from and to measures.")
 
     # Set the station distance
     if int(station_distance) == 0:
-        # If station_distance is zero, use original vertices unchanged
+        # If station_distance is zero, use original flowline vertices unchanged
         arcpy.management.CopyFeatures(in_features = flowline, 
                                       out_feature_class = "flowline_densify")
-        arcpy.AddMessage("Verticies of flowline not changed")
+        arcpy.AddMessage("Verticies of flowline not changed.")
     else:
         # Simplify the flowline (speeds interpolation)
         arcpy.cartography.SimplifyLine(in_features = flowline, 
                                        out_feature_class = "flowline_simplify",
                                        algorithm = "POINT_REMOVE", 
                                        tolerance = "1 Feet")
-        arcpy.AddMessage("Simplified flowline: flowline_simplify")
+        arcpy.AddMessage("Simplified flowline.")
         
-        # Set the station distance by densifying vertices of flowline_simplify.
+        # Set the station distance by densifying vertices to station_distance
         arcpy.management.CopyFeatures(in_features = "flowline_simplify", 
                                       out_feature_class = "flowline_densify")
         arcpy.edit.Densify(in_features = "flowline_densify", 
                            densification_method = "DISTANCE", 
                            distance = station_distance)
-        arcpy.AddMessage("Densified verticies of flowline: flowline_densify")
+        arcpy.AddMessage("Densified verticies of flowline to station_distance.")
 
     # Convert the flowline feature class to a route
-    arcpy.CreateRoutes_lr(in_line_features = "flowline_densify", 
+    arcpy.lr.CreateRoutes(in_line_features = "flowline_densify", 
                           route_id_field = "ReachName", 
                           out_feature_class = "flowline_densify_route", 
                           measure_source = "TWO_FIELDS", 
                           from_measure_field = "from_measure", 
                           to_measure_field = "to_measure")
-    arcpy.AddMessage("Converted densfied flowline to a route: "
-                     "flowline_densify_route")
+    arcpy.AddMessage("Converted densfied flowline to a route.")
     
     # Calibrate route
     if calibration_points:
@@ -150,15 +150,14 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
                                  search_radius = search_radius)
         arcpy.management.CopyFeatures(in_features = "flowline_route_calibrate", 
                                   out_feature_class = "flowline_densify_route")
-        arcpy.AddMessage("Calibrated route")
+        arcpy.AddMessage("Calibrated flowline to calibration_points.")
     
     # Convert flowline feature vertices to points
     flowline_points = os.path.join(feature_dataset, "flowline_points")
     arcpy.management.FeatureVerticesToPoints(
                      in_features = "flowline_densify_route", 
                      out_feature_class = flowline_points)
-    arcpy.AddMessage("Converted densified flowline route to points: "
-                     "flowline_points")
+    arcpy.AddMessage("Converted densified flowline route to points.")
 
     # Add x, y, z, and m values to the `flowline_points` feature class
     arcpy.management.AddGeometryAttributes(Input_Features = flowline_points, 
@@ -169,8 +168,6 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
     # route` tool sets it to NULL. 
     # Create code block that inserts the km_to_mouth value for the NULL record
     # (the first record) 
-    #arcpy.AddMessage("Set Null m-values to zero - start: {}".format(datetime.now().strftime("%H:%M:%S")))
-    
     codeBlock = """def setNull2Zero(m):
                        if m is None: 
                            return {}
@@ -181,8 +178,7 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
                                 expression = "setNull2Zero(!POINT_M!)", 
                                 code_block = codeBlock,
                                 expression_type = "PYTHON_9.3")
-    #arcpy.AddMessage("Set Null m-values to zero - end: {}".format(datetime.now().strftime("%H:%M:%S")))
-
+    
     # Delete un-needed fields
     arcpy.management.DeleteField(in_table = flowline_points, 
                                  drop_field = ["ORIG_FID","POINT_Z"])
@@ -192,13 +188,14 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
                                     in_surface = dem, 
                                     out_property = "Z",
                                     z_factor = 1.0)
-    arcpy.AddMessage("Added geometry fields to flowline points.")
+    arcpy.AddMessage("Added geometry fields to flowline_points.")
     
     # Return
     arcpy.SetParameter(9, flowline_points)
     
     # Cleanup
     arcpy.management.Delete("flowline_simplify")
+    arcpy.management.Delete("flowline_simplify_Pnt")
     arcpy.management.Delete("flowline_densify")
     arcpy.management.Delete("flowline_route_calibrate")
     arcpy.management.Delete("flowline_densify_route")
@@ -223,4 +220,3 @@ if __name__ == "__main__":
     search_radius      = arcpy.GetParameterAsText(8)
     
     main()
-
