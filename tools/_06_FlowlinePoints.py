@@ -47,19 +47,17 @@ search_radius         -- Limits how far a calibration point can be from a route
                          of the route feature class will be used.
 
 Outputs:
-flowline_points        -- a new feature class of densified vertices along the 
-                          flowline
+flowline_points        -- a flowline_points feature class
 ____________________________________________________________________________"""
  
 import os
 from datetime import datetime
 import arcpy
 
-# Define the StreamProfilePoints function
-def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth, 
-                        station_distance, 
-                        calibration_points, point_id_field, measure_field,
-                        search_radius):
+def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth, 
+                   station_distance, 
+                   calibration_points, point_id_field, measure_field,
+                   search_radius):
     # Check out the extension licenses 
     arcpy.CheckOutExtension("3D")
 
@@ -79,55 +77,53 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
         arcpy.AddMessage("measure_field: {}".format(str(measure_field)))
         arcpy.AddMessage("search_radius: {}".format(str(search_radius)))
     
-    # Add a field to hold the linear referencing route from measure
-    # Check if the field already exists and if not add it
+    # Add fields to hold the linear referencing route from and to measures
     field_names = [f.name for f in arcpy.ListFields(flowline)]
     if "from_measure" not in field_names:
-        arcpy.AddField_management(in_table = flowline, 
+        arcpy.management.AddField(in_table = flowline, 
                                   field_name = "from_measure", 
                                   field_type = "DOUBLE")
-
+                                  
+    if "to_measure" not in field_names:
+        arcpy.management.AddField(in_table = flowline, 
+                                  field_name = "to_measure", 
+                                  field_type = "DOUBLE")
+                                  
+    arcpy.AddMessage("Added required fields")
+                                  
     # Set the value of the flowline `from_measure` to the input parameter 
     # `km_to_mouth` in units kilometers
-    arcpy.CalculateField_management(in_table = flowline, 
+    arcpy.management.CalculateField(in_table = flowline, 
                                     field = "from_measure", 
                                     expression = km_to_mouth, 
                                     expression_type = "PYTHON_9.3")
 
-    # Add a field to hold the linear referencing route to measure
-    if "to_measure" not in field_names:
-        arcpy.AddField_management(in_table = flowline, 
-                                  field_name = "to_measure", 
-                                  field_type = "DOUBLE")
-
     # Set the value of the flowline `to_measure` to the length of the flowline
     # in units kilometers plus the value of km_to_mouth 
     expression = "!shape.length@kilometers! + {}".format(str(km_to_mouth))
-    
-    arcpy.CalculateField_management(in_table = flowline, 
+    arcpy.management.CalculateField(in_table = flowline, 
                                     field = "to_measure", 
                                     expression = expression, 
                                     expression_type = "PYTHON_9.3")
 
     # Set the station distance
-    if station_distance == 0:
+    if int(station_distance) == 0:
         # If station_distance is zero, use original vertices unchanged
-        arcpy.CopyFeatures_management(in_features = flowline, 
+        arcpy.management.CopyFeatures(in_features = flowline, 
                                       out_feature_class = "flowline_densify")
         arcpy.AddMessage("Verticies of flowline not changed")
-    
-    else: 
+    else:
         # Simplify the flowline (speeds interpolation)
-        arcpy.SimplifyLine_cartography(in_features = flowline, 
-                                       out_feature_class = "flowline_simplify", 
+        arcpy.cartography.SimplifyLine(in_features = flowline, 
+                                       out_feature_class = "flowline_simplify",
                                        algorithm = "POINT_REMOVE", 
                                        tolerance = "1 Feet")
         arcpy.AddMessage("Simplified flowline: flowline_simplify")
-    
+        
         # Set the station distance by densifying vertices of flowline_simplify.
-        arcpy.CopyFeatures_management(in_features = "flowline_simplify", 
+        arcpy.management.CopyFeatures(in_features = "flowline_simplify", 
                                       out_feature_class = "flowline_densify")
-        arcpy.Densify_edit(in_features = "flowline_densify", 
+        arcpy.edit.Densify(in_features = "flowline_densify", 
                            densification_method = "DISTANCE", 
                            distance = station_distance)
         arcpy.AddMessage("Densified verticies of flowline: flowline_densify")
@@ -144,7 +140,7 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
     
     # Calibrate route
     if calibration_points:
-        arcpy.CalibrateRoutes_lr(in_route_features = "flowline_densify_route", 
+        arcpy.lr.CalibrateRoutes(in_route_features = "flowline_densify_route", 
                                  route_id_field = "ReachName", 
                                  in_point_features = calibration_points,
                                  point_id_field = point_id_field,
@@ -152,20 +148,20 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
                                  out_feature_class = "flowline_route_calibrate",
                                  calibrate_method = "DISTANCE",
                                  search_radius = search_radius)
-        arcpy.CopyFeatures_management(in_features = "flowline_route_calibrate", 
+        arcpy.management.CopyFeatures(in_features = "flowline_route_calibrate", 
                                   out_feature_class = "flowline_densify_route")
         arcpy.AddMessage("Calibrated route")
     
     # Convert flowline feature vertices to points
     flowline_points = os.path.join(feature_dataset, "flowline_points")
-    arcpy.FeatureVerticesToPoints_management(
+    arcpy.management.FeatureVerticesToPoints(
                      in_features = "flowline_densify_route", 
                      out_feature_class = flowline_points)
     arcpy.AddMessage("Converted densified flowline route to points: "
                      "flowline_points")
 
     # Add x, y, z, and m values to the `flowline_points` feature class
-    arcpy.AddGeometryAttributes_management(Input_Features = flowline_points, 
+    arcpy.management.AddGeometryAttributes(Input_Features = flowline_points, 
                                            Geometry_Properties = "POINT_X_Y_Z_M", 
                                            Length_Unit = "METERS")
 
@@ -180,7 +176,7 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
                            return {}
                        else:
                            return m""".format(km_to_mouth)
-    arcpy.CalculateField_management(in_table = flowline_points, 
+    arcpy.management.CalculateField(in_table = flowline_points, 
                                 field = "POINT_M", 
                                 expression = "setNull2Zero(!POINT_M!)", 
                                 code_block = codeBlock,
@@ -188,32 +184,31 @@ def StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth,
     #arcpy.AddMessage("Set Null m-values to zero - end: {}".format(datetime.now().strftime("%H:%M:%S")))
 
     # Delete un-needed fields
-    arcpy.DeleteField_management(in_table = flowline_points, 
+    arcpy.management.DeleteField(in_table = flowline_points, 
                                  drop_field = ["ORIG_FID","POINT_Z"])
 
     # Add elevations to the `flowline_points` feature class
-    arcpy.AddSurfaceInformation_3d(in_feature_class = flowline_points, 
-                                   in_surface = dem, 
-                                   out_property = "Z",
-                                   z_factor = 1.0)
+    arcpy.ddd.AddSurfaceInformation(in_feature_class = flowline_points, 
+                                    in_surface = dem, 
+                                    out_property = "Z",
+                                    z_factor = 1.0)
     arcpy.AddMessage("Added geometry fields to flowline points.")
     
     # Return
     arcpy.SetParameter(9, flowline_points)
     
     # Cleanup
-    arcpy.Delete_management(in_data = "flowline_simplify")
-    arcpy.Delete_management(in_data = "flowline_densify")
-    arcpy.Delete_management(in_data = "flowline_route_calibrate")
-    arcpy.Delete_management(in_data = "flowline_densify_route")
+    arcpy.management.Delete("flowline_simplify")
+    arcpy.management.Delete("flowline_densify")
+    arcpy.management.Delete("flowline_route_calibrate")
+    arcpy.management.Delete("flowline_densify_route")
     return
     
 def main():
-    # Call the StreamProfilePoints function with command line parameters
-    StreamProfilePoints(feature_dataset, flowline, dem, km_to_mouth, 
-                        station_distance, 
-                        calibration_points, point_id_field, measure_field,
-                        search_radius)
+    FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth, 
+                   station_distance, 
+                   calibration_points, point_id_field, measure_field,
+                   search_radius)
 
 if __name__ == "__main__":
     # Get input parameters
