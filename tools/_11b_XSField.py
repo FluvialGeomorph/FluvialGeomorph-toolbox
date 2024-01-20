@@ -38,7 +38,16 @@ def XSField(feature_dataset, field_xs_points):
                                   Transfer_Fields = ["ReachName"])
     arcpy.AddMessage("Converted field_xs_points to a field_xs line.")
     
-    # Fix field names (AlterField broke)
+    # Create `Seq` field
+    arcpy.management.AddField(in_table = field_xs, 
+                              field_name = "Seq", field_type = "SHORT")
+    arcpy.management.CalculateField(in_table = field_xs, 
+                                    field = "Seq", 
+                                    expression = "!OBJECTID!", 
+                                    expression_type = "PYTHON3")
+    arcpy.AddMessage("Added Sequence field.")
+    
+    # Fix field names (AlterField is broke)
     arcpy.management.AddField(in_table = field_xs, 
                               field_name = "ReachName", 
                               field_type = "TEXT")
