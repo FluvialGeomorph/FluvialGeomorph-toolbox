@@ -1,17 +1,18 @@
-# FluvialGeomorph v0.2.1 (Release date: 2024-01-12)
+# FluvialGeomorph v0.2.1 (Release date: 2024-01-26)
 
 # Major Changes
 * Updated workflow to support importing on-the-ground field survey data. Added or modified the following tools:
   
-  * Added the `ImportThalweg` tool - Creates a `thalweg_points` feature class from a field survey. 
-  * Added the `ImportFieldXS` tool - Creates a `field_xs_points` feature class from a field survey. 
-  * Added the `DEMFromField` tool - Creates a DEM from field survey points. 
-  * Added the `FlowlineFromThalweg` tool - Creates a `flowline` feature class from a `thalweg_points` feature class. 
-  * Updated the `FlowlinePoints` tool  - It now allows setting the `station_distance` parameter to zero to support using field surveys. Setting `station_distance` to zero turns off simplification of the `flowline` and creating regularly spaced `flowline_points` at the station_distance spacing. This preserves the original field surveyed thalweg locations. 
-  * Added the `XSFromField` tool - 
+  * Added the `Import Thalweg` tool - Creates a `thalweg_points` feature class from a field survey. 
+  * Added the `Import Field XS` tool - Creates a `field_xs_points` feature class from a field survey. 
+  * Added the `DEM From Field` tool - Creates a DEM from field survey points. 
+  * Added the `Flowline Thalweg` tool - Creates a `flowline` feature class from a `thalweg_points` feature class. 
+  * Updated the `Flowline Points` tool  - It now allows setting the `station_distance` parameter to zero to support using field surveys. Setting `station_distance` to zero turns off simplification of the `flowline` and creating regularly spaced `flowline_points` at the station_distance spacing. This preserves the original field surveyed thalweg locations. 
+  * Added the `XS From Field` tool - Creates a polyline feature class from a `field_xs_points` feature class. 
 
 # Bug fixes
-*   
+* Refactored R scripts to use the [`here`](https://here.r-lib.org//articles/here.html) package to resolve script location within the toolbox folder structure. 
+* Updated the process for pandoc executable detection. 
 
 
 # FluvialGeomorph v0.1.8 (Release date: 2023-08-24)
