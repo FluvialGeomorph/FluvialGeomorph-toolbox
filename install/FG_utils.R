@@ -99,41 +99,68 @@ install_fluvgeo_packages <- function(force = FALSE) {
 #' 
 #' @export
 #' 
-#' @description Determine if \code{pandoc} is installed and set the path.
+#' @description Determine if \code{pandoc} is installed and set an R environment
+#'     variable and tell rmarkdown. 
 #' 
 #' @details This function is needed to be able to use pandoc outside of an 
 #'     RStudio session. It detects the pandoc installation path and sets the 
 #'     R environment variable \code{RSTUDIO_PANDOC} to the installation path. 
+#'     It also tells rmarkdown where to find pandoc. 
 #' 
 set_pandoc <- function() {
-    if (!Sys.which("pandoc") == "") {
-        # Check if pandoc is on the path
+    if (rmarkdown::pandoc_available()) {
+        # pandoc already available
+        message(paste("Pandoc available: ", rmarkdown::pandoc_available()))
+        message("pandoc version: ", rmarkdown::pandoc_version())
+        message("Find pandoc: ",  rmarkdown::find_pandoc()$dir)
+    } else if (!Sys.which("pandoc") == "") {
+        # Check if pandoc location detectable by Sys.which
         # Set R environment variable
         Sys.setenv(RSTUDIO_PANDOC = dirname(Sys.which("pandoc")))
         # Tell rmarkdown directly
         rmarkdown::find_pandoc(dir = dirname(Sys.which("pandoc")))
+        message("pandoc discovery method: Sys.which")
         message("Using pandoc: ", dirname(Sys.which("pandoc")))
+        message("Find pandoc: ",  rmarkdown::find_pandoc()$dir)
+    } else if (file.exists("C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/pandoc.exe")) {
+        # Check if pandoc is installed by RStudio, current RStudio
+        # Set R environment variable
+        Sys.setenv(RSTUDIO_PANDOC  = "C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools")
+        # Tell rmarkdown directly
+        rmarkdown::find_pandoc(dir = "C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools")
+        message("pandoc discovery method: RStudio Quarto")
+        message("Using pandoc: C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools" )
+        message("Find pandoc: ",  rmarkdown::find_pandoc()$dir)
+    } else if (file.exists("C:/Program Files/Quarto/bin/tools/pandoc.exe")) {
+        # Check if pandoc is installed by Quarto, current quarto
+        # Set R environment variable
+        Sys.setenv(RSTUDIO_PANDOC  = "C:/Program Files/Quarto/bin/tools")
+        # Tell rmarkdown directly
+        rmarkdown::find_pandoc(dir = "C:/Program Files/Quarto/bin/tools")
+        message("pandoc discovery method: Quarto")
+        message("Using pandoc: C:/Program Files/Quarto/bin/tools" )
+        message("Find pandoc: ",  rmarkdown::find_pandoc()$dir)
     } else if (file.exists("C:/Program Files/RStudio/bin/quarto/bin/pandoc.exe")) {
-        # Check if pandoc is installed by RStudio, post quarto
+        # Check if pandoc is installed by RStudio, early RStudio Quarto
         # Set R environment variable
         Sys.setenv(RSTUDIO_PANDOC  = "C:/Program Files/RStudio/bin/quarto/bin")
         # Tell rmarkdown directly
         rmarkdown::find_pandoc(dir = "C:/Program Files/RStudio/bin/quarto/bin")
-        message("Using pandoc: C:/Program Files/RStudio/bin/quarto" )
+        message("pandoc discovery method: Early RStudio Quarto")
+        message("Using pandoc: C:/Program Files/RStudio/bin/quarto/bin" )
+        message("Find pandoc: ",  rmarkdown::find_pandoc()$dir)
     } else if (file.exists("C:/Program Files/RStudio/bin/pandoc/pandoc.exe")) {
         # Check if pandoc is installed by RStudio, pre quarto
         # Set R environment variable
         Sys.setenv(RSTUDIO_PANDOC  = "C:/Program Files/RStudio/bin/pandoc")
         # Tell rmarkdown directly
         rmarkdown::find_pandoc(dir = "C:/Program Files/RStudio/bin/pandoc")
+        message("pandoc discovery method: RStudio Pre Quarto")
         message("Using pandoc: C:/Program Files/RStudio/bin/pandoc" )
+        message("Find pandoc: ",  rmarkdown::find_pandoc()$dir)
     } else {
         message("pandoc installation not detected.")
     }
-    
-    # Determine if pandoc is available
-    message(paste("Pandoc available: ", rmarkdown::pandoc_available()))
-    
 }
 
 
