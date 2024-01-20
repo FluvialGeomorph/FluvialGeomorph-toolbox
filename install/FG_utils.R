@@ -1,5 +1,8 @@
 # Utility R functions for the ArcGIS FluvialGeomorph toolbox. 
 
+# Declare location of script within the toolbox
+here::i_am("install/FG_utils.R")
+
 #' @title Load needed packages
 #' 
 #' @description Loads specified packages. 
