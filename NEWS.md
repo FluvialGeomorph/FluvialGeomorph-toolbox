@@ -1,4 +1,4 @@
-# FluvialGeomorph v0.2.1 (Release date: 2024-01-26)
+# FluvialGeomorph v0.2.1 (Release date: 2024-01-22)
 
 # Major Changes
 * Updated workflow to support importing on-the-ground field survey data. Added or modified the following tools:
