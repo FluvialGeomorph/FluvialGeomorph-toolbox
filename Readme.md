@@ -5,8 +5,8 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 ## Project Status
 [![Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle)
 [![Project Status: Active The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![packageversion](https://img.shields.io/badge/Package%20version-0.1.8-orange.svg?style=flat-square)](commits/master)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2023--08--24-yellowgreen.svg)](/commits/master)
+[![packageversion](https://img.shields.io/badge/Package%20version-0.2.0-orange.svg?style=flat-square)](commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2024--01--22-yellowgreen.svg)](/commits/master)
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 ## Description
@@ -70,5 +70,3 @@ If you find any bugs while using the FluvialGeomorph ArcGIS toolbox, please open
 ### Credits
 * [hex logo created using the `hexSticker` R package](https://github.com/GuangchuangYu/hexSticker)
 * [hex logo oblique aerial photo from pexels.com](https://www.pexels.com/@donaldtong94)
-
-

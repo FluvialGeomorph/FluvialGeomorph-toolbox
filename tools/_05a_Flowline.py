@@ -1,5 +1,5 @@
 """____________________________________________________________________________
-Script Name:          _05_Flowline.py
+Script Name:          _05a_Flowline.py
 Description:          Creates a flowline from an edited stream network. 
 Date:                 05/27/2020
 
@@ -43,7 +43,7 @@ def CleanFlowline(feature_dataset, stream_network, smooth_tolerance):
     # Dissolve by `ReachName` field
     stream_network_dissolve = os.path.join(feature_dataset, 
                                            "stream_network_dissolve")
-    arcpy.Dissolve_management(in_features = stream_network, 
+    arcpy.management.Dissolve(in_features = stream_network, 
                               out_feature_class = stream_network_dissolve,  
                               dissolve_field = ["ReachName"], 
                               unsplit_lines = "DISSOLVE_LINES")
@@ -52,7 +52,7 @@ def CleanFlowline(feature_dataset, stream_network, smooth_tolerance):
     
     # Smooth the stream network
     flowline = os.path.join(feature_dataset, "flowline")
-    arcpy.SmoothLine_cartography(in_features = stream_network_dissolve, 
+    arcpy.cartography.SmoothLine(in_features = stream_network_dissolve, 
                                  out_feature_class = flowline, 
                                  algorithm = "PAEK", 
                                  tolerance = smooth_tolerance)
@@ -63,16 +63,15 @@ def CleanFlowline(feature_dataset, stream_network, smooth_tolerance):
     arcpy.SetParameter(3, flowline)
     
     # Cleanup
-    arcpy.Delete_management(in_data = stream_network_dissolve)
+    arcpy.management.Delete(in_data = stream_network_dissolve)
 
     
 def main():
-    # Call the CleanFlowline function with command line parameters
     CleanFlowline(feature_dataset, stream_network, smooth_tolerance)
     
 if __name__ == "__main__":
     # Get input parameters
-    feature_dataset = arcpy.GetParameterAsText(0)
+    feature_dataset  = arcpy.GetParameterAsText(0)
     stream_network   = arcpy.GetParameterAsText(1)
     smooth_tolerance = arcpy.GetParameterAsText(2)
     

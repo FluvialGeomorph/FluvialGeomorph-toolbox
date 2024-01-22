@@ -10,8 +10,8 @@
 #'
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
-    message("Source utility functions...")
     source("FG_utils.R")
+    message("Source utility functions...")
     
     # gp tool parameters
     reinstall <- in_params[[1]]
@@ -24,6 +24,7 @@ tool_exec <- function(in_params, out_params) {
                      "ggplot2",
                      "ggrepel",
                      "grDevices",
+                     "here",
                      "methods",
                      "Metrics",
                      "maptiles",

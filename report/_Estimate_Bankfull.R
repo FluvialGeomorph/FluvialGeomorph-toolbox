@@ -75,11 +75,12 @@
 #' @return A report written to the file system in the output format requested.
 #'
 tool_exec <- function(in_params, out_params) {
+    # Declare location of script within the toolbox
+    here::i_am("report/_Estimate_Bankfull.R")
     # Load utility R functions
-    dir_name <- getSrcDirectory(function(x) {x})
-    fg <- dirname(dir_name)
-    fg_install <- file.path(fg, "install")
-    source(file.path(fg_install, "FG_utils.R"))
+    fg_utils <- here::here("install", "FG_utils.R")
+    source(fg_utils)
+    message("Sourced utility functions: ", fg_utils)
     # Load required libraries
     load_packages(c("tibble", "purrr", "rmarkdown", 
                     "sf", "sp", "raster", "rgdal", "tmap", 
