@@ -1,7 +1,7 @@
 """____________________________________________________________________________
 Script Name:          _12_XSWatershedArea.py
 Description:          Adds watershed area to each cross section.
-Date:                 10/24/2019
+Date:                 01/26/2024
 
 Usage:
 Calculates the watershed area upstream of the input cross section. Writes the
@@ -10,7 +10,11 @@ value to a new field in the flowline feature class.
 This tool assumes that there is a field in the cross section feature class
 called `Seq` (long) that uniquely identifies each cross section.
 
-This tool also adds the stream `ReachName` field from the flowline feature class.
+This tool also adds the stream `ReachName` field from the flowline feature 
+class.
+
+This tool runs much faster if the regional flow accumulation raster is clipped 
+to the flowline extent. 
 
 Parameters:
 feature_dataset       -- Path to the feature dataset
@@ -40,7 +44,7 @@ def XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
     arcpy.env.scratchWorkspace = os.path.dirname(feature_dataset)
 
     # Cast flow_accum as a raster
-    FAC_orig = arcpy.Raster(flow_accum)
+    FAC = arcpy.Raster(flow_accum)
 
     # List parameter values
     arcpy.AddMessage("Workspace: {}".format(arcpy.env.workspace))
@@ -48,46 +52,23 @@ def XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
                      "{}".format(arcpy.Describe(cross_section).baseName))
     arcpy.AddMessage("Flowline: "
                      "{}".format(arcpy.Describe(flowline).baseName))
-    arcpy.AddMessage("FAC: {}".format(arcpy.Describe(FAC_orig).baseName))
+    arcpy.AddMessage("FAC: {}".format(arcpy.Describe(FAC).baseName))
     arcpy.AddMessage("Snap distance: {}".format(snap_distance))
 
     # Get spatial reference of FAC
-    spatial_ref = arcpy.Describe(FAC_orig).spatialReference
-
-    # Buffer flowline
-    linear_unit = spatial_ref.linearUnitName.replace(" ", "")
-    buffer_distance = int(float(snap_distance) * 1.2)
-    buffer_distance_string = '"{} {}"'.format(buffer_distance, linear_unit)
-    
-    flowline_buffer = os.path.join(feature_dataset, "flowline_buffer")
-    arcpy.analysis.Buffer(in_features = flowline,
-                          out_feature_class = flowline_buffer,
-                          buffer_distance_or_field = buffer_distance,
-                          dissolve_option = "ALL")
-
-    # Clip FAC
-    FAC = os.path.join(arcpy.env.workspace, "FAC")
-    ex = arcpy.Describe(flowline_buffer).extent
-    rectangle = '"{} {} {} {}"'.format(ex.XMin, ex.YMin, ex.XMax, ex.YMax)
-    arcpy.AddMessage("Clipping extent: {}".format(rectangle))
-    arcpy.management.Clip(in_raster = FAC_orig, 
-                          rectangle = rectangle, 
-                          out_raster = FAC,
-                          in_template_dataset = flowline_buffer,
-                          clipping_geometry = "ClippingGeometry",
-                          maintain_clipping_extent = "NO_MAINTAIN_EXTENT")
+    spatial_ref = arcpy.Describe(FAC).spatialReference
 
     # Check if the ReachName field exists in the cross_section fc. If so delete
     # it so that it can be updated. It must be deleted so that it does not get
     # confused with the ReachName field in the flowline fc during Intersect.
     field_names = [f.name for f in arcpy.ListFields(cross_section)]
     if "ReachName" in field_names:
-        arcpy.DeleteField_management(in_table = cross_section,
+        arcpy.management.DeleteField(in_table = cross_section,
                                      drop_field = ["ReachName"])
 
     # Intersect cross_section with flowline
     xs_flowline_pt = os.path.join(feature_dataset, "xs_flowline_pt")
-    arcpy.Intersect_analysis(in_features = [cross_section, flowline],
+    arcpy.analysis.Intersect(in_features = [cross_section, flowline],
                              out_feature_class = xs_flowline_pt,
                              output_type = "POINT")
 
@@ -95,7 +76,7 @@ def XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
     # Check if the field already exists and if not add it
     field_names = [f.name for f in arcpy.ListFields(cross_section)]
     if "Watershed_Area_SqMile" not in field_names:
-        arcpy.AddField_management(cross_section, "Watershed_Area_SqMile",
+        arcpy.management.AddField(cross_section, "Watershed_Area_SqMile",
                                   "DOUBLE")
 
     # Add a field to the cross section feature class to hold the name of the
@@ -114,7 +95,7 @@ def XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
             # Create a feature layer from the xs_flowline_pt feature class
             # for the current cross section
             OID = "Seq = {}".format(str(row[0]))
-            arcpy.MakeFeatureLayer_management(
+            arcpy.management.MakeFeatureLayer(
                       in_features = xs_flowline_pt,
                       out_layer = "xs_flowln_pt",
                       where_clause = OID)
@@ -209,19 +190,15 @@ def XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
     arcpy.SetParameter(5, cross_section)
     
     # Cleanup
-    arcpy.Delete_management(in_data = xs_flowline_pt)
-    arcpy.Delete_management(in_data = watershed_area)
-    #arcpy.Delete_management(in_data = flowline_buffer)
-    #arcpy.Delete_management(in_data = FAC)
+    arcpy.management.Delete(in_data = xs_flowline_pt)
+    arcpy.management.Delete(in_data = watershed_area)
 
 
 def main():
-    # Call the XSWatershedArea function with command line parameters
     XSWatershedArea(feature_dataset, cross_section, flowline, flow_accum,
                     snap_distance)
 
 if __name__ == "__main__":
-    # Get input parameters
     feature_dataset  = arcpy.GetParameterAsText(0)
     cross_section    = arcpy.GetParameterAsText(1)
     flowline         = arcpy.GetParameterAsText(2)
