@@ -45,13 +45,22 @@ def CopyJoin(output_workspace, fc, fc_field, table, table_field):
     out_fc_name = table_name.replace("_table", "")
     out_fc_path = os.path.join(feature_dataset, out_fc_name)
     arcpy.management.CopyFeatures(in_features = fc, 
-                                  out_feature_class = out_fc_path) 
+                                  out_feature_class = out_fc_path)
+    arcpy.AddMessage("Created new fc")
                                
     # Join `table` to the new feature class
-    arcpy.JoinField_management(in_data = out_fc_path,
+    arcpy.management.JoinField(in_data = out_fc_path,
                                in_field = fc_field,
                                join_table = table,
                                join_field = table_field)
+    arcpy.AddMessage("Joined table to new fc")
+    
+    # Delete duplicate fields
+    dup_fields = [f.name for f in arcpy.ListFields(dataset = out_fc_path, 
+                                                  wild_card = "*_1")]
+    arcpy.management.DeleteField(in_table = out_fc_path,
+                                  drop_field = dup_fields)
+    arcpy.AddMessage("Deleted duplicate fields")
     
     # Return
     arcpy.SetParameter(5, out_fc_path)
@@ -61,7 +70,6 @@ def main():
     CopyJoin(output_workspace, fc, fc_field, table, table_field)
 
 if __name__ == "__main__":
-    # Get input parameters
     output_workspace = arcpy.GetParameterAsText(0)
     fc               = arcpy.GetParameterAsText(1)
     fc_field         = arcpy.GetParameterAsText(2)
