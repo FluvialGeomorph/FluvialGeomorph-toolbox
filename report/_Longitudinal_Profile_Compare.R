@@ -32,7 +32,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("dplyr", "purrr", "sp", "ggplot2", "fluvgeo"))
+    load_packages(c("dplyr", "purrr", "ggplot2", "fluvgeo"))
     
     # Ensure pandoc can be found
     message("Setting pandoc directory...")
@@ -50,30 +50,6 @@ tool_exec <- function(in_params, out_params) {
     survey_name_4     <- in_params[[9]]
     features_fc       <- in_params[[10]]
     profile_units     <- unlist(in_params[[11]])
-    
-    # Inputs for testing in RStudio
-    # library(dplyr)
-    # library(tibble)
-    # library(purrr)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # library(fluvgeo)
-    # 
-    # stream <- "Cole Creek R1"
-    # flowline_points_1 <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2004_R1.gdb\\flowline_points"
-    # flowline_points_2 <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2010_R1.gdb\\flowline_points"
-    # flowline_points_3 <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2016_R1.gdb\\flowline_points"
-    # flowline_points_4 <- NULL
-    # survey_name_1 <- "2004"
-    # survey_name_2 <- "2010"
-    # survey_name_3 <- "2016"
-    # survey_name_4 <- NULL
-    # features_fc <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2016_R1.gdb\\features"
-    # profile_units <- "feet"
-    # in_params <- list(stream, flowline_points_1, flowline_points_2,
-    #                   flowline_points_3, flowline_points_4, survey_name_1,
-    #                   survey_name_2, survey_name_3, survey_name_4,
-    #                   features_fc, profile_units)
     
     # Verify parameters
     ## Create list of parameters (named using the parameter names)
@@ -105,7 +81,7 @@ tool_exec <- function(in_params, out_params) {
     flowline_pts_sf_list <- purrr::map(flowline_points_paths, fluvgeo::fc2sf)
     
     # Convert features_fc to an sp object
-    print("Converting features to sp")
+    print("Converting features to sf")
     features_sf <- fluvgeo::fc2sf(features_fc)
     
     # Call the graph function

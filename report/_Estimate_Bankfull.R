@@ -83,7 +83,7 @@ tool_exec <- function(in_params, out_params) {
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
     load_packages(c("tibble", "purrr", "rmarkdown", 
-                    "sf", "sp", "raster", "rgdal", "tmap", 
+                    "sf", "raster", "tmap", 
                     "ggplot2", "maptiles","terrainr","terra", "fluvgeo"))
     
     # Ensure pandoc can be found

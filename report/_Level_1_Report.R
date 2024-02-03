@@ -62,7 +62,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("purrr", "sf", "sp", "raster", "rgdal", "tmap", 
+    load_packages(c("purrr", "sf", "raster", "tmap", 
                     "ggplot2", "tibble", "terrainr", "terra", "maptiles", 
                     "fluvgeo"))
     

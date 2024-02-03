@@ -20,7 +20,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("sp", "ggplot2", "ggrepel", "fluvgeo"))
+    load_packages(c("ggplot2", "ggrepel", "fluvgeo"))
     
     # Ensure pandoc can be found
     message("Setting pandoc directory...")
@@ -31,20 +31,9 @@ tool_exec <- function(in_params, out_params) {
     features_fc         <- in_params[[2]]
     label_xs            <- as.logical(in_params[[3]])
     
-    # Inputs for testing in RStudio
-    #library(sp)
-    #library(ggplot2)
-    #library(ggrepel)
-    #library(fluvgeo)
-    #library(arcgisbinding)
-    #arc.check_product()
-    #xs_dimensions_fc    <- "Z:/Work/Office/Regional/ERDC/EMRRP_Sediment/Senachwine/Data/Watershed/01_LowerSenachwineCreek/LowerSenachwineCreek.gdb/riffle_dims"
-    #features_fc         <- ""
-    #label_xs            <- TRUE
-    
-    # Import fc to sp
-    xs_dimensions <- fluvgeo::arc2sp(xs_dimensions_fc)
-    features      <- fluvgeo::arc2sp(features_fc)
+    # Import fc to sf
+    xs_dimensions <- fluvgeo::fc2sf(xs_dimensions_fc)
+    features      <- fluvgeo::fc2sf(features_fc)
 
     # Call xs_plot function
     print(fluvgeo::xs_profile_plot(reach_xs_dims = xs_dimensions, 
