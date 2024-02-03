@@ -76,11 +76,11 @@ tool_exec <- function(in_params, out_params) {
     print("Discarding empty items")
     flowline_points_paths <- purrr::discard(flowline_points_paths, is.null)
     
-    # Convert list of survey paths to list of sp objects
+    # Convert list of survey paths to list of sf objects
     print("Converting flowline_points to sf")
     flowline_pts_sf_list <- purrr::map(flowline_points_paths, fluvgeo::fc2sf)
     
-    # Convert features_fc to an sp object
+    # Convert features_fc to an sf
     print("Converting features to sf")
     features_sf <- fluvgeo::fc2sf(features_fc)
     

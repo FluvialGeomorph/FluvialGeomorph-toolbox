@@ -32,7 +32,7 @@ tool_exec <- function(in_params, out_params) {
     xs_label_freq <- as.numeric(in_params[[4]])
     profile_units <- in_params[[5]]
     
-    # Import fc to sp
+    # Import fc to sf
     xs_dims_sf  <- fluvgeo::fc2sf(xs_dims_fc)
     features_sf <- fluvgeo::fc2sf(features_fc)
 

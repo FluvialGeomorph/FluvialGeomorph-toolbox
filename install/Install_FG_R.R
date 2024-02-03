@@ -31,12 +31,10 @@ tool_exec <- function(in_params, out_params) {
                      "purrr",
                      "raster",
                      "reshape2",
-                     "rgdal",
                      "rlang",
                      "rmarkdown",
                      "scales",
                      "sf",
-                     "sp",
                      "stats",
                      "stringr",
                      "terra",
@@ -59,7 +57,5 @@ tool_exec <- function(in_params, out_params) {
     message("Setting pandoc directory...")
     set_pandoc()
 
-    # Mute warnings of possible GDAL/OSR exportToProj4() degradation
-    options("rgdal_show_exportToProj4_warnings"="none")
     return(out_params)
 }
