@@ -11,7 +11,7 @@
 tool_exec <- function(in_params, out_params) {
     # Load utility R functions
     source("FG_utils.R")
-    message("Source utility functions...")
+    message("Sourcing utility functions...")
     
     # gp tool parameters
     reinstall <- in_params[[1]]

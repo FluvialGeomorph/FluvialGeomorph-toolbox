@@ -31,7 +31,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("sp", "dplyr", "purrr", "tibble", "fluvgeo"))
+    load_packages(c("dplyr", "purrr", "tibble", "fluvgeo"))
     
     # gp tool parameters
     xs_fc              <- in_params[[1]]
@@ -41,12 +41,9 @@ tool_exec <- function(in_params, out_params) {
     vert_units         <- in_params[[5]]
 
     # Code for testing in RStudio
-    # library(sp)
     # library(dplyr)
     # library(fluvgeo)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # xs_fc              <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph-toolbox\\tests\\data\\test.gdb\\xs_200"
+    # xs_fc              <- "C:\\Workspace\\FluvialGeomorph\\fluvgeo\\inst\\extdata\\y2016_R1.gdb\\feature_dataset\\xs_50"
     # lead_n             <- 1
     # use_smoothing      <- TRUE
     # loess_span         <- 0.5
@@ -71,23 +68,22 @@ tool_exec <- function(in_params, out_params) {
                                                  use_smoothing = use_smoothing,
                                                  loess_span = loess_span,
                                                  vert_units = vert_units)
-    message("Calculated cross section dimensions")
+    message("Calculated cross section dimensions table")
     
-    # Join the xs_dims to xs
-    xs_dims_sf <- sp::merge(xs_sf[, c("Seq")], 
-                            xs_dims, 
-                            by = "Seq")
-    message("join table of metrics to fc complete")
+    # Join the xs_dims to xs_sf
+    xs_dims_sf <- xs_sf %>%
+        dplyr::select(Seq) %>%
+        dplyr::left_join(as.data.frame(xs_dims), by = join_by(Seq))
+    message("join table of cross section dimensions to sf complete")
     
-    # Convert sf to sp for writing
-    xs_dims_sp <- sf::as_Spatial(xs_dims_sf)
-    
-    # Write the hydraulic dimensions to a file geodatabase table
-    table_name <- paste0(basename(xs_fc), "_dims_L1_table")
-    gdb_path   <- dirname(dirname(xs_fc))
-    table_path <- file.path(gdb_path, table_name)
-    fluvgeo::sx2arc_table(sx_obj = xs_dims_sp, table_path = table_path)
-    message("saving table complete")
+    # Write the hydraulic dimensions to a csv file
+    # arcgisbinding::arc.write unable to reliably export sf to gdb
+    table_name <- paste0(basename(xs_fc), "_dims_L1_table.csv")
+    gdb_folder_path <- dirname(dirname(dirname(xs_fc)))
+    csv_path <- file.path(gdb_folder_path, table_name)
+    fluvgeo::sf2csv(sf_object = xs_dims_sf, 
+                    csv_path = csv_path)
+    message("saving csv complete: ", csv_path)
     
     return(out_params)
 }

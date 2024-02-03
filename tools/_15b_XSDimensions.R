@@ -54,7 +54,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("sp", "dplyr", "purrr", "tibble", "fluvgeo"))
+    load_packages(c("dplyr", "purrr", "tibble", "fluvgeo"))
 
     # gp tool parameters
     xs_fc              <- in_params[[1]]
@@ -71,13 +71,10 @@ tool_exec <- function(in_params, out_params) {
     width_method       <- in_params[[12]]
     
     # Code for testing in RStudio
-    # library(sp)
     # library(dplyr)
     # library(fluvgeo)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # xs_fc              <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph-toolbox\\tests\\data\\testing_Cole_2016.gdb\\xs_250_25"
-    # xs_points_fc       <- "D:\\Workspace\\EMRRP_Sediment\\Methods\\FluvialGeomorph-toolbox\\tests\\data\\testing_Cole_2016.gdb\\xs_250_25_points"
+    # xs_fc              <- "C:\\Workspace\\FluvialGeomorph\\fluvgeo\\inst\\extdata\\y2016_R1.gdb\\feature_dataset\\xs_50"
+    # xs_points_fc       <- "C:\\Workspace\\FluvialGeomorph\\fluvgeo\\inst\\extdata\\y2016_R1.gdb\\feature_dataset\\xs_50_points"
     # bankfull_elevation <- 104.5
     # lead_n             <- 1
     # use_smoothing      <- TRUE
@@ -104,14 +101,14 @@ tool_exec <- function(in_params, out_params) {
     message("Compare input tool parameters")
     print(compare_params(in_params, param_list))
     
-    # Convert ArcGIS fc to sp format
-    xs        <- fluvgeo::arc2sp(xs_fc)
-    xs_points <- fluvgeo::arc2sp(xs_points_fc)
-    message("Conversion to sp complete")
+    # Convert ArcGIS fc to sf format
+    xs_sf        <- fluvgeo::fc2sf(xs_fc)
+    xs_points_sf <- fluvgeo::fc2sf(xs_points_fc)
+    message("Conversion to sf complete")
     
     # Calculate cross section dimensions
-    xs_dims <- fluvgeo::cross_section_dimensions_L2(xs = xs,
-                                        xs_points = xs_points,
+    xs_dims <- fluvgeo::cross_section_dimensions_L2(xs = xs_sf,
+                                        xs_points = xs_points_sf,
                                         bankfull_elevation = bankfull_elevation,
                                         lead_n = lead_n,
                                         use_smoothing = use_smoothing,
@@ -132,18 +129,14 @@ tool_exec <- function(in_params, out_params) {
                                       width_method = width_method)
     message("Calculated stream power")
     
-    # Join the xs_dims to xs
-    xs_dims_sp <- sp::merge(xs[, c("Seq")], 
-                            xs_dims_spow, 
-                            by = "Seq")
-    message("join table of metrics to fc complete")
-    
-    # Write the hydraulic dimensions to a file geodatabase table
-    table_name <- paste0(basename(xs_fc), "_dims_L2_table")
-    gdb_path   <- dirname(dirname(xs_fc))
-    table_path <- file.path(gdb_path, table_name)
-    fluvgeo::sx2arc_table(sx_obj = xs_dims_sp, table_path = table_path)
-    message("saving table complete")
+    # Write the hydraulic dimensions to a csv file
+    # arcgisbinding::arc.write unable to reliably export sf to gdb
+    table_name <- paste0(basename(xs_fc), "_dims_L2_table.csv")
+    gdb_folder_path <- dirname(dirname(dirname(xs_fc)))
+    csv_path <- file.path(gdb_folder_path, table_name)
+    fluvgeo::sf2csv(sf_object = xs_dims_spow,
+                    csv_path = csv_path)
+    message("saving csv complete: ", csv_path)
     
     return(out_params)
 }
