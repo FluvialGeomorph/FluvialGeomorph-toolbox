@@ -26,7 +26,7 @@ tool_exec <- function(in_params, out_params) {
     # gp tool parameters
     banklines_fc  <- in_params[[1]]
     
-    # Import fc to sp
+    # Import fc to sf
     banklines_sf <- fc2sf(banklines_fc)
     
     fc_name <- basename(banklines_fc)

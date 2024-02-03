@@ -31,7 +31,7 @@ tool_exec <- function(in_params, out_params) {
     # gp tool parameters
     loop_points_fc  <- in_params[[1]]
     
-    # Import fc to sp
+    # Import fc to sf
     loop_points_sf <- fc2sf(loop_points_fc)
     
     fc_name <- basename(loop_points_fc)
