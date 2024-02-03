@@ -29,7 +29,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("dplyr", "purrr", "sp", "ggplot2"))
+    load_packages(c("dplyr", "purrr", "ggplot2"))
     
     # gp tool parameters
     stream          <- in_params[[1]]
@@ -43,21 +43,6 @@ tool_exec <- function(in_params, out_params) {
     survey_name_3   <- in_params[[9]]
     survey_name_4   <- in_params[[10]]
     
-    # Inputs for testing in RStudio
-    # library(purrr)
-    # library(fluvgeo)
-    # 
-    # stream <- "Cole Creek R1"
-    # xs_number <- 40
-    # xs_points_1 <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2004_R1.gdb\\xs_50_points"
-    # xs_points_2 <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2010_R1.gdb\\xs_50_points"
-    # xs_points_3 <- "D:\\Workspace\\EMRRP_Sediment\\PapillionCreek_NE\\Reaches\\02_Cole_Creek\\y2016_R1.gdb\\xs_50_points"
-    # xs_points_4 <- NULL
-    # survey_name_1 <- "2004"
-    # survey_name_2 <- "2010"
-    # survey_name_3 <- "2016"
-    # survey_name_4 <- NULL
-
     # Create list of survey paths
     xs_points_paths <- list(xs_points_1, xs_points_2, xs_points_3, xs_points_4)
     

@@ -61,7 +61,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("sp", "sf", "tmap","terra","maptiles","terrainr", 
+    load_packages(c("sf", "tmap","terra","maptiles","terrainr", 
                     "rmarkdown", "ggplot2", "tibble", "fluvgeo"))
     
     # Ensure pandoc can be found
@@ -96,43 +96,6 @@ tool_exec <- function(in_params, out_params) {
     extent_factor      <- in_params[[25]]
     output_dir         <- in_params[[26]]
     output_format      <- in_params[[27]]
-    
-    # Code for testing in RStudio
-    # library(fluvgeo)
-    # library(sp)
-    # library(sf)
-    # library(tibble)
-    # library(dplyr)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # 
-    # stream        <- "Cole Creek R3"
-    # flowline_fc   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/flowline"
-    # xs_fc         <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/xs_50"
-    # xs_dims_fc    <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/xs_50_dims_L3"
-    # xs_points_1   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/xs_50_points"
-    # xs_points_2   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2010_R3.gdb/xs_50_points"
-    # xs_points_3   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2004_R3.gdb/xs_50_points"
-    # xs_points_4   <- NULL
-    # survey_name_1 <- "2016"
-    # survey_name_2 <- "2010"
-    # survey_name_3 <- "2006"
-    # survey_name_4 <- NULL
-    # dem           <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/dem_2016_hydro"
-    # banklines_fc  <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/banklines"
-    # features_fc   <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Data/y2016_R3.gdb/features"
-    # bf_estimate   <- 106
-    # regions       <- c("USA")
-    # label_xs      <- TRUE
-    # show_xs_map   <- FALSE
-    # profile_units <- "feet"
-    # aerial        <- TRUE
-    # elevation     <- TRUE
-    # xs_label_freq <- 10
-    # exaggeration  <- 10
-    # extent_factor <- 1.3
-    # output_dir    <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Reaches/02_Cole_Creek/Reports"
-    # output_format <- "word_document"
     
     # Verify parameters
     ## Create list of parameters (named using the parameter names)

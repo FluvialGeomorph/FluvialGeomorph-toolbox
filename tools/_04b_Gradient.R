@@ -30,7 +30,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("sp", "dplyr", "raster", "fluvgeo"))
+    load_packages(c("dplyr", "raster", "fluvgeo"))
 
     # gp tool parameters
     flowline_points_fc  <- in_params[[1]]
@@ -38,15 +38,13 @@ tool_exec <- function(in_params, out_params) {
     use_smoothing       <- as.logical(in_params[[3]])
     loess_span          <- as.numeric(in_params[[4]])
     
-    # temp variables for development within R
-    # library(arcgisbinding)
-    # arc.check_product()
+    # Code for testing in RStudio
     # library(raster)
-    # flowline_points_fc <- "D:/Workspace/EMRRP_Sediment/09_LittleSenachwineCreek/LittleSenachwineCreek.gdb/flowline_points"
+    # flowline_points_fc <- "C:\\Workspace\\FluvialGeomorph\\fluvgeo\\inst\\extdata\\y2016_R1.gdb\\feature_dataset\\flowline_points"
     # gradient_distance  <- 1000
     # use_smoothing      <- TRUE
     # loess_span         <- 0.05
-    
+
     # Set default values
     if(length(use_smoothing) < 1) {
         use_smoothing <- TRUE
@@ -55,31 +53,27 @@ tool_exec <- function(in_params, out_params) {
         loess_span <- 0.05
     }
 
-    # Import fc to sp
-    flowline_points <- fluvgeo::arc2sp(flowline_points_fc)
+    # Import fc to sf
+    flowline_points_sf <- fluvgeo::fc2sf(flowline_points_fc)
+    message("Conversion to sf complete")
     
     # Calculate slope and sinuosity
-    message("Calculating slope and sinuosity...")
-    fl_pts <- fluvgeo::slope_sinuosity(channel_features = flowline_points, 
+    fl_pts <- fluvgeo::slope_sinuosity(channel_features = flowline_points_sf, 
                                        lead_n = gradient_distance,
                                        lag_n = gradient_distance,
                                        use_smoothing = use_smoothing,
                                        loess_span = loess_span,
                                        vert_units = "ft")
+    message("Calculated slope and sinuosity")
     
-    # Join slope attributes back to sp object
-    message("Joining slope-sinuosity attributes...")
-    gradient <- sp::merge(x = flowline_points, 
-                          y = fl_pts[,c("OBJECTID","z_smooth", 
-                                        "upstream_x","upstream_y", 
-                                        "downstream_x","downstream_y",
-                                        "upstream_z","downstream_z",
-                                        "upstream_m","downstream_m", 
-                                        "rise","run",
-                                        "stream_length","valley_length",
-                                        "sinuosity", "sinuosity_gte_one",
-                                        "slope", "slope_gte_zero")], 
-                          by.x = "OBJECTID", by.y = "OBJECTID")
+    # Write the hydraulic dimensions to a csv file
+    # arcgisbinding::arc.write unable to reliably export sf to gdb
+    table_name <- paste0(basename(flowline_points_fc), "_gradient.csv")
+    gdb_folder_path <- dirname(dirname(dirname(flowline_points_fc)))
+    csv_path <- file.path(gdb_folder_path, table_name)
+    fluvgeo::sf2csv(sf_object = fl_pts, 
+                    csv_path = csv_path)
+    message("saving csv complete: ", csv_path)
     
     # Write the hydraulic dimensions to a file geodatabase table
     table_name <- paste0("gradient_", 

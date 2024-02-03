@@ -25,7 +25,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("tibble", "sf", "sp", "terra", "terrainr", "maptiles",
+    load_packages(c("tibble", "sf", "terra", "terrainr", "maptiles",
                     "raster", "tmap", "fluvgeo"))
     
     # Ensure pandoc can be found
@@ -40,23 +40,6 @@ tool_exec <- function(in_params, out_params) {
     exaggeration     <- in_params[[5]]
     extent_factor    <- in_params[[6]]
     
-    # Inputs for testing in RStudio
-    # library(sf)
-    # library(sp)
-    # library(ceramic)
-    # library(raster)
-    # library(tmap)
-    # library(arcgisbinding)
-    # arc.check_product()
-    # library(fluvgeo)
-    # 
-    # flowline_fc      <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Sites/02_Cole_Creek/Data/y2016_R1.gdb/flowline"
-    # cross_section_fc <- "D:/Workspace/EMRRP_Sediment/PapillionCreek_NE/Sites/02_Cole_Creek/Data/y2016_R1.gdb/xs_50_dims_L1"
-    # xs_label_freq    <- 10
-    # background       <- "aerial"
-    # exaggeration     <- 1
-    # extent_factor    <- 2
-    
     # Verify parameters
     ## Create list of parameters (named using the parameter names)
     param_list <- tibble::lst(flowline_fc, cross_section_fc, xs_label_freq, 
@@ -66,12 +49,11 @@ tool_exec <- function(in_params, out_params) {
     message("Compare input tool parameters")
     print(compare_params(in_params, param_list))
     
-    # Convert fc to sf object
+    # Convert fc to sf
     flowline_sf      <- fluvgeo::fc2sf(flowline_fc)
     cross_section_sf <- fluvgeo::fc2sf(cross_section_fc)
     
     # Call the map_reach_overview function
-    print("calling map...")
     print(fluvgeo::map_reach_overview(flowline_sf = flowline_sf,
                                       cross_section_sf = cross_section_sf,
                                       xs_label_freq = xs_label_freq,

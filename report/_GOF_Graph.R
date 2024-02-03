@@ -31,7 +31,7 @@ tool_exec <- function(in_params, out_params) {
     source(fg_utils)
     message("Sourced utility functions: ", fg_utils)
     # Load required libraries
-    load_packages(c("sp", "dplyr", "tibble", "tidyr", "Metrics", 
+    load_packages(c("dplyr", "tibble", "tidyr", "Metrics", 
                     "ggplot2", "fluvgeo"))
     
     # gp tool parameters
@@ -42,11 +42,11 @@ tool_exec <- function(in_params, out_params) {
     to_elevation        <- in_params[[5]]
     by_elevation        <- in_params[[6]]
     
-    # Import fc to sp
-    xs_points <- arc2sp(xs_points_fc)
+    # Import fc to sf
+    xs_points_sf <- fcc2sf(xs_points_fc)
     
     # Determine the stream names
-    streams <- unique(xs_points$ReachName)
+    streams <- unique(xs_points_sf$ReachName)
     
     # Bankfull elevations to examine for sensitivity analysis
     bankfull_elevations <- seq(from = from_elevation,
@@ -54,7 +54,7 @@ tool_exec <- function(in_params, out_params) {
                                by = by_elevation)
     
     # Convert xs_points to a data frame
-    xs_pts <- xs_points@data
+    xs_pts <- sf::st_drop_geometry(xs_points_sf)
     
     # Calculate cross section dimensions
     xs_dims <- fluvgeo::xs_dimensions(xs_points = xs_pts, 

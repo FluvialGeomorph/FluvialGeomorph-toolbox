@@ -1,6 +1,20 @@
+# FluvialGeomorph v0.2.2 (Release date: 2024-02-10)
+
+## Major Changes
+ 
+
+## Bug Fixes
+* Fixed tool 12 - XS Watershed Area. 
+* Updated tools 15a, 15b, 15c to use only `sf` functions from `fluvgeo`. 
+* Updated tool in the `Check` toolset. 
+* Removed all remaining `sp` and `rgdal` dependencies. 
+* Removed all use of the `arcgisbinding::arc.write` function as it has proven over the past 2 years to be too fragile to risk any further production use. No reliable write methods remain for the file geodatabase format from R. Therefore, all R data frame output is now written to `.csv` files for later import into file geodatabase format. Adoption of this strategy mitigates any further disruption to this project from ESRI's lack of support for ensuring a robust `arcgisbinding::arc.write` function. 
+
+***
+
 # FluvialGeomorph v0.2.1 (Release date: 2024-01-22)
 
-# Major Changes
+## Major Changes
 * Updated workflow to support importing on-the-ground field survey data. Added or modified the following tools:
   
   * Added the `Import Thalweg` tool - Creates a `thalweg_points` feature class from a field survey. 
@@ -10,32 +24,32 @@
   * Updated the `Flowline Points` tool  - It now allows setting the `station_distance` parameter to zero to support using field surveys. Setting `station_distance` to zero turns off simplification of the `flowline` and creating regularly spaced `flowline_points` at the station_distance spacing. This preserves the original field surveyed thalweg locations. 
   * Added the `XS From Field` tool - Creates a polyline feature class from a `field_xs_points` feature class. 
 
-# Bug fixes
+## Bug fixes
 * Refactored R scripts to use the [`here`](https://here.r-lib.org//articles/here.html) package to resolve script location within the toolbox folder structure. 
 * Updated the process for pandoc executable detection. 
 
+***
 
 # FluvialGeomorph v0.1.8 (Release date: 2023-08-24)
 
-# Major Changes
+## Major Changes
 * None
 
-
-# Bug fixes
+## Bug fixes
 * Install latest stable release of RegionalCurve.  
 
+***
 
 # FluvialGeomorph v0.1.7 (Release date: 2023-03-22)
 
-# Major Changes
+## Major Changes
 * Removed `ceramic` dependency and added in `maptiles` and `terrainr` to create 
 basemaps for aerial and elevation data. 
 
-
-# Bug fixes
+## Bug fixes
 * Removed dependency on the  package `ceramic`. 
 
-# Compatability Matrix
+## Compatability Matrix
 This table describes the latest versions the software has been tested with. 
 
 Software        |Tested    
@@ -45,18 +59,20 @@ R               |4.2.2
 R-bridge        |1.0.1.300  
 FluvialGeomorph |0.1.7  
 
+***
+
 # FluvialGeomorph v0.1.6 (Release date: 2023-01-25)
 
-# Major Changes
+## Major Changes
 * To ensure that all feature classes are in the same coordinate system, each project file geodatabase will use a feature dataset to store all feature classes. To support this change, all tools have been refactored to expect feature classes to reside within a feature dataset. 
 * Discovered that `arcgisbinding::arc.write` frequently fails to write feature classes to a file geodatabase. To workaround this limitation, we have decided 
 to only write table data from R back to the file geodatabase. The tools `04b - Gradient`, `15a - XS Dimensions, Level 1`, `15b - XS Dimensions, Level 2`, and `15c - XS Planform, Level 3` now write their results as tables. 
 * Added a `JoinField` tool to the `Data Management` toolset. This allows calculations made in R and written to tables to be joined back to their geometry feature classes. 
 
-# Bug fixes
+## Bug fixes
 * Removed dependency on the unmaintained package `facetscales`. 
 
-# Compatability Matrix
+## Compatability Matrix
 This table describes the latest versions the software has been tested with. 
 
 Software        |Tested    
@@ -66,16 +82,17 @@ R               |4.2.0
 R-bridge        |1.0.1.300  
 FluvialGeomorph |0.1.6   
 
+***
 
 # FluvialGeomorph v0.1.5 (Release date: 2022-05-16)
 
-# Major Changes
-* None
+## Major Changes
+* None.
 
-# Bug fixes
+## Bug fixes
 * Updated the install tool to handle Pandoc located within the RStudio Quarto distribution
 
-# Compatability Matrix
+## Compatability Matrix
 This table describes the latest versions the software has been tested with. 
 
 Software        |Tested    
@@ -86,15 +103,17 @@ R               |4.1.3
 R-bridge        |1.0.1.244  
 FluvialGeomorph |0.1.5     
 
+***
+
 # FluvialGeomorph v0.1.42 (Release date: 2021-02-28)
 
-# Major Changes
+## Major Changes
 * The R-bridge (arcgisbinding v1.0.1.244) now fully supports R 4.x. Therefore, the FluvialGeomorph toolbox can now be used in ArcGIS Pro and Map with the latest version of R. 
 
-# Bug fixes
+## Bug fixes
 * The install script now creates the ceramic cache directory. If this directory doesn't previously exist, tools calling ceramic would fail when the interactive prompt wasn't responded to. On certian computers, this bug prevented all reports from running since a map calling ceramic is at the beginning of each report. 
 
-# Compatability Matrix
+## Compatability Matrix
 This table describes the latest versions the software has been tested with. 
 
 Software        |Tested    |Not Tested
@@ -105,10 +124,11 @@ R               |4.0.3     |4.0.4
 R-bridge        |1.0.1.244 | -   
 FluvialGeomorph |0.1.42    | -  
 
+***
 
 # FluvialGeomorph v0.1.41 (Release date: 2020-12-14)
 
-# Major Changes
+## Major Changes
 * Added chart output to the XS River Position tool to allow the user to QA the watershed area and river position calculations before proceeding. 
 
 ## Bug fixes
@@ -125,8 +145,12 @@ R               |3.6       |![](https://img.shields.io/badge/-4.0-red)
 R-bridge        |1.0.1.239 |![](https://img.shields.io/badge/-1.0.1.241-red)  
 FluvialGeomorph |0.1.41    |0.1.41             
 
+***
 
 # FluvialGeomorph v0.1.40 (Release date: 2020-09-27)
+
+## Major Changes
+* None.
 
 ## Bug fixes
 * Fixed a bug that prevented the Level 1 and 2 reports from displaying slope. 
@@ -145,6 +169,7 @@ FluvialGeomorph |0.1.40    |0.1.40
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.39 (Release date: 2020-09-21)
 
@@ -169,6 +194,7 @@ FluvialGeomorph |0.1.39    |0.1.39
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.38 (Release date: 2020-09-13)
 
@@ -198,6 +224,7 @@ FluvialGeomorph |0.1.38    |0.1.38
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.37 (Release date: 2020-09-07)
 
@@ -223,6 +250,7 @@ FluvialGeomorph |0.1.37    |0.1.37
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.36 (Release date: 2020-08-31)
 
@@ -245,6 +273,7 @@ FluvialGeomorph |0.1.36    |0.1.36
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.35 (Release date: 2020-08-15)
 
@@ -254,7 +283,6 @@ FluvialGeomorph |0.1.36    |0.1.36
 
 ## Bug fixes
 * Fixed the `Estimate Bankfull` tool. 
-
 
 ## Compatibility Matrix
 Please follow the compatibility matrix below to determine the required combination of software components necessary to run the toolbox. 
@@ -269,8 +297,12 @@ FluvialGeomorph |0.1.35    |0.1.35
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.34 (Release date: 2020-07-27)
+
+## Major Changes
+* None.
 
 ## Bug fixes
 * Fixed Level 1 Report.
@@ -288,8 +320,12 @@ FluvialGeomorph |0.1.34    |0.1.34
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.33 (Release date: 2020-07-27)
+
+## Major Changes
+* None.
 
 ## Bug Fixes
 * Continued improvements to the R package install process to be more resilient. 
@@ -308,12 +344,17 @@ FluvialGeomorph |0.1.33    |0.1.33
 
 **Note: The ArcGIS R-bridge does not yet support R 4.0 for use in ArcGIS Pro or ArcMap geoprocessing tools.**
 
+***
 
 # FluvialGeomorph v0.1.32 (Release date: 2020-07-09)
+
+## Major Changes
+* None.
 
 ## Bug Fixes
 * Overhauled the `R` package install process to make it more robust and secure on a wider range of previous `R` installs. 
 
+***
 
 # FluvialGeomorph v0.1.31 (Release date: 2020-07-06)
 
@@ -323,12 +364,17 @@ FluvialGeomorph |0.1.33    |0.1.33
 ## Bug Fixes
 * Fixed a bug that was preventing tools from running in ArcGIS Pro due to an apparent circular dependency reference (`devtools` unable to install `pkgload`). 
 
+***
 
 # FluvialGeomorph v0.1.30 (Release date: 2020-06-30)
 
 ## Major Changes
 * FluvialGeomorph `R` packages (i.e., `RegionalCurve`, `fluvgeo`) now install directly from GitHub using the `Install R packages` tool. 
 
+## Bug Fixes
+* None.
+
+***
 
 # FluvialGeomorph v0.1.29 (Release date: 2020-06-18)
 
@@ -340,6 +386,7 @@ FluvialGeomorph |0.1.33    |0.1.33
 ## Bug Fixes
 * Added the Cole Creek test datasets (2004, 2010, 2016) for tools that need multiple time periods. 
 
+***
 
 # FluvialGeomorph v0.1.28 (Release date: 2020-05-28)
 
@@ -365,6 +412,7 @@ FluvialGeomorph |0.1.33    |0.1.33
 * Tool running in ArcGIS Pro had been hindered by the different way Pro handles the assignment of datasets to the current workspace (compared with ArcMap). Explicit data path references were added to prevent conflicts and protect the FG codebase from future changes ESRI might make. 
 * Updated package test data. 
 
+***
 
 # FluvialGeomorph v0.1.27 (Release date: 2020-05-14)
 
