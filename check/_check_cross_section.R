@@ -32,7 +32,7 @@ tool_exec <- function(in_params, out_params) {
     cross_section_fc  <- in_params[[1]]
     step              <- in_params[[2]]
     
-    # Import fc to sp
+    # Import fc to sf
     cross_section_sf <- fc2sf(cross_section_fc)
     
     fc_name <- basename(cross_section_fc)

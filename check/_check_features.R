@@ -26,7 +26,7 @@ tool_exec <- function(in_params, out_params) {
     # gp tool parameters
     features_fc  <- in_params[[1]]
     
-    # Import fc to sp
+    # Import fc to sf
     features_sf <- fc2sf(features_fc)
     
     fc_name <- basename(features_fc)

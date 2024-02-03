@@ -19,7 +19,7 @@
 #'
 tool_exec <- function(in_params, out_params) {
     # Declare location of script within the toolbox
-    here::i_am("check/_check_bankline_points.R")
+    here::i_am("check/_check_cross_section_points.R")
     # Load utility R functions
     fg_utils <- here::here("install", "FG_utils.R")
     source(fg_utils)
@@ -30,7 +30,7 @@ tool_exec <- function(in_params, out_params) {
     xs_points_fc  <- in_params[[1]]
     step          <- in_params[[1]]
     
-    # Import fc to sp
+    # Import fc to sf
     cross_section_points_sf <- fc2sf(xs_points_fc)
     
     fc_name <- basename(xs_points_fc)
