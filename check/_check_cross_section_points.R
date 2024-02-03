@@ -1,32 +1,48 @@
-#' Checks a `cross_section_points` feature class.
+#' @title Check the validity of a `fluvgeo` `cross_section_points` data structure
 #'
-#' Args:
-#'    cross_section_points_fc  character; the full path to an ESRI 
-#'                             cross_section_points feature class
+#' @description Checks that the input data structure `cross_section_points`
+#' meets the requirements for this data structure.
+#'
+#' @export
+#' @param xs_points_fc    character; a `cross_section_points` feature class
+#'                        used by the fluvgeo package.
+#' @param step            character; last completed processing step. One of
+#'                        "station_points", "loop_bend"
+#'
+#' @details This is a wrapper to the `fluvgeo::check_cross_section_points` 
+#' function.
+#' 
+#' @return Returns TRUE if the `cross_section_points` data structure matches the
+#' requirements. The function throws an error for a data structure not matching
+#' the data specification. Returns errors describing how the the data structure
+#' doesn't match the requirement.
 #'
 tool_exec <- function(in_params, out_params) {
+    # Declare location of script within the toolbox
+    here::i_am("check/_check_bankline_points.R")
     # Load utility R functions
-    dir_name <- getSrcDirectory(function(x) {x})
-    fg <- dirname(dir_name)
-    fg_install <- file.path(fg, "install")
-    source(file.path(fg_install, "FG_utils.R"))
-    # Load required libraries
-    load_packages(c("sp", "dplyr", "raster", "fluvgeo"))
+    fg_utils <- here::here("install", "FG_utils.R")
+    source(fg_utils)
+    message("Sourced utility functions: ", fg_utils)
+    load_packages(c("dplyr", "raster", "fluvgeo"))
     
     # gp tool parameters
-    cross_section_points_fc  <- in_params[[1]]
+    xs_points_fc  <- in_params[[1]]
+    step          <- in_params[[1]]
     
     # Import fc to sp
-    cross_section_points_sp <- arc2sp(cross_section_points_fc)
+    cross_section_points_sf <- fc2sf(xs_points_fc)
     
-    fc_name <- basename(cross_section_points_fc)
+    fc_name <- basename(xs_points_fc)
     
     # Check cross_section_points and print messages
-    check <- try(check_cross_section_points(cross_section_points_sp))
+    check <- try(check_cross_section_points(xs_points_sf,
+                                            step = step))
     if(inherits(check, "try-error")) {
         print(geterrmessage())
     } else { 
-        message(paste(fc_name, "is a valid cross_section_points data structure."))
+        message(paste(fc_name, 
+                      "is a valid cross_section_points data structure."))
     }
     
     return(out_params)
