@@ -38,7 +38,9 @@ install_needed_packages <- function(need_pkgs) {
     #options(install.packages.check.source = "no")
     
     # Update existing packages
-    message("Updating packages...")
+    update_pkgs <- as.data.frame(old.packages())
+    message("Updating existing packages: ",  
+            paste(update_pkgs$Package, collapse = ", "))
     update.packages(lib.loc = .libPaths()[1], 
                     ask = FALSE, 
                     checkBuilt = TRUE,
@@ -49,7 +51,8 @@ install_needed_packages <- function(need_pkgs) {
     
     # Install uninstalled packages
     if (length(uninst_pkgs)) {
-        message("Installing missing packages...")
+        message("Installing missing packages: ", 
+                paste(uninst_pkgs, collapse = ", "))
         install.packages(uninst_pkgs, 
                          Ncpus = 5,
                          dependencies = TRUE,
