@@ -1,4 +1,4 @@
-#' @title Cross Section Compare Plot
+#' @title Cross Section Compare Plot, Level 1
 #' 
 #' @description Produces a cross section profile plot for the specified cross
 #' section for the input surveys.
@@ -18,12 +18,14 @@
 #' @param survey_name_2   character; the label to use for the second survey.
 #' @param survey_name_3   character; the label to use for the third survey.
 #' @param survey_name_4   character; the label to use for the fourth survey.
+#' @param extent          character; The extent of the cross section to
+#'                        plot. One of "all", "floodplain", or "channel".
 #' 
 #' @return A ggplot object
 #'
 tool_exec <- function(in_params, out_params) {
     # Declare location of script within the toolbox
-    here::i_am("report/_XS_Compare_Plot.R")
+    here::i_am("report/_XS_Compare_Plot_L1.R")
     # Load utility R functions
     fg_utils <- here::here("install", "FG_utils.R")
     source(fg_utils)
@@ -42,6 +44,7 @@ tool_exec <- function(in_params, out_params) {
     survey_name_2   <- in_params[[8]]
     survey_name_3   <- in_params[[9]]
     survey_name_4   <- in_params[[10]]
+    extent          <- in_params[[11]]
     
     # Create list of survey paths
     xs_points_paths <- list(xs_points_1, xs_points_2, xs_points_3, xs_points_4)
@@ -57,9 +60,10 @@ tool_exec <- function(in_params, out_params) {
     xs_pts_sf_list <- purrr::map(xs_points_paths, fluvgeo::fc2sf)
     
     # Call the graph function
-    print(fluvgeo::xs_compare_plot(stream = stream,
-                                   xs_number = xs_number,
-                                   xs_pts_sf_list = xs_pts_sf_list))
+    print(fluvgeo::xs_compare_plot_L1(stream = stream,
+                                      xs_number = xs_number,
+                                      xs_pts_sf_list = xs_pts_sf_list,
+                                      extent = extent))
     
     return(out_params)
 }
