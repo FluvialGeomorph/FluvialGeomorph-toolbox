@@ -9,9 +9,25 @@
 #' @return None. Installs needed R packages. 
 #'
 tool_exec <- function(in_params, out_params) {
+    # Ensure package `here` is installed and updated
+    if(c("here") %in% installed.packages()[, "Package"]) {
+        message("Updating `here` package...")
+        update.packages(oldPkgs = c("here"), 
+                        ask = FALSE, 
+                        checkBuilt = TRUE,
+                        type = "win.binary")
+    } else {
+        message("Installing `here` package...")
+        install.packages("here",
+                         dependencies = TRUE,
+                         type = "win.binary")
+    }
+    # Declare location of script within the toolbox
+    here::i_am("install/Install_FG_R.R")
     # Load utility R functions
-    source("FG_utils.R")
-    message("Sourcing utility functions...")
+    fg_utils <- here::here("install", "FG_utils.R")
+    source(fg_utils)
+    message("Sourced utility functions: ", fg_utils)
     
     # gp tool parameters
     reinstall <- in_params[[1]]
@@ -24,7 +40,6 @@ tool_exec <- function(in_params, out_params) {
                      "ggplot2",
                      "ggrepel",
                      "grDevices",
-                     "here",
                      "methods",
                      "Metrics",
                      "maptiles",

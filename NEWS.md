@@ -1,9 +1,14 @@
-# FluvialGeomorph v0.2.2 (Release date: 2024-02-10)
+# FluvialGeomorph v0.2.2 (Release date: 2024-05-26)
 
 ## Major Changes
- 
+* Added the report `Report - L1 b` that displays cross sections plots disaggregated by extent. 
+* Added the report `XS Compare Plot, L1` that plots XS points for a specified extent of the cross section. 
+* Added the tool `14a - XS Points Classify` that classifies XS station points as falling within floodplain and channel polygons. 
+* Recommended a Level 1 workflow adjustment to use the `detrend` raster to make a rough estimate of the channel and floodplain at the end of L1, rather than wait until L2 for a more informed estimate. Use tool `08 - Water Surface Extent` to create new polygon feature classes `channel_xxx` and `floodplain_xxx` (where xxx represents the detrended elevation) to capturet these L1 rough estimates. These will be revised further in L2 with better estimates. 
+* Added the data management `Join From CSV` tool to workaround the inability to reliably write results into ESRI geodatabases. 
 
 ## Bug Fixes
+* Fixed a bug in the `15b - XS Dimensions, Level 2` tool that was causing slope and sinuosity values for the last cross section to calculate null values. 
 * Fixed tool 12 - XS Watershed Area. 
 * Updated tools 15a, 15b, 15c to use only `sf` functions from `fluvgeo`. 
 * Updated tool in the `Check` toolset. 
@@ -11,6 +16,7 @@
 * Removed all use of the `arcgisbinding::arc.write` function as it has proven over the past 2 years to be too fragile to risk any further production use. No reliable write methods remain for the file geodatabase format from R. Therefore, all R data frame output is now written to `.csv` files for later import into file geodatabase format. Adoption of this strategy mitigates any further disruption to this project from ESRI's lack of support for ensuring a robust `arcgisbinding::arc.write` function. 
 
 ***
+
 
 # FluvialGeomorph v0.2.1 (Release date: 2024-01-22)
 

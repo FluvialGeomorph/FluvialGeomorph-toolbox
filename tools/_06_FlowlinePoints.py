@@ -96,7 +96,7 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
     arcpy.management.CalculateField(in_table = flowline, 
                                     field = "from_measure", 
                                     expression = km_to_mouth, 
-                                    expression_type = "PYTHON_9.3")
+                                    expression_type = "PYTHON3")
 
     # Set the value of the flowline `to_measure` to the length of the flowline
     # in units kilometers plus the value of km_to_mouth 
@@ -104,17 +104,17 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
     arcpy.management.CalculateField(in_table = flowline, 
                                     field = "to_measure", 
                                     expression = expression, 
-                                    expression_type = "PYTHON_9.3")
+                                    expression_type = "PYTHON3")
     arcpy.AddMessage("Calculated flowline from and to measures.")
 
     # Set the station distance
     if int(station_distance) == 0:
         # If station_distance is zero, use original flowline vertices unchanged
         arcpy.management.CopyFeatures(in_features = flowline, 
-                                      out_feature_class = "flowline_densify")
-        arcpy.AddMessage("Verticies of flowline not changed.")
+                                      out_feature_class = "flowline_vertices")
+        arcpy.AddMessage("Vertices of flowline not changed.")
     else:
-        # Simplify the flowline (speeds interpolation)
+        # Simplify the flowline (speeds processing)
         arcpy.cartography.SimplifyLine(in_features = flowline, 
                                        out_feature_class = "flowline_simplify",
                                        algorithm = "POINT_REMOVE", 
@@ -123,24 +123,55 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
         
         # Set the station distance by densifying vertices to station_distance
         arcpy.management.CopyFeatures(in_features = "flowline_simplify", 
-                                      out_feature_class = "flowline_densify")
-        arcpy.edit.Densify(in_features = "flowline_densify", 
+                                      out_feature_class = "flowline_vertices")
+        arcpy.edit.Densify(in_features = "flowline_vertices", 
                            densification_method = "DISTANCE", 
                            distance = station_distance)
         arcpy.AddMessage("Densified verticies of flowline to station_distance.")
-
-    # Convert the flowline feature class to a route
-    arcpy.lr.CreateRoutes(in_line_features = "flowline_densify", 
+    
+    # Convert the flowline to a route
+    arcpy.lr.CreateRoutes(in_line_features = "flowline_vertices", 
                           route_id_field = "ReachName", 
-                          out_feature_class = "flowline_densify_route", 
+                          out_feature_class = "flowline_route", 
                           measure_source = "TWO_FIELDS", 
                           from_measure_field = "from_measure", 
                           to_measure_field = "to_measure")
-    arcpy.AddMessage("Converted densfied flowline to a route.")
+    arcpy.AddMessage("Converted flowline to route.")
+
+    if not calibration_points:
+        arcpy.AddMessage("No flowline_route calibration required.")
+
+        # Convert flowline_route vertices to flowline_points
+        flowline_points = os.path.join(feature_dataset, "flowline_points")
+        arcpy.management.FeatureVerticesToPoints(
+                             in_features = "flowline_route", 
+                             out_feature_class = flowline_points)
+        arcpy.AddMessage("Converted flowline_route to flowline_points.")
     
-    # Calibrate route
+        # Add x, y, and m values to the `flowline_points` feature class
+        arcpy.management.CalculateGeometryAttributes(
+                              in_features = flowline_points, 
+                              geometry_property = [["POINT_X", "POINT_X"], 
+                                                   ["POINT_Y", "POINT_Y"],
+                                                   ["POINT_M", "POINT_M"]],
+                              length_unit = "METERS")
+        arcpy.AddMessage("Calculated flowline_points X, Y, and M attributes.")
+    
+        # Calculate the m-values for the uncalibrated route
+        arcpy.management.AddField(in_table = flowline_points, 
+                                  field_name = "POINT_M_uncalibrated", 
+                                  field_type = "DOUBLE")
+        arcpy.management.CalculateField(in_table = flowline_points, 
+                                        field = "POINT_M_uncalibrated", 
+                                        expression = "!POINT_M!", 
+                                        expression_type = "PYTHON3")
+        arcpy.AddMessage("Calculated m-values for the uncalibrated route.")
+
     if calibration_points:
-        arcpy.lr.CalibrateRoutes(in_route_features = "flowline_densify_route", 
+        arcpy.AddMessage("flowline_route calibration required.")
+        
+        # Calibrate flowline_route using calibration points
+        arcpy.lr.CalibrateRoutes(in_route_features = "flowline_route", 
                                  route_id_field = "ReachName", 
                                  in_point_features = calibration_points,
                                  point_id_field = point_id_field,
@@ -148,57 +179,70 @@ def FlowlinePoints(feature_dataset, flowline, dem, km_to_mouth,
                                  out_feature_class = "flowline_route_calibrate",
                                  calibrate_method = "DISTANCE",
                                  search_radius = search_radius)
-        arcpy.management.CopyFeatures(in_features = "flowline_route_calibrate", 
-                                  out_feature_class = "flowline_densify_route")
-        arcpy.AddMessage("Calibrated flowline to calibration_points.")
+        arcpy.AddMessage("Calibrated flowline_route using calibration_points.")
+        
+        # Convert flowline_route vertices to flowline_points
+        flowline_points = os.path.join(feature_dataset, "flowline_points")
+        arcpy.management.FeatureVerticesToPoints(
+                             in_features = "flowline_route_calibrate", 
+                             out_feature_class = flowline_points)
+        arcpy.AddMessage("Converted flowline_route_calibrate to flowline_points.")
+        
+        # Add x, y, and m values to the `flowline_points` feature class
+        arcpy.management.CalculateGeometryAttributes(
+                             in_features = flowline_points, 
+                             geometry_property = [["POINT_X", "POINT_X"], 
+                                                  ["POINT_Y", "POINT_Y"],
+                                                  ["POINT_M", "POINT_M"]],
+                             length_unit = "METERS")
+        arcpy.AddMessage("Calculated flowline_points X, Y, and M attributes.")
+        
+        # Calculate the m-value for the uncalibrated route
+        fl_pts_uncalibrated = os.path.join(arcpy.env.workspace, 
+                                           "fl_pts_uncalibrated")
+        arcpy.lr.LocateFeaturesAlongRoutes(
+                 in_features = flowline_points, 
+                 in_routes = "flowline_route", 
+                 route_id_field = "ReachName", 
+                 radius_or_tolerance = station_distance, 
+                 out_table = fl_pts_uncalibrated, 
+                 out_event_properties = "ReachName POINT POINT_M_uncalibrated")
+        arcpy.AddMessage("Calculated m-values for the uncalibrated route.")
     
-    # Convert flowline feature vertices to points
-    flowline_points = os.path.join(feature_dataset, "flowline_points")
-    arcpy.management.FeatureVerticesToPoints(
-                     in_features = "flowline_densify_route", 
-                     out_feature_class = flowline_points)
-    arcpy.AddMessage("Converted densified flowline route to points.")
+        arcpy.management.JoinField(in_data = flowline_points, 
+                                   in_field = "OBJECTID", 
+                                   join_table = fl_pts_uncalibrated, 
+                                   join_field = "OBJECTID",
+                                   fields = ["POINT_M_uncalibrated"])
+        arcpy.AddMessage("Uncalibrated m-value joined to flowline_points.")
 
-    # Add x, y, z, and m values to the `flowline_points` feature class
-    arcpy.management.AddGeometryAttributes(Input_Features = flowline_points, 
-                                           Geometry_Properties = "POINT_X_Y_Z_M", 
-                                           Length_Unit = "METERS")
-
-    # Set the first m-value for the flowline_points to zero. The `create 
-    # route` tool sets it to NULL. 
-    # Create code block that inserts the km_to_mouth value for the NULL record
-    # (the first record) 
-    codeBlock = """def setNull2Zero(m):
-                       if m is None: 
-                           return {}
-                       else:
-                           return m""".format(km_to_mouth)
-    arcpy.management.CalculateField(in_table = flowline_points, 
-                                field = "POINT_M", 
-                                expression = "setNull2Zero(!POINT_M!)", 
-                                code_block = codeBlock,
-                                expression_type = "PYTHON_9.3")
-    
     # Delete un-needed fields
     arcpy.management.DeleteField(in_table = flowline_points, 
-                                 drop_field = ["ORIG_FID","POINT_Z"])
+                                 drop_field = ["ORIG_FID"])
+    
+    # Calculate difference between calibrated and uncalibrated m-values
+    arcpy.management.AddField(in_table = flowline_points, 
+                              field_name = "calibration_diff", 
+                              field_type = "DOUBLE")
+    arcpy.management.CalculateField(
+                          in_table = flowline_points, 
+                          field = "calibration_diff", 
+                          expression = "!POINT_M! - !POINT_M_uncalibrated!", 
+                          expression_type = "PYTHON3")
+    arcpy.AddMessage("Calculated calibration difference.")
 
     # Add elevations to the `flowline_points` feature class
     arcpy.ddd.AddSurfaceInformation(in_feature_class = flowline_points, 
                                     in_surface = dem, 
                                     out_property = "Z",
                                     z_factor = 1.0)
-    arcpy.AddMessage("Added geometry fields to flowline_points.")
+    arcpy.AddMessage("Added DEM elevation to flowline_points.")
     
     # Return
     arcpy.SetParameter(9, flowline_points)
     
     # Cleanup
-    arcpy.management.Delete("flowline_simplify")
-    arcpy.management.Delete("flowline_simplify_Pnt")
-    arcpy.management.Delete("flowline_densify")
-    arcpy.management.Delete("flowline_route_calibrate")
-    arcpy.management.Delete("flowline_densify_route")
+    #arcpy.management.Delete(fl_pts_uncalibrated)
     return
     
 def main():
