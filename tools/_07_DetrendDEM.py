@@ -4,7 +4,8 @@ Description:          Creates a detrended DEM.
 Date:                 01/14/2020
 
 Usage:
-This tool is based on the detrending method used in the River Bathymetry Toolkit (RBT) http://essa.com/tools/river-bathymetry-toolkit-rbt/. 
+This tool is based on the detrending method used in the River Bathymetry 
+Toolkit (RBT) http://essa.com/tools/river-bathymetry-toolkit-rbt/. 
 
 Parameters:
 feature_dataset (str) -- Path to the feature dataset.

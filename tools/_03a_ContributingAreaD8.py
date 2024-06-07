@@ -18,9 +18,6 @@ dem_hydro             -- Path to the hydro modified digital elevation model (DEM
 processes             -- The number of processes to use for parallel processing.
 
 Outputs:
-contributing_area_D8  -- an flow accumulation raster using the D* method. Units 
-                         are the linear units of the input DEM. ESRI refers to 
-                         this as a flow accumulation raster. 
 flow_direction_D8     -- A flow direction raster using the D8 method (integer 
                          flow directions). 
 ____________________________________________________________________________"""
