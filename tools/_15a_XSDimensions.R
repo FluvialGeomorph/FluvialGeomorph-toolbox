@@ -19,7 +19,7 @@
 #'
 #'
 #' @return A new cross section feature class with the hydraulic geometry 
-#'      dimensions is added to the attribute table.
+#'      dimensions added to the attribute table.
 #'      
 #' #TODO Create an fluvgeo function to perform this operation
 #' 

@@ -24,7 +24,7 @@ feature_dataset       -- Path to the feature dataset.
 points                -- Path to the points feature class.
 point_ID_field        -- Field in the points feature class that contains the 
                          point IDs.
-flow_accumulation     -- Path to the flow accumulation model.
+flow_accumulation     -- Path to the D8 flow accumulation model.
 flow_direction_d8     -- Path to the flow_direction_d8` model (must use 
                          D8 method).
 snap_distance         -- The distance the point will be snapped to find the 
