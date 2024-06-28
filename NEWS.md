@@ -1,3 +1,15 @@
+# FluvialGeomorph v0.2.3 (Release date: 2024-06-28)
+
+## Major Changes
+* Added the report `Report - L2 b` that displays cross sections plots disaggregated by extent. 
+* Added the report `XS Compare Plot, L2` that plots XS points for a specified extent of the cross section. 
+
+## Bug Fixes
+* Updated tool documentation to add many missing parameter descriptions. 
+
+***
+
+
 # FluvialGeomorph v0.2.2 (Release date: 2024-05-26)
 
 ## Major Changes
