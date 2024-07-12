@@ -105,6 +105,9 @@ def XSPointsClassify(feature_dataset, xs_points, channel_polygon,
     arcpy.management.SelectLayerByAttribute(in_layer_or_view = "xs_points", 
                                             selection_type = "CLEAR_SELECTION")
     
+    # Return
+    arcpy.SetParameter(5, xs_points)
+    
     return
     
 def main():
