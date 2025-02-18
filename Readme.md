@@ -20,7 +20,7 @@ The FluvialGeomorph ArcGIS toolbox is a Python/R toolbox used to rapidly assess 
 
 ## Funding
 
-<img src="man/figures/chl.png" width=125 align="right" />
+<img src="images/chl.png" width=125 align="right" />
 
 Funding for development and maintenance of FluvialGeomorph has been
 provided by the following US Army Corps of Engineers (USACE) programs:
@@ -38,13 +38,13 @@ provided by the following US Army Corps of Engineers (USACE) programs:
 -   [Engineering With Nature (EWN)](https://ewn.el.erdc.dren.mil/)
 
 <p float="left">
-<img src="man/figures/chl.png" height=75 />
-<img src="man/figures/EMRRP_logo_200.png" height=75 />
-<img src="man/figures/RSM_200.png" height=75 />
-<img src="man/figures/MRG&P_300.png" height=75 />
-<img src="man/figures/FRMP_200.png" height=75 />
-<img src="man/figures/SilverJackets_200.png" height=75 />
-<img src="man/figures/EWN_200.png" height=75 />
+<img src="images/chl.png" height=75 />
+<img src="images/EMRRP_logo_200.png" height=75 />
+<img src="images/RSM_200.png" height=75 />
+<img src="images/MRG&P_300.png" height=75 />
+<img src="images/FRMP_200.png" height=75 />
+<img src="images/SilverJackets_200.png" height=75 />
+<img src="images/EWN_200.png" height=75 />
 </p>
 
 
@@ -54,10 +54,10 @@ Check out the [NEWS](NEWS.md) for details on the latest updates.
 
 ## Authors
 
--   Christopher Haring, Fluvial Geomorphologist/Research Physical
+-   [Christopher Haring](mailto:Christopher.P.Haring@usace.army.mil), Fluvial Geomorphologist/Research Physical
     Scientist, U.S. Army Corps of Engineers
     <a itemprop="sameAs" content="https://orcid.org/0009-0004-3834-9811" href="https://orcid.org/0009-0004-3834-9811" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" alt="ORCID iD icon" style="width:1em;margin-right:.5em;"/>https://orcid.org/0009-0004-3834-9811</a>
--   Michael Dougherty, Geographer, U.S. Army Corps of Engineers
+-   [Michael Dougherty](mailto:Michael.P.Dougherty@usace.army.mil), Geographer, U.S. Army Corps of Engineers
     <a itemprop="sameAs" content="https://orcid.org/0000-0002-1465-5927" href="https://orcid.org/0000-0002-1465-5927" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">https://orcid.org/0000-0002-1465-5927</a>
 -   [Thomas Darby](mailto:Thomas.A.Darby@usace.army.mil), Geographer, Rock Island District, U.S. Army Corps of Engineers 
 
