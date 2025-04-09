@@ -1,3 +1,13 @@
+# FluvialGeomorph v0.2.4 (Release date: 2025-04-09)
+
+## Major Changes
+* None.
+
+## Bug Fixes
+* Fixed toolbox report L2b tool. 
+
+***
+
 # FluvialGeomorph v0.2.3 (Release date: 2024-06-28)
 
 ## Major Changes
