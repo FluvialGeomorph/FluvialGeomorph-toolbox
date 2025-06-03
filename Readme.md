@@ -7,7 +7,7 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 [![Maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle)
 [![Project Status: Active The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![packageversion](https://img.shields.io/badge/Package%20version-0.2.4-orange.svg?style=flat-square)](commits/master)
-[![Last-changedate](https://img.shields.io/badge/last%20change-2024--04--09-yellowgreen.svg)](/commits/master)
+[![Last-changedate](https://img.shields.io/badge/last%20change-2025--04--09-yellowgreen.svg)](/commits/master)
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 
@@ -69,12 +69,12 @@ To install the FluvialGeomorph ArcGIS toolbox, click the [latest release](https:
 ## Getting Started
 Use the following guides to learn how to use the FluvialGeomorph ArcGIS toolbox. 
 
-* User Manual: [https://usermanual.fluvialgeomorph.org](https://usermanual.fluvialgeomorph.org)
-* Tech Manual: [https://techmanual.fluvialgeomorph.org](https://techmanual.fluvialgeomorph.org)
+* User Manual: [https://fluvialgeomorph.github.io/FG-User-Manual](https://fluvialgeomorph.github.io/FG-User-Manual/)
+* Tech Manual: [https://fluvialgeomorph.github.io/FG-Tech-Manual](https://fluvialgeomorph.github.io/FG-Tech-Manual/)
 
 
 ## Bug Reports
-If you find any bugs while using the FluvialGeomorph ArcGIS toolbox, please open an [issue](https://github.com/FluvialGeomorph/FluvialGeomorph/issues) in this repository. 
+If you find any bugs while using the FluvialGeomorph ArcGIS toolbox, please open an [issue](https://github.com/FluvialGeomorph/FluvialGeomorph-toolbox/issues) in this repository. 
 
 ***  
 
