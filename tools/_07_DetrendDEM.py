@@ -31,12 +31,16 @@ def DetrendDEM(feature_dataset, flowline, flowline_points, dem, buffer_distance)
     arcpy.CheckOutExtension("3D")
     arcpy.CheckOutExtension("Spatial")
     
+    # Determine the resolution of dem (assumes planar coordinate system)
+    cellsize = float(arcpy.GetRasterProperties_management(
+                                         dem, "CELLSIZEX").getOutput(0))
+    
     # Set environment variables 
     arcpy.env.overwriteOutput = True
     arcpy.env.workspace = os.path.dirname(feature_dataset)
     arcpy.env.extent = dem
     arcpy.env.snapRaster = dem
-    arcpy.env.cellSize = arcpy.Describe(dem).meanCellHeight
+    arcpy.env.cellSize = cellsize
     arcpy.env.compression = "LZ77"
     arcpy.env.outputCoordinateSystem = dem    
     

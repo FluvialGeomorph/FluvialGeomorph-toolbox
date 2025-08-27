@@ -26,12 +26,16 @@ def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
     # Check out the extension license 
     arcpy.CheckOutExtension("Spatial")
     
+    # Determine the resolution of dem (assumes planar coordinate system)
+    cellsize = float(arcpy.GetRasterProperties_management(
+                                         dem, "CELLSIZEX").getOutput(0))
+    
     # Set environment variables 
     arcpy.env.overwriteOutput = True
     arcpy.env.workspace = output_workspace
     arcpy.env.extent = dem
     arcpy.env.snapRaster = dem
-    arcpy.env.cellSize = arcpy.Describe(dem).meanCellHeight
+    arcpy.env.cellSize = cellsize
     arcpy.env.compression = "LZ77"
     arcpy.env.outputCoordinateSystem = dem    
     
@@ -42,9 +46,6 @@ def BurnCutlines(output_workspace, cutlines, dem, widen_cells):
     arcpy.AddMessage("DEM: {}".format(arcpy.Describe(dem).baseName))
     arcpy.AddMessage("widen_cells: {}".format(str(widen_cells)))
     
-    # Determine the resolution of dem
-    cellsize = float(arcpy.GetRasterProperties_management(
-                                         dem, "CELLSIZEX").getOutput(0))
     
     # Create a list of cutline OIDs
     cutlines_desc = arcpy.Describe(cutlines)
