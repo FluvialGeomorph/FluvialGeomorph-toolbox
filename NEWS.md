@@ -1,3 +1,13 @@
+# FluvialGeomorph-toolbox 2025.04.09
+
+## Major Changes
+* Converted from Semantic Versioning (SemVer) to Date-Based Versioning (CalVer) to match the rest of the project. 
+
+## Bug Fixes
+* Fixed the arcpy.Describe(dem).meanCellHeight Error: "meanCellHeight does not exist". Raster band property, no longer a raster dataset property.
+
+***
+
 # FluvialGeomorph v0.2.4 (Release date: 2025-04-09)
 
 ## Major Changes
