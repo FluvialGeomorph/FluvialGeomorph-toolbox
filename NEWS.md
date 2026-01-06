@@ -1,4 +1,14 @@
-# FluvialGeomorph-toolbox 2025.04.09
+# FluvialGeomorph-toolbox 2026.01.06
+
+## Major Changes
+* Restructured toolsets and tools to align to new workflow structures.
+
+## Bug Fixes
+* None.
+
+***
+
+# FluvialGeomorph-toolbox 2025.08.27
 
 ## Major Changes
 * Converted from Semantic Versioning (SemVer) to Date-Based Versioning (CalVer) to match the rest of the project. 
