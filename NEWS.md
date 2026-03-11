@@ -1,3 +1,13 @@
+# FluvialGeomorph-toolbox 2026.03.11
+
+## Major Changes
+* None.
+
+## Bug Fixes
+* Added missing toolset "Install".
+
+***
+
 # FluvialGeomorph-toolbox 2026.01.06
 
 ## Major Changes

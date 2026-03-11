@@ -6,7 +6,7 @@ The FluvialGeomorph ArcGIS toolbox provides a set of tools for extracting river 
 ## Project Status
 [![Maturing](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle)
 [![Project Status: Active The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![packageversion](https://img.shields.io/badge/Package%20version-2026.01.06-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/Package%20version-2026.03.11-orange.svg?style=flat-square)](commits/master)
 [![Licence](https://img.shields.io/badge/licence-CC0-blue.svg)](http://choosealicense.com/licenses/cc0-1.0/)
 
 
@@ -59,7 +59,7 @@ Check out the [NEWS](NEWS.md) for details on the latest updates.
 -   [Michael Dougherty](mailto:Michael.P.Dougherty@usace.army.mil), Geographer, U.S. Army Corps of Engineers
     <a itemprop="sameAs" content="https://orcid.org/0000-0002-1465-5927" href="https://orcid.org/0000-0002-1465-5927" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">https://orcid.org/0000-0002-1465-5927</a>
 -   [Thomas Darby](mailto:Thomas.A.Darby@usace.army.mil), Geographer, Rock Island District, U.S. Army Corps of Engineers 
-
+-   [Bobby Oliver](mailto:Bobby.J.Oliver@usace.army.mil), Geographer, Rock Island District, U.S. Army Corps of Engineers 
 
 ## Install
 To install the FluvialGeomorph ArcGIS toolbox, click the [latest release](https://github.com/FluvialGeomorph/FluvialGeomorph-toolbox/releases/latest) above, and download the `.zip` archive. Unzip this archive into a working folder and open the FluvialGeomorph ArcGIS toolbox in ArcMap or ArcGIS Pro. `R` must be installed for many of the tools in this toolbox to work. Please see the [NEWS](NEWS.md) for the software compatibility matrix and release notes. See the [User Manual](https://usermanual.fluvialgeomorph.org) for more details on getting started. 
