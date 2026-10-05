@@ -54,6 +54,26 @@ FluvialGeomorph-toolbox/
 * run pytest: `C:\Python27\ArcGIS10.4\Scripts\pytest`
 
 
+## XS Points Classify geometry preflight
+
+Run the focused tests from the repository root using ArcGIS Pro's Python:
+
+```powershell
+& "C:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe" -m pytest -q tests\test_14a_XSPointsClassify_preflight.py tests\test_14a_XSPointsClassify_arcpy.py
+```
+
+The preflight tests mock ArcPy and can also run without ArcGIS. The ArcPy
+tests create isolated, synthetic file geodatabases; they verify valid polygon
+classification and rejection of null geometry without changing source data
+or existing XS classifications. They do not reproduce issue #49's ERROR 002836.
+
+XS Points Classify checks both polygons and completes both Buffer operations
+before adding or resetting classification fields. Invalid geometry is repaired
+only in a uniquely named scratch copy with null features retained. Remaining
+geometry problems, empty inputs, and feature loss stop classification with
+an actionable error. Scratch copies are retained for inspection; temporary
+Check Geometry tables are deleted, with a warning if cleanup fails.
+
 # R Testing
 R scripts are tested using the `testthat` R package. R script tests are located in the `..tests\testthat` folder. R test files can be run individually using the `testthat::test_file()` or the `testthat::test_dir()` functions. 
 
@@ -68,4 +88,3 @@ testthat::test_file(here::here("tests", "testthat", "test_04b_Gradient.R"))
 # Run all tests
 testthat::test_dir(here::here("tests", "testthat"))
 ```
-
